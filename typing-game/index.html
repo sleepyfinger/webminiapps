@@ -33,29 +33,22 @@
 
       .word-input-box {
         margin-top: 2rem;
-      }
-
-      .word-input {
-        padding: 0.5rem;
         width: 300px;
       }
 
-      .game-info {
-        margin-top: 2rem;
-        font-size: 0.8rem;
-        display: flex;
-        justify-content: space-between;
-        width: 200px;
+      .word-input {
+        width: 100%;
+        height: 30px;
+        font-size: 30px;
       }
 
-      .time,
       .score,
       .highscore {
         font-size: 30px;
       }
 
       .highscore {
-        color: rgb(117, 119, 89);
+        color: #5d8360;
       }
 
       .button {
@@ -71,6 +64,25 @@
       .loading {
         background: #ccc;
         cursor: not-allowed;
+      }
+
+      #progress {
+        appearance: none;
+        width: 100%;
+      }
+
+      #progress::-webkit-progress-bar {
+        background: #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 3px;
+      }
+
+      #progress::-webkit-progress-value {
+        background: #5d8360;
+        border-radius: 12px;
+        height: 30px;
+        transition: width 1s;
       }
 
       #toast_message {
@@ -97,18 +109,15 @@
     <div class="header">
       <h1>타이핑 마스터!</h1>
     </div>
+
     <div class="word-display">Hello</div>
     <div class="word-input-box">
+      <progress id="progress" value="100" max="100"></progress>
       <input type="text" class="word-input" />
     </div>
     <div>최고 점수: <span class="highscore">0</span>점</div>
-    <div class="game-info">
-      <div>남은 시간: <span class="time">0</span>초</div>
-      <div>획득 점수: <span class="score">0</span>점</div>
-    </div>
-    <button class="button loading" onclick="run()">
-      게임을 불러오는 중...
-    </button>
+    <div>획득 점수: <span class="score">0</span>점</div>
+    <button class="button" onclick="run()">게임을 불러오는 중...</button>
     <div id="toast_message">토스트 메시지 입니다</div>
     <script>
       const GAME_TIME = 10;
@@ -118,6 +127,7 @@
         PLAYING: "playing",
       };
 
+      let randomIndex = -1;
       let score = 0;
       let highScore = 0;
       let time = GAME_TIME;
@@ -130,7 +140,7 @@
       const wordDisplay = document.querySelector(".word-display");
       const scoreDisplay = document.querySelector(".score");
       const highScoreDisplay = document.querySelector(".highscore");
-      const timeDisplay = document.querySelector(".time");
+      const timeProgress = document.getElementById("progress");
       const button = document.querySelector(".button");
       const toastMessage = document.getElementById("toast_message");
 
@@ -142,6 +152,11 @@
         buttonChange(GAME_STATE.LOADING);
         getWords();
         wordInput.addEventListener("input", checkMatch);
+        wordInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            wordInput.value = "";
+          }
+        });
 
         setHighScore(loadHighScore());
       }
@@ -162,7 +177,6 @@
         timeInterval = setInterval(countDown, 1000);
         checkInterval = setInterval(checkStatus, 50);
 
-        wordInput.focus();
         buttonChange(GAME_STATE.PLAYING);
       }
 
@@ -178,7 +192,7 @@
         toastMessage.classList.add("active");
         setTimeout(() => {
           toastMessage.classList.remove("active");
-        }, 1000);
+        }, 5000);
       }
 
       function setScore(value) {
@@ -213,12 +227,16 @@
 
       function setTime(value) {
         time = value;
-        timeDisplay.innerText = time;
+        updateProgress();
+      }
+
+      function updateProgress() {
+        timeProgress.value = (time / GAME_TIME) * 100;
       }
 
       // 단어 불러오기
       function getWords() {
-        fetch("https://random-word-api.vercel.app/api?words=15&length=5")
+        fetch("https://random-word-api.vercel.app/api?words=30&length=5")
           .then((response) => response.json())
           .then((data) => {
             words = data;
@@ -240,13 +258,16 @@
           }
 
           setScore(score + 1);
-
           resetNewWord();
         }
       }
 
       function resetNewWord() {
-        const randomIndex = Math.floor(Math.random() * words.length);
+        let tempRandomIndex = randomIndex;
+        while (tempRandomIndex === randomIndex) {
+          tempRandomIndex = Math.floor(Math.random() * words.length);
+        }
+        randomIndex = tempRandomIndex;
         wordDisplay.innerText = words[randomIndex];
       }
 
@@ -259,7 +280,7 @@
             setHighScore(score);
           }
         }
-        timeDisplay.innerText = time;
+        updateProgress();
       }
 
       function buttonChange(state) {
@@ -267,16 +288,21 @@
           case GAME_STATE.LOADING:
             button.innerText = "게임 로딩 중";
             button.classList.add("loading");
+            button.focus();
             break;
 
           case GAME_STATE.READY:
             button.innerText = "게임 시작";
             button.classList.remove("loading");
+            wordInput.disabled = true;
+            button.focus();
             break;
 
           case GAME_STATE.PLAYING:
             button.innerText = "게임 중";
             button.classList.add("loading");
+            wordInput.disabled = false;
+            wordInput.focus();
             break;
         }
       }
