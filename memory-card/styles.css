@@ -7,7 +7,7 @@
 body {
   height: 100vh;
   display: flex;
-  background: #f9cdad;
+  background: #fcf0d8;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -20,6 +20,9 @@ body {
   display: flex;
   flex-wrap: wrap;
   perspective: 1000px;
+  background: #089da1;
+  border-radius: 50px;
+  padding: 30px;
 }
 
 .memory-card {
@@ -30,7 +33,8 @@ body {
   transform: scale(1);
   transform-style: preserve-3d;
   transition: transform 0.5s;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  box-shadow: 3px 3px 3px #d6c6ac;
+  border-radius: 5px;
 }
 
 .memory-card:active {
@@ -49,19 +53,23 @@ body {
   padding: 20px;
   position: absolute;
   border-radius: 5px;
-  background: #fe4365;
   backface-visibility: hidden;
 }
 
+.back-face {
+  background: #ffeede;
+}
+
 .front-face {
+  background: #ffeede;
   transform: rotateY(180deg);
 }
 
 .button {
   width: 200px;
   height: 50px;
-  background: #810c22;
-  color: #fff;
+  background: #089da1;
+  color: #fcf0d8;
   border: none;
   cursor: pointer;
 }
