@@ -34,8 +34,8 @@ let scaleUpButton;
 let scaleDownButton;
 let scaleResetButton;
 let currentScale = 1; // 현재 스케일 값
-const minScale = 0.5; // 최소 스케일 값
-const maxScale = 2; // 최대 스케일 값
+const minScale = 1.0; // 최소 스케일 값
+const maxScale = 2.75; // 최대 스케일 값
 
 // Canvas 설정
 const canvas = document.getElementById("gameCanvas");
