@@ -22,12 +22,13 @@ const numberWeights = {
 let grid = [];
 let selectedCells = [];
 let score = 0;
+let highScore = 0;
 let isDragging = false;
 let currentX = 0,
   currentY = 0;
 let timeLeft = INITIAL_TIME;
 let gameOver = false;
-let scoreFont, timeFont, cellFont, gameoverFont;
+let scoreFont, hsFont, timeFont, cellFont, gameoverFont;
 let scoreSound;
 let restartButton;
 let resetButton;
@@ -59,9 +60,13 @@ function init() {
 
   // 폰트 설정
   scoreFont = "16px GameFont";
+  hsFont = "12px GameFont";
   timeFont = "20px GameFont";
   cellFont = "20px GameFont";
   gameoverFont = "20px GameFont";
+
+  // 로컬 스토리지에서 하이스코어 불러오기
+  highScore = localStorage.getItem("highScore") || 0;
 
   // 이벤트 리스너 연결
   setupEventListeners();
@@ -337,20 +342,9 @@ function drawLine() {
 
 // UI 그리기
 function drawUI() {
-  drawTime();
   drawProgressBar();
   drawScore();
-} // 시간 그리기
-function drawTime() {
-  drawUIElement(WINDOW_WIDTH - 160, WINDOW_HEIGHT - 35, 150, 40, () => {
-    ctx.fillStyle = "rgba(255, 255, 255, 1)"; // White
-    ctx.font = timeFont;
-    ctx.fillText(
-      "Time: " + timeLeft.toFixed(1),
-      WINDOW_WIDTH - 150,
-      WINDOW_HEIGHT - 10
-    ); // Adjusted text position
-  });
+  drawHighScore();
 }
 
 // 진행 막대 그리기
@@ -383,6 +377,15 @@ function drawScore() {
   });
 }
 
+// 하이스코어 그리기
+function drawHighScore() {
+  drawUIElement(WINDOW_WIDTH - 160, WINDOW_HEIGHT - 35, 150, 40, () => {
+    ctx.fillStyle = "rgba(255, 255, 255, 1)"; // White
+    ctx.font = scoreFont;
+    ctx.fillText("HS: " + highScore, WINDOW_WIDTH - 150, WINDOW_HEIGHT - 10); // Adjusted text position
+  });
+}
+
 // UI 요소 그리기
 function drawUIElement(x, y, width, height, drawFunction) {
   ctx.fillStyle = "rgba(51, 51, 51, 0.8)"; // Dark gray with 80% opacity
@@ -398,13 +401,26 @@ function drawGameOver() {
   ctx.font = gameoverFont;
   ctx.textAlign = "center";
   ctx.fillText("Game Over", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 20);
+  ctx.font = hsFont;
+  ctx.fillText(
+    "High Score: " + highScore,
+    WINDOW_WIDTH / 2,
+    WINDOW_HEIGHT / 2 + 20
+  );
   ctx.font = scoreFont;
   ctx.fillText(
     "Final Score: " + score,
     WINDOW_WIDTH / 2,
-    WINDOW_HEIGHT / 2 + 20
+    WINDOW_HEIGHT / 2 + 50
   );
   ctx.textAlign = "left";
+
+  if (score > highScore) {
+    highScore = score;
+
+    // 새로운 하이스코어를 로컬 스토리지에 저장
+    localStorage.setItem("highScore", highScore);
+  }
 
   // 다시 시작 버튼 표시
   restartButton.style.display = "block";
