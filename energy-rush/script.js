@@ -47,6 +47,61 @@ function addEventListeners() {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
   });
   restartButton.addEventListener("click", restartGame);
+
+  document
+    .getElementById("upButton")
+    .addEventListener("mousedown", () => (keys.ArrowUp = true));
+  document
+    .getElementById("upButton")
+    .addEventListener("mouseup", () => (keys.ArrowUp = false));
+  document
+    .getElementById("leftButton")
+    .addEventListener("mousedown", () => (keys.ArrowLeft = true));
+  document
+    .getElementById("leftButton")
+    .addEventListener("mouseup", () => (keys.ArrowLeft = false));
+  document
+    .getElementById("rightButton")
+    .addEventListener("mousedown", () => (keys.ArrowRight = true));
+  document
+    .getElementById("rightButton")
+    .addEventListener("mouseup", () => (keys.ArrowRight = false));
+  document
+    .getElementById("downButton")
+    .addEventListener("mousedown", () => (keys.ArrowDown = true));
+  document
+    .getElementById("downButton")
+    .addEventListener("mouseup", () => (keys.ArrowDown = false));
+
+  // 터치 이벤트 지원을 위한 코드
+  document.getElementById("upButton").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keys.ArrowUp = true;
+  });
+  document
+    .getElementById("upButton")
+    .addEventListener("touchend", () => (keys.ArrowUp = false));
+  document.getElementById("leftButton").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keys.ArrowLeft = true;
+  });
+  document
+    .getElementById("leftButton")
+    .addEventListener("touchend", () => (keys.ArrowLeft = false));
+  document.getElementById("rightButton").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keys.ArrowRight = true;
+  });
+  document
+    .getElementById("rightButton")
+    .addEventListener("touchend", () => (keys.ArrowRight = false));
+  document.getElementById("downButton").addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    keys.ArrowDown = true;
+  });
+  document
+    .getElementById("downButton")
+    .addEventListener("touchend", () => (keys.ArrowDown = false));
 }
 
 // 아이템 생성
