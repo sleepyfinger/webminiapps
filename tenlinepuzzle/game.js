@@ -274,28 +274,43 @@ function drawGrid() {
 
 // 셀 그리기
 function drawCell(x, y) {
+  const cellData = grid[y][x];
   const centerX = (x - 0.5) * CELL_SIZE;
   const centerY = (y - 0.5) * CELL_SIZE;
   const radius = CELL_SIZE * 0.45;
 
+  // 투명도 업데이트
+  if (cellData.alpha < 1) {
+    cellData.alpha += cellData.fadeSpeed;
+    cellData.alpha = Math.min(1, cellData.alpha); // 최대 투명도 1로 제한
+  }
+
+  // 스프링 효과를 적용한 크기 업데이트
+  const force = cellData.targetScale - cellData.scale;
+  const acceleration = force * cellData.scaleSpring;
+  cellData.scaleVelocity += acceleration;
+  cellData.scaleVelocity *= 1 - cellData.scaleFriction;
+  cellData.scale += cellData.scaleVelocity;
+
   // Draw cell background (circle)
-  ctx.fillStyle = "rgba(204, 204, 204, 1)"; // Light gray
+  ctx.fillStyle = `rgba(204, 204, 204, ${cellData.alpha})`; // Light gray with opacity
   ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+  ctx.arc(centerX, centerY, radius * cellData.scale, 0, 2 * Math.PI);
   ctx.fill();
 
   // Draw cell border (circle outline)
-  ctx.strokeStyle = "rgba(128, 128, 128, 1)"; // Gray
+  ctx.strokeStyle = `rgba(128, 128, 128, ${cellData.alpha})`; // Gray with opacity
   ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+  ctx.arc(centerX, centerY, radius * cellData.scale, 0, 2 * Math.PI);
   ctx.stroke();
 
   // Draw number
-  ctx.fillStyle = "rgba(0, 0, 0, 1)"; // Black
+  ctx.fillStyle = `rgba(0, 0, 0, ${cellData.alpha})`; // Black with opacity
   ctx.font = cellFont;
-  const text = grid[y][x].toString();
-  const textWidth = ctx.measureText(text).width;
-  const textHeight = 24; // 폰트 크기를 높이로 가정
+  const text = cellData.number.toString();
+  const textWidth = ctx.measureText(text).width * cellData.scale; // 텍스트 크기도 스케일에 맞춰 조정
+  const textHeight = 24 * cellData.scale; // 폰트 크기를 높이로 가정
+
   ctx.fillText(text, centerX - textWidth / 2, centerY + textHeight / 4); // 텍스트를 약간 아래로 이동
 }
 
@@ -505,7 +520,16 @@ function resetGrid() {
     grid[y] = [];
     for (let x = 1; x <= GRID_SIZE; x++) {
       // 가중치를 적용한 랜덤 숫자 할당
-      grid[y][x] = getRandomNumberWithWeights();
+      grid[y][x] = {
+        number: getRandomNumberWithWeights(),
+        alpha: 1, // 초기 투명도 0으로 설정
+        fadeSpeed: 0.02 + Math.random() * 0.04, // 랜덤 페이드 속도
+        scale: 1, // 초기 크기 0으로 설정
+        scaleVelocity: 0, // 크기 변화 속도
+        scaleSpring: 0.2, // 스프링 강도
+        scaleFriction: 0.2, // 마찰력
+        targetScale: 1, // 목표 크기
+      };
     }
   }
 }
@@ -576,7 +600,7 @@ function isValidGridPosition(x, y) {
 function checkSum() {
   let sum = 0;
   for (let cell of selectedCells) {
-    sum += grid[cell.y][cell.x];
+    sum += grid[cell.y][cell.x].number;
   }
 
   if (sum === 10) {
@@ -659,8 +683,19 @@ function updateFallingCells() {
 // 떨어지는 셀 생성
 function createFallingCells() {
   selectedCells.forEach((cell) => {
-    fallingCells.push(new FallingCell(cell.x, cell.y, grid[cell.y][cell.x]));
-    grid[cell.y][cell.x] = getRandomNumberWithWeights(); // 새로운 숫자로 교체
+    fallingCells.push(
+      new FallingCell(cell.x, cell.y, grid[cell.y][cell.x].number)
+    );
+    grid[cell.y][cell.x] = {
+      number: getRandomNumberWithWeights(),
+      alpha: 0,
+      fadeSpeed: 0.02 + Math.random() * 0.04,
+      scale: 0,
+      scaleVelocity: 0,
+      scaleSpring: 0.2,
+      scaleFriction: 0.2,
+      targetScale: 1,
+    }; // 새로운 숫자로 교체 및 속성 초기화
   });
 }
 
