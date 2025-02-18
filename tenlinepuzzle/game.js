@@ -46,6 +46,9 @@ const ctx = canvas.getContext("2d");
 canvas.width = WINDOW_WIDTH;
 canvas.height = WINDOW_HEIGHT;
 
+// 떨어지는 셀을 저장할 배열
+let fallingCells = [];
+
 function init() {
   // 오디오 및 버튼 요소 초기화
   scoreSound = document.getElementById("scoreSound");
@@ -244,6 +247,7 @@ function draw() {
     drawSelectedCells();
     drawLine();
     drawUI();
+    updateFallingCells(); // 떨어지는 셀 업데이트 및 그리기
   } else {
     drawGameOver();
   }
@@ -577,12 +581,87 @@ function checkSum() {
 
   if (sum === 10) {
     updateScore();
+    createFallingCells(); // 떨어지는 셀 생성
+    clearSelectedCells(); // 선택된 셀 초기화
+  } else {
+    clearSelectedCells(); // 합이 10이 아니면 선택 해제
+  }
+}
 
-    for (let cell of selectedCells) {
-      // 가중치를 적용한 랜덤 숫자로 교체
-      grid[cell.y][cell.x] = getRandomNumberWithWeights();
+// 떨어지는 셀 클래스
+class FallingCell {
+  constructor(x, y, number) {
+    this.x = (x - 0.5) * CELL_SIZE; // 셀의 중앙 x 좌표
+    this.y = (y - 0.5) * CELL_SIZE; // 셀의 중앙 y 좌표
+    this.number = number; // 셀 숫자 값
+    this.speedX = (Math.random() - 0.5) * 10; // X축 초기 속도 (무작위)
+    this.speedY = Math.random() * 10; // Y축 초기 속도 (아래 방향)
+    this.gravity = 0.5; // 중력 가속도
+    this.alpha = 1; // 투명도
+    this.radius = CELL_SIZE * 0.45; // 셀 반지름
+    this.rotation = Math.random() * Math.PI * 2; // 초기 회전 각도
+    this.rotationSpeed = (Math.random() - 0.5) * 0.2; // 회전 속도
+    this.friction = 0.98; // 마찰력
+  }
+
+  update() {
+    this.speedY += this.gravity; // 중력에 따라 속도 증가
+    this.speedX *= this.friction; // X축 속도 감소 (마찰력)
+    this.x += this.speedX; // x 좌표 갱신
+    this.y += this.speedY; // y 좌표 갱신
+    this.alpha -= 0.02; // 투명도 감소
+    this.rotation += this.rotationSpeed; // 회전
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha); // 투명도 설정, 0 이하 방지
+
+    // 회전 적용
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+
+    // 셀 배경 (원) 그리기
+    ctx.fillStyle = "rgba(204, 204, 204, 1)"; // 연한 회색
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // 셀 테두리 (원) 그리기
+    ctx.strokeStyle = "rgba(128, 128, 128, 1)"; // 회색
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    // 숫자 그리기
+    ctx.fillStyle = "rgba(0, 0, 0, 1)"; // 검정색
+    ctx.font = cellFont;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(this.number.toString(), 0, 0);
+
+    ctx.restore();
+  }
+}
+
+// 떨어지는 셀 업데이트
+function updateFallingCells() {
+  for (let i = fallingCells.length - 1; i >= 0; i--) {
+    fallingCells[i].update();
+    fallingCells[i].draw();
+
+    if (fallingCells[i].alpha <= 0 || fallingCells[i].y > canvas.height) {
+      fallingCells.splice(i, 1); // 투명도가 0 이하이거나 화면 밖으로 나가면 제거
     }
   }
+}
+
+// 떨어지는 셀 생성
+function createFallingCells() {
+  selectedCells.forEach((cell) => {
+    fallingCells.push(new FallingCell(cell.x, cell.y, grid[cell.y][cell.x]));
+    grid[cell.y][cell.x] = getRandomNumberWithWeights(); // 새로운 숫자로 교체
+  });
 }
 
 // 점수 업데이트
