@@ -11,26 +11,36 @@
       body {
         margin: 0;
         overflow: hidden;
-        background-color: #f0f0f0;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        flex-direction: column;
+        background-color: #f0f0f0;
+        font-family: "GameFont", sans-serif;
       }
+
+      #gameContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
       canvas {
-        border: 1px solid #000;
+        display: block;
+        border: 2px solid #333;
         background-color: #fff;
       }
+
       h1 {
-        font-family: "GameFont", cursive;
         font-size: 2.5em;
-        margin: 20px 0;
+        margin: 0 0 20px 0;
         color: #4a4a4a;
         text-shadow: 3px 3px 0px #d5d5d5;
       }
+
       #restartButton {
-        margin-top: 10px;
+        margin-top: 20px;
         padding: 10px 20px;
         font-size: 16px;
         background-color: #4caf50;
@@ -40,16 +50,35 @@
         cursor: pointer;
         display: none;
       }
+
       #restartButton:hover {
         background-color: #45a049;
+      }
+
+      #scaleButtons {
+        margin-top: 10px;
+      }
+
+      #scaleButtons button {
+        padding: 8px 16px;
+        font-size: 14px;
+        margin: 0 5px;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <h1 id="gameTitle">Ten Line Puzzle</h1>
-    <canvas id="gameCanvas"></canvas>
-    <button id="restartButton">다시 시작</button>
-    <audio id="scoreSound" src="get_score.mp3"></audio>
+    <div id="gameContainer">
+      <h1 id="gameTitle">Ten Line Puzzle</h1>
+      <canvas id="gameCanvas"></canvas>
+      <div id="scaleButtons">
+        <button id="scaleUpButton">확대</button>
+        <button id="scaleDownButton">축소</button>
+        <button id="scaleResetButton">원래 크기로</button>
+      </div>
+      <button id="restartButton">다시 시작</button>
+    </div>
+    <audio id="scoreSound" src="get_score.mp3" preload="auto"></audio>
     <script src="game.js"></script>
   </body>
 </html>

@@ -30,6 +30,12 @@ let gameOver = false;
 let scoreFont, timeFont, cellFont, gameoverFont;
 let scoreSound;
 let restartButton;
+let scaleUpButton;
+let scaleDownButton;
+let scaleResetButton;
+let currentScale = 1; // 현재 스케일 값
+const minScale = 0.5; // 최소 스케일 값
+const maxScale = 2; // 최대 스케일 값
 
 // Canvas 설정
 const canvas = document.getElementById("gameCanvas");
@@ -42,6 +48,9 @@ function init() {
   // 오디오 및 버튼 요소 초기화
   scoreSound = document.getElementById("scoreSound");
   restartButton = document.getElementById("restartButton");
+  scaleUpButton = document.getElementById("scaleUpButton");
+  scaleDownButton = document.getElementById("scaleDownButton");
+  scaleResetButton = document.getElementById("scaleResetButton");
 
   // 게임 상태 초기화
   resetGame();
@@ -102,8 +111,9 @@ function handleTouchEnd(event) {
 
 // 터치 위치 가져오기
 function getTouchPosition(touch) {
-  const x = touch.clientX - canvas.offsetLeft;
-  const y = touch.clientY - canvas.offsetTop;
+  const rect = canvas.getBoundingClientRect();
+  const x = (touch.clientX - rect.left) / currentScale;
+  const y = (touch.clientY - rect.top) / currentScale;
   return { x, y };
 }
 
@@ -117,6 +127,13 @@ function setupEventListeners() {
 
   // Touch event listeners
   setupTouchEventListeners();
+
+  // Scale event listeners
+  scaleUpButton.addEventListener("click", () => setScale(currentScale + 0.25));
+  scaleDownButton.addEventListener("click", () =>
+    setScale(currentScale - 0.25)
+  );
+  scaleResetButton.addEventListener("click", resetScale);
 }
 
 // 마우스 클릭 이벤트 핸들러
@@ -151,8 +168,9 @@ function handleMouseUp(event) {
 
 // 마우스 위치 가져오기
 function getMousePosition(event) {
-  const x = event.clientX - canvas.offsetLeft;
-  const y = event.clientY - canvas.offsetTop;
+  const rect = canvas.getBoundingClientRect();
+  const x = (event.clientX - rect.left) / currentScale;
+  const y = (event.clientY - rect.top) / currentScale;
   return { x, y };
 }
 
@@ -179,6 +197,36 @@ function updateDragging() {
   }
 }
 
+// 캔버스 스케일 설정 함수
+function setScale(scale) {
+  scale = Math.max(minScale, Math.min(maxScale, scale)); // 스케일 값을 최소, 최대값 사이로 제한
+  currentScale = scale;
+
+  // 캔버스 크기 업데이트
+  canvas.width = WINDOW_WIDTH * currentScale;
+  canvas.height = WINDOW_HEIGHT * currentScale;
+
+  // 캔버스 스타일 변환 적용 (확대/축소)
+  canvas.style.width = `${WINDOW_WIDTH * currentScale}px`;
+  canvas.style.height = `${WINDOW_HEIGHT * currentScale}px`;
+
+  // 캔버스 스케일 조정
+  ctx.scale(currentScale, currentScale);
+
+  // 폰트 크기 업데이트 (스케일에 비례하여 조정)
+  scoreFont = `16px GameFont`;
+  timeFont = `20px GameFont`;
+  cellFont = `20px GameFont`;
+  gameoverFont = `20px GameFont`;
+
+  // draw 함수를 호출하여 캔버스를 다시 그립니다.
+  draw();
+}
+
+function resetScale() {
+  setScale(1);
+}
+
 // Drawing
 function draw() {
   clearCanvas();
@@ -195,7 +243,12 @@ function draw() {
 
 // 캔버스 비우기
 function clearCanvas() {
-  ctx.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+  ctx.clearRect(
+    0,
+    0,
+    WINDOW_WIDTH * currentScale,
+    WINDOW_HEIGHT * currentScale
+  );
 }
 
 // 그리드 그리기
@@ -271,6 +324,7 @@ function drawLine() {
         (lastCell.x - 0.5) * CELL_SIZE,
         (lastCell.y - 0.5) * CELL_SIZE
       );
+      // 스케일된 마우스 좌표를 보정
       ctx.lineTo(currentX, currentY);
       ctx.stroke();
     }
@@ -283,9 +337,7 @@ function drawUI() {
   drawTime();
   drawProgressBar();
   drawScore();
-}
-
-// 시간 그리기
+} // 시간 그리기
 function drawTime() {
   drawUIElement(WINDOW_WIDTH - 160, WINDOW_HEIGHT - 35, 150, 40, () => {
     ctx.fillStyle = "rgba(255, 255, 255, 1)"; // White
@@ -435,6 +487,10 @@ function resetGrid() {
 
 // 셀 선택
 function selectCell(x, y) {
+  if (!isValidGridPosition(x, y)) {
+    return; // 유효하지 않은 위치면 함수 종료
+  }
+
   if (
     selectedCells.length === 0 ||
     (isAdjacent(x, y, selectedCells[selectedCells.length - 1]) &&
