@@ -1,16 +1,20 @@
-// DOM 요소
+// DOM 요소 선택
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreDisplay = document.getElementById("score");
 const gameOverDisplay = document.getElementById("gameOver");
 const restartButton = document.getElementById("restartButton");
 const energyFill = document.getElementById("energyFill");
+const upButton = document.getElementById("upButton");
+const leftButton = document.getElementById("leftButton");
+const rightButton = document.getElementById("rightButton");
+const downButton = document.getElementById("downButton");
 
-// 게임 상태
+// 게임 상태 변수
 let score = 0;
 let gameRunning = true;
 
-// 게임 객체
+// 플레이어 객체
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -20,6 +24,7 @@ const player = {
   energy: 100,
 };
 
+// 아이템 객체
 let item = createItem();
 
 // 키 입력 상태
@@ -30,7 +35,7 @@ const keys = {
   ArrowRight: false,
 };
 
-// 초기화
+// 게임 초기화 및 시작
 function init() {
   canvas.width = window.innerWidth * 0.8;
   canvas.height = window.innerHeight * 0.8;
@@ -40,68 +45,41 @@ function init() {
 
 // 이벤트 리스너 추가
 function addEventListeners() {
+  // 키보드 이벤트
   window.addEventListener("keydown", (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = true;
   });
   window.addEventListener("keyup", (e) => {
     if (keys.hasOwnProperty(e.key)) keys[e.key] = false;
   });
+
+  // 재시작 버튼 이벤트
   restartButton.addEventListener("click", restartGame);
 
-  document
-    .getElementById("upButton")
-    .addEventListener("mousedown", () => (keys.ArrowUp = true));
-  document
-    .getElementById("upButton")
-    .addEventListener("mouseup", () => (keys.ArrowUp = false));
-  document
-    .getElementById("leftButton")
-    .addEventListener("mousedown", () => (keys.ArrowLeft = true));
-  document
-    .getElementById("leftButton")
-    .addEventListener("mouseup", () => (keys.ArrowLeft = false));
-  document
-    .getElementById("rightButton")
-    .addEventListener("mousedown", () => (keys.ArrowRight = true));
-  document
-    .getElementById("rightButton")
-    .addEventListener("mouseup", () => (keys.ArrowRight = false));
-  document
-    .getElementById("downButton")
-    .addEventListener("mousedown", () => (keys.ArrowDown = true));
-  document
-    .getElementById("downButton")
-    .addEventListener("mouseup", () => (keys.ArrowDown = false));
+  // 방향 버튼 마우스 이벤트
+  [
+    [upButton, "ArrowUp"],
+    [leftButton, "ArrowLeft"],
+    [rightButton, "ArrowRight"],
+    [downButton, "ArrowDown"],
+  ].forEach(([button, key]) => {
+    button.addEventListener("mousedown", () => (keys[key] = true));
+    button.addEventListener("mouseup", () => (keys[key] = false));
+  });
 
-  // 터치 이벤트 지원을 위한 코드
-  document.getElementById("upButton").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keys.ArrowUp = true;
+  // 방향 버튼 터치 이벤트
+  [
+    [upButton, "ArrowUp"],
+    [leftButton, "ArrowLeft"],
+    [rightButton, "ArrowRight"],
+    [downButton, "ArrowDown"],
+  ].forEach(([button, key]) => {
+    button.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      keys[key] = true;
+    });
+    button.addEventListener("touchend", () => (keys[key] = false));
   });
-  document
-    .getElementById("upButton")
-    .addEventListener("touchend", () => (keys.ArrowUp = false));
-  document.getElementById("leftButton").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keys.ArrowLeft = true;
-  });
-  document
-    .getElementById("leftButton")
-    .addEventListener("touchend", () => (keys.ArrowLeft = false));
-  document.getElementById("rightButton").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keys.ArrowRight = true;
-  });
-  document
-    .getElementById("rightButton")
-    .addEventListener("touchend", () => (keys.ArrowRight = false));
-  document.getElementById("downButton").addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    keys.ArrowDown = true;
-  });
-  document
-    .getElementById("downButton")
-    .addEventListener("touchend", () => (keys.ArrowDown = false));
 }
 
 // 아이템 생성
