@@ -50,7 +50,7 @@ function init() {
   scoreFont = "16px GameFont";
   timeFont = "20px GameFont";
   cellFont = "20px GameFont";
-  gameoverFont= "20px GameFont";
+  gameoverFont = "20px GameFont";
 
   // 이벤트 리스너 연결
   setupEventListeners();
@@ -59,12 +59,64 @@ function init() {
   gameLoop();
 }
 
-// 이벤트 리스너 설정
+// 터치 이벤트 리스너 설정 함수
+function setupTouchEventListeners() {
+  canvas.addEventListener("touchstart", handleTouchStart);
+  canvas.addEventListener("touchmove", handleTouchMove);
+  canvas.addEventListener("touchend", handleTouchEnd);
+}
+
+// 터치 시작 이벤트 핸들러
+function handleTouchStart(event) {
+  event.preventDefault(); // prevent mouse event from being triggered
+  const touch = event.touches[0];
+  const { x, y } = getTouchPosition(touch);
+  const cell = getGridPosition(x, y);
+
+  if (cell) {
+    startSelection(cell.gridX, cell.gridY, x, y);
+  }
+}
+
+// 터치 이동 이벤트 핸들러
+function handleTouchMove(event) {
+  event.preventDefault(); // prevent scrolling while touching
+  if (!isDragging || gameOver) return;
+  const touch = event.touches[0];
+  const { x, y } = getTouchPosition(touch);
+  const cell = getGridPosition(x, y);
+
+  if (cell) {
+    continueSelection(cell.gridX, cell.gridY, x, y);
+  } else {
+    updateCurrentMousePosition(x, y);
+  }
+}
+
+// 터치 종료 이벤트 핸들러
+function handleTouchEnd(event) {
+  event.preventDefault();
+  if (!isDragging) return;
+  endSelection();
+}
+
+// 터치 위치 가져오기
+function getTouchPosition(touch) {
+  const x = touch.clientX - canvas.offsetLeft;
+  const y = touch.clientY - canvas.offsetTop;
+  return { x, y };
+}
+
+// 이벤트 리스너 설정 함수 수정
 function setupEventListeners() {
+  // Mouse event listeners
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mousemove", handleMouseMove);
   canvas.addEventListener("mouseup", handleMouseUp);
   restartButton.addEventListener("click", resetGame);
+
+  // Touch event listeners
+  setupTouchEventListeners();
 }
 
 // 마우스 클릭 이벤트 핸들러
