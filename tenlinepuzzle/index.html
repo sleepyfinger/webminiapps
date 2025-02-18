@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ten Line Puzzle</title>
+    <style>
+      @font-face {
+        font-family: "GameFont";
+        src: url("RiaSans-ExtraBold.otf") format("opentype");
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+      canvas {
+        border: 1px solid #000;
+        background-color: #fff;
+      }
+      h1 {
+        font-family: "GameFont", cursive;
+        font-size: 2.5em;
+        margin: 20px 0;
+        color: #4a4a4a;
+        text-shadow: 3px 3px 0px #d5d5d5;
+      }
+      #restartButton {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none;
+      }
+      #restartButton:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="gameTitle">Ten Line Puzzle</h1>
+    <canvas id="gameCanvas"></canvas>
+    <button id="restartButton">다시 시작</button>
+    <audio id="scoreSound" src="get_score.mp3"></audio>
+    <script src="game.js"></script>
+  </body>
+</html>
