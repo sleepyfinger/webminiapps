@@ -30,6 +30,7 @@ let gameOver = false;
 let scoreFont, timeFont, cellFont, gameoverFont;
 let scoreSound;
 let restartButton;
+let resetButton;
 let scaleUpButton;
 let scaleDownButton;
 let scaleResetButton;
@@ -48,6 +49,7 @@ function init() {
   // 오디오 및 버튼 요소 초기화
   scoreSound = document.getElementById("scoreSound");
   restartButton = document.getElementById("restartButton");
+  resetButton = document.getElementById("resetButton");
   scaleUpButton = document.getElementById("scaleUpButton");
   scaleDownButton = document.getElementById("scaleDownButton");
   scaleResetButton = document.getElementById("scaleResetButton");
@@ -124,6 +126,7 @@ function setupEventListeners() {
   canvas.addEventListener("mousemove", handleMouseMove);
   canvas.addEventListener("mouseup", handleMouseUp);
   restartButton.addEventListener("click", resetGame);
+  resetButton.addEventListener("click", resetGame);
 
   // Touch event listeners
   setupTouchEventListeners();
@@ -405,6 +408,7 @@ function drawGameOver() {
 
   // 다시 시작 버튼 표시
   restartButton.style.display = "block";
+  resetButton.style.display = "none";
 }
 
 // Game state management
@@ -451,6 +455,7 @@ function resetGame() {
 
   // 다시 시작 버튼 숨기기
   restartButton.style.display = "none";
+  resetButton.style.display = "";
 }
 
 // 가중치를 적용한 랜덤 숫자 생성 함수
