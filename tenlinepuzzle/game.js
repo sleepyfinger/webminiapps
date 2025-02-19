@@ -5,6 +5,17 @@ const INITIAL_TIME = 60;
 const WINDOW_WIDTH = GRID_SIZE * CELL_SIZE;
 const WINDOW_HEIGHT = GRID_SIZE * CELL_SIZE + 50;
 
+// Color Palette
+const COLOR_CELL_BG = "rgba(240, 248, 255,";
+const COLOR_CELL_BORDER = "rgba(128, 128, 128,";
+const COLOR_TEXT = "rgba(80, 80, 80,";
+const COLOR_CELL_SELECTED = "rgba(255, 0, 0, 0.3)";
+const COLOR_LINE = "rgba(218, 27, 27, 0.66)";
+const COLOR_UI = "rgba(105, 105, 105, 0.8)";
+const COLOR_PROGRESS = "rgba(25, 204, 25, 1)";
+const COLOR_UI_TEXT = "rgba(255, 255, 255, 1)";
+const COLOR_GAME_OVER_BG = "rgba(119, 103, 103, 0.57)";
+
 // 숫자별 가중치 (비율) 설정
 const numberWeights = {
   1: 20,
@@ -293,19 +304,19 @@ function drawCell(x, y) {
   cellData.scale += cellData.scaleVelocity;
 
   // Draw cell background (circle)
-  ctx.fillStyle = `rgba(204, 204, 204, ${cellData.alpha})`; // Light gray with opacity
+  ctx.fillStyle = `${COLOR_CELL_BG} ${cellData.alpha})`; // Light gray with opacity
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius * cellData.scale, 0, 2 * Math.PI);
   ctx.fill();
 
   // Draw cell border (circle outline)
-  ctx.strokeStyle = `rgba(128, 128, 128, ${cellData.alpha})`; // Gray with opacity
+  ctx.strokeStyle = `${COLOR_CELL_BORDER} ${cellData.alpha})`; // Gray with opacity
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius * cellData.scale, 0, 2 * Math.PI);
   ctx.stroke();
 
   // Draw number
-  ctx.fillStyle = `rgba(0, 0, 0, ${cellData.alpha})`; // Black with opacity
+  ctx.fillStyle = `${COLOR_TEXT} ${cellData.alpha})`; // Black with opacity
   ctx.font = cellFont;
   const text = cellData.number.toString();
   const textWidth = ctx.measureText(text).width * cellData.scale; // 텍스트 크기도 스케일에 맞춰 조정
@@ -316,7 +327,7 @@ function drawCell(x, y) {
 
 // 선택된 셀 그리기
 function drawSelectedCells() {
-  ctx.fillStyle = "rgba(255, 0, 0, 0.3)"; // Red with 30% opacity
+  ctx.fillStyle = COLOR_CELL_SELECTED; // Red with 30% opacity
   selectedCells.forEach((cell) => {
     const centerX = (cell.x - 0.5) * CELL_SIZE;
     const centerY = (cell.y - 0.5) * CELL_SIZE;
@@ -331,7 +342,7 @@ function drawSelectedCells() {
 // 선 그리기
 function drawLine() {
   if (selectedCells.length > 1) {
-    ctx.strokeStyle = "rgba(255, 0, 0, 0.5)"; // Red with 50% opacity
+    ctx.strokeStyle = COLOR_LINE; // Red with 50% opacity
     ctx.lineWidth = 5;
 
     for (let i = 0; i < selectedCells.length - 1; i++) {
@@ -375,22 +386,22 @@ function drawProgressBar() {
   const timeRatio = timeLeft / INITIAL_TIME;
 
   // Background
-  ctx.fillStyle = "rgba(51, 51, 51, 0.8)"; // Dark gray with 80% opacity
+  ctx.fillStyle = COLOR_UI; // Dark gray with 80% opacity
   ctx.fillRect(barX, barY, barWidth, barHeight);
 
   // Time remaining
-  ctx.fillStyle = "rgba(25, 204, 25, 1)"; // Green
+  ctx.fillStyle = COLOR_PROGRESS; // Green
   ctx.fillRect(barX, barY, barWidth * timeRatio, barHeight);
 
   // Border
-  ctx.strokeStyle = "rgba(255, 255, 255, 1)"; // White
+  ctx.strokeStyle = COLOR_UI_TEXT; // White
   ctx.strokeRect(barX, barY, barWidth, barHeight);
 }
 
 // 점수 그리기
 function drawScore() {
   drawUIElement(10, WINDOW_HEIGHT - 35, 150, 40, () => {
-    ctx.fillStyle = "rgba(255, 255, 255, 1)"; // White
+    ctx.fillStyle = COLOR_UI_TEXT; // White
     ctx.font = scoreFont;
     ctx.fillText("Score: " + score, 20, WINDOW_HEIGHT - 10); // Adjusted text position
   });
@@ -399,7 +410,7 @@ function drawScore() {
 // 하이스코어 그리기
 function drawHighScore() {
   drawUIElement(WINDOW_WIDTH - 160, WINDOW_HEIGHT - 35, 150, 40, () => {
-    ctx.fillStyle = "rgba(255, 255, 255, 1)"; // White
+    ctx.fillStyle = COLOR_UI_TEXT; // White
     ctx.font = scoreFont;
     ctx.fillText("HS: " + highScore, WINDOW_WIDTH - 150, WINDOW_HEIGHT - 10); // Adjusted text position
   });
@@ -407,16 +418,16 @@ function drawHighScore() {
 
 // UI 요소 그리기
 function drawUIElement(x, y, width, height, drawFunction) {
-  ctx.fillStyle = "rgba(51, 51, 51, 0.8)"; // Dark gray with 80% opacity
+  ctx.fillStyle = COLOR_UI; // Dark gray with 80% opacity
   ctx.fillRect(x, y, width, height);
   drawFunction();
 }
 
 // 게임 오버 화면 그리기
 function drawGameOver() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+  ctx.fillStyle = COLOR_GAME_OVER_BG;
   ctx.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-  ctx.fillStyle = "rgba(255, 255, 255, 1)";
+  ctx.fillStyle = COLOR_UI_TEXT;
   ctx.font = gameoverFont;
   ctx.textAlign = "center";
   ctx.fillText("Game Over", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 20);
