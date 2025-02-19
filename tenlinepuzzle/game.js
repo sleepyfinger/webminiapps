@@ -43,12 +43,13 @@ let scoreFont, hsFont, timeFont, cellFont, gameoverFont;
 let scoreSound;
 let restartButton;
 let resetButton;
+let scaleMaxButton;
 let scaleUpButton;
 let scaleDownButton;
 let scaleResetButton;
 let currentScale = 1; // 현재 스케일 값
 const minScale = 1.0; // 최소 스케일 값
-const maxScale = 2.75; // 최대 스케일 값
+const maxScale = 2.5; // 최대 스케일 값
 
 // Canvas 설정
 const canvas = document.getElementById("gameCanvas");
@@ -65,6 +66,7 @@ function init() {
   scoreSound = document.getElementById("scoreSound");
   restartButton = document.getElementById("restartButton");
   resetButton = document.getElementById("resetButton");
+  scaleMaxButton = document.getElementById("scaleMaxButton");
   scaleUpButton = document.getElementById("scaleUpButton");
   scaleDownButton = document.getElementById("scaleDownButton");
   scaleResetButton = document.getElementById("scaleResetButton");
@@ -151,6 +153,7 @@ function setupEventListeners() {
   setupTouchEventListeners();
 
   // Scale event listeners
+  scaleMaxButton.addEventListener("click", () => setScale(maxScale));
   scaleUpButton.addEventListener("click", () => setScale(currentScale + 0.25));
   scaleDownButton.addEventListener("click", () =>
     setScale(currentScale - 0.25)
