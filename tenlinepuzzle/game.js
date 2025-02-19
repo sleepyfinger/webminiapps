@@ -500,6 +500,7 @@ function resetGame() {
   score = 0;
   timeLeft = INITIAL_TIME;
   gameOver = false;
+  fallingCells = [];
   resetGrid();
 
   // 다시 시작 버튼 숨기기
