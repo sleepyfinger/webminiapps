@@ -6,7 +6,7 @@ const WINDOW_WIDTH = GRID_SIZE * CELL_SIZE;
 const WINDOW_HEIGHT = GRID_SIZE * CELL_SIZE + 50;
 
 // Color Palette
-const COLOR_CELL_BG = "rgba(240, 248, 255,";
+const COLOR_CELL_BG = "rgba(228, 228, 228,";
 const COLOR_CELL_BORDER = "rgba(128, 128, 128,";
 const COLOR_TEXT = "rgba(80, 80, 80,";
 const COLOR_CELL_SELECTED = "rgba(255, 0, 0, 0.3)";
@@ -14,7 +14,7 @@ const COLOR_LINE = "rgba(218, 27, 27, 0.66)";
 const COLOR_UI = "rgba(105, 105, 105, 0.8)";
 const COLOR_PROGRESS = "rgba(25, 204, 25, 1)";
 const COLOR_UI_TEXT = "rgba(255, 255, 255, 1)";
-const COLOR_GAME_OVER_BG = "rgba(119, 103, 103, 0.57)";
+const COLOR_GAME_OVER_BG = "rgba(49, 46, 46, 0.57)";
 
 // 숫자별 가중치 (비율) 설정
 const numberWeights = {
@@ -304,19 +304,19 @@ function drawCell(x, y) {
   cellData.scale += cellData.scaleVelocity;
 
   // Draw cell background (circle)
-  ctx.fillStyle = `${COLOR_CELL_BG} ${cellData.alpha})`; // Light gray with opacity
+  ctx.fillStyle = `${COLOR_CELL_BG} ${cellData.alpha})`;
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius * cellData.scale, 0, 2 * Math.PI);
   ctx.fill();
 
   // Draw cell border (circle outline)
-  ctx.strokeStyle = `${COLOR_CELL_BORDER} ${cellData.alpha})`; // Gray with opacity
+  ctx.strokeStyle = `${COLOR_CELL_BORDER} ${cellData.alpha})`;
   ctx.beginPath();
   ctx.arc(centerX, centerY, radius * cellData.scale, 0, 2 * Math.PI);
   ctx.stroke();
 
   // Draw number
-  ctx.fillStyle = `${COLOR_TEXT} ${cellData.alpha})`; // Black with opacity
+  ctx.fillStyle = `${COLOR_TEXT} ${cellData.alpha})`;
   ctx.font = cellFont;
   const text = cellData.number.toString();
   const textWidth = ctx.measureText(text).width * cellData.scale; // 텍스트 크기도 스케일에 맞춰 조정
@@ -630,7 +630,7 @@ class FallingCell {
     this.y = (y - 0.5) * CELL_SIZE; // 셀의 중앙 y 좌표
     this.number = number; // 셀 숫자 값
     this.speedX = (Math.random() - 0.5) * 10; // X축 초기 속도 (무작위)
-    this.speedY = Math.random() * 10; // Y축 초기 속도 (아래 방향)
+    this.speedY = Math.random() * -10; // Y축 초기 속도 (아래 방향)
     this.gravity = 0.5; // 중력 가속도
     this.alpha = 1; // 투명도
     this.radius = CELL_SIZE * 0.45; // 셀 반지름
@@ -641,6 +641,13 @@ class FallingCell {
 
   update() {
     this.speedY += this.gravity; // 중력에 따라 속도 증가
+
+    // 바닥에 닿았을 때 위로 튕겨 올라가는 효과
+    if (this.y + this.radius > canvas.height / currentScale) {
+      this.y = canvas.height / currentScale - this.radius; // 바닥 위치로 조정
+      this.speedY = -this.speedY * 0.7; // 위로 튕겨 올라가는 속도 (반발 계수 0.7)
+    }
+
     this.speedX *= this.friction; // X축 속도 감소 (마찰력)
     this.x += this.speedX; // x 좌표 갱신
     this.y += this.speedY; // y 좌표 갱신
@@ -657,19 +664,19 @@ class FallingCell {
     ctx.rotate(this.rotation);
 
     // 셀 배경 (원) 그리기
-    ctx.fillStyle = "rgba(204, 204, 204, 1)"; // 연한 회색
+    ctx.fillStyle = `${COLOR_CELL_BG} 1)`;
     ctx.beginPath();
     ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
     ctx.fill();
 
     // 셀 테두리 (원) 그리기
-    ctx.strokeStyle = "rgba(128, 128, 128, 1)"; // 회색
+    ctx.strokeStyle = `${COLOR_CELL_BORDER} 1)`;
     ctx.beginPath();
     ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
     ctx.stroke();
 
     // 숫자 그리기
-    ctx.fillStyle = "rgba(0, 0, 0, 1)"; // 검정색
+    ctx.fillStyle = `${COLOR_TEXT} 1)`;
     ctx.font = cellFont;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
