@@ -654,7 +654,7 @@ class FallingCell {
     this.speedX *= this.friction; // X축 속도 감소 (마찰력)
     this.x += this.speedX; // x 좌표 갱신
     this.y += this.speedY; // y 좌표 갱신
-    this.alpha -= 0.02; // 투명도 감소
+    this.alpha -= 0.011; // 투명도 감소
     this.rotation += this.rotationSpeed; // 회전
   }
 
