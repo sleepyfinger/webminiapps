@@ -7,6 +7,7 @@ body {
 
 h1 {
   color: #d32f2f; /* 붉은색 */
+  margin: 0px;
 }
 
 #numpad {
@@ -82,17 +83,4 @@ h1 {
 
 #logo {
   border-radius: 10px; /* 모서리 둥글게 */
-}
-
-/* 모바일 화면용 반응형 스타일 */
-@media (max-width: 480px) {
-  .container {
-    padding: 1rem; /* 내부 여백 줄이기 */
-  }
-
-  .number {
-    width: 40px; /* 너비 줄이기 */
-    height: 40px; /* 높이 줄이기 */
-    font-size: 1.2rem; /* 글자 크기 줄이기 */
-  }
 }
