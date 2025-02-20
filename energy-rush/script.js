@@ -1,14 +1,13 @@
 // DOM 요소 선택
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const scoreDisplay = document.getElementById("score");
 const gameOverDisplay = document.getElementById("gameOver");
 const restartButton = document.getElementById("restartButton");
-const energyFill = document.getElementById("energyFill");
 const upButton = document.getElementById("upButton");
 const leftButton = document.getElementById("leftButton");
 const rightButton = document.getElementById("rightButton");
 const downButton = document.getElementById("downButton");
+const fullscreenButton = document.getElementById("fullscreenButton"); // 풀스크린 버튼
 
 // 게임 상태 변수
 let score = 0;
@@ -37,10 +36,31 @@ const keys = {
 
 // 게임 초기화 및 시작
 function init() {
-  canvas.width = window.innerWidth * 0.8;
-  canvas.height = window.innerHeight * 0.8;
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
   addEventListeners();
   gameLoop();
+}
+
+function resizeCanvas() {
+  const aspectRatio = 9 / 16;
+  let newWidth, newHeight;
+
+  if (window.innerWidth / window.innerHeight > aspectRatio) {
+    newHeight = window.innerHeight;
+    newWidth = newHeight * aspectRatio;
+  } else {
+    newWidth = window.innerWidth;
+    newHeight = newWidth / aspectRatio;
+  }
+
+  canvas.width = newWidth;
+  canvas.height = newHeight;
+
+  // 플레이어와 아이템 위치 재조정
+  player.x = canvas.width / 2;
+  player.y = canvas.height / 2;
+  item = createItem();
 }
 
 // 이벤트 리스너 추가
@@ -80,6 +100,20 @@ function addEventListeners() {
     });
     button.addEventListener("touchend", () => (keys[key] = false));
   });
+
+  // 풀스크린 버튼 이벤트
+  fullscreenButton.addEventListener("click", toggleFullscreen);
+}
+
+// 풀스크린 전환 함수
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.log(`Fullscreen 요청 실패: ${err.message} (${err.name})`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
 }
 
 // 아이템 생성
@@ -115,27 +149,15 @@ function checkCollision() {
     player.size += 2;
     player.energy = Math.min(player.energy + 10, 100);
     score += 10;
-    updateScore();
   }
 }
 
 // 에너지 소모
 function consumeEnergy() {
-  player.energy = Math.max(player.energy - 0.2, 0);
-  updateEnergyBar();
+  player.energy = Math.max(player.energy - 0.15, 0);
   if (player.energy <= 0 && gameRunning) {
     gameOver();
   }
-}
-
-// 점수 업데이트
-function updateScore() {
-  scoreDisplay.textContent = score;
-}
-
-// 에너지 바 업데이트
-function updateEnergyBar() {
-  energyFill.style.width = `${player.energy}%`;
 }
 
 // 게임 오버
@@ -154,8 +176,6 @@ function restartGame() {
   item = createItem();
   gameRunning = true;
   gameOverDisplay.style.display = "none";
-  updateScore();
-  updateEnergyBar();
   gameLoop();
 }
 
@@ -174,6 +194,30 @@ function draw() {
   ctx.beginPath();
   ctx.arc(item.x, item.y, item.size, 0, Math.PI * 2);
   ctx.fill();
+
+  // 에너지바 그리기
+  const barWidth = canvas.width * 0.6; // 캔버스 너비의 60%
+  const barHeight = 20;
+  const barX = (canvas.width - barWidth) / 2;
+  const barY = 10; // 상단에서 10px 아래
+
+  // 에너지바 배경
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  ctx.fillRect(barX, barY, barWidth, barHeight);
+
+  // 에너지 레벨
+  ctx.fillStyle = "green";
+  ctx.fillRect(barX, barY, barWidth * (player.energy / 100), barHeight);
+
+  // 에너지바 테두리
+  ctx.strokeStyle = "white";
+  ctx.strokeRect(barX, barY, barWidth, barHeight);
+
+  // 점수 표시
+  ctx.fillStyle = "black";
+  ctx.font = "20px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(`Score: ${score}`, canvas.width / 2, barY + barHeight + 25);
 }
 
 // 게임 루프
