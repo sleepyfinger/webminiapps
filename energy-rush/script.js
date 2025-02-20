@@ -123,7 +123,22 @@ function createItem() {
     y: Math.random() * canvas.height,
     size: 10,
     color: "red",
+    speedX: (Math.random() - 0.5) * 4, // -2에서 2 사이의 랜덤 속도
+    speedY: (Math.random() - 0.5) * 4,
   };
+}
+
+function moveItem() {
+  item.x += item.speedX;
+  item.y += item.speedY;
+
+  // 벽에 부딪히면 방향 전환
+  if (item.x <= item.size || item.x >= canvas.width - item.size) {
+    item.speedX = -item.speedX;
+  }
+  if (item.y <= item.size || item.y >= canvas.height - item.size) {
+    item.speedY = -item.speedY;
+  }
 }
 
 // 플레이어 이동
@@ -225,6 +240,7 @@ function gameLoop() {
   if (!gameRunning) return;
 
   movePlayer();
+  moveItem(); // 아이템 이동 함수 호출
   checkCollision();
   consumeEnergy();
   draw();
