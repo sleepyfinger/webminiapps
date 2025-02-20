@@ -17,10 +17,6 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const gameOverDisplay = document.getElementById("gameOver");
 const restartButton = document.getElementById("restartButton");
-const upButton = document.getElementById("upButton");
-const leftButton = document.getElementById("leftButton");
-const rightButton = document.getElementById("rightButton");
-const downButton = document.getElementById("downButton");
 const fullscreenButton = document.getElementById("fullscreenButton");
 
 // 게임 상태 변수
@@ -48,12 +44,100 @@ const keys = {
   ArrowRight: false,
 };
 
-// 게임 초기화 및 시작
-function init() {
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-  addEventListeners();
-  gameLoop();
+// 방향키 객체
+const directionButtons = {
+  up: { x: 0, y: 0, width: 50, height: 50, text: "↑" },
+  left: { x: 0, y: 0, width: 50, height: 50, text: "←" },
+  right: { x: 0, y: 0, width: 50, height: 50, text: "→" },
+  down: { x: 0, y: 0, width: 50, height: 50, text: "↓" },
+};
+
+// 방향키 위치 설정
+function setDirectionButtonsPosition() {
+  const padding = 10;
+  const bottomPadding = 20;
+
+  directionButtons.up.x = canvas.width / 2 - 25;
+  directionButtons.up.y = canvas.height - 150 - bottomPadding;
+
+  directionButtons.left.x = canvas.width / 2 - 75;
+  directionButtons.left.y = canvas.height - 100 - bottomPadding;
+
+  directionButtons.right.x = canvas.width / 2 + 25;
+  directionButtons.right.y = canvas.height - 100 - bottomPadding;
+
+  directionButtons.down.x = canvas.width / 2 - 25;
+  directionButtons.down.y = canvas.height - 50 - bottomPadding;
+}
+
+// 방향키 그리기
+function drawDirectionButtons() {
+  Object.values(directionButtons).forEach((button) => {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.fillRect(button.x, button.y, button.width, button.height);
+    ctx.strokeStyle = "#000";
+    ctx.strokeRect(button.x, button.y, button.width, button.height);
+    ctx.fillStyle = "#000";
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      button.text,
+      button.x + button.width / 2,
+      button.y + button.height / 2
+    );
+  });
+}
+
+// 마우스 이벤트 처리
+canvas.addEventListener("mousedown", handleMouseEvent);
+canvas.addEventListener("mouseup", handleMouseEvent);
+
+function handleMouseEvent(e) {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  Object.entries(directionButtons).forEach(([direction, button]) => {
+    if (
+      x >= button.x &&
+      x <= button.x + button.width &&
+      y >= button.y &&
+      y <= button.y + button.height
+    ) {
+      keys[`Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`] =
+        e.type === "mousedown"; // mousedown이면 true, mouseup이면 false
+    }
+  });
+}
+
+// 터치 이벤트 처리
+canvas.addEventListener("touchstart", handleTouchEvent);
+canvas.addEventListener("touchend", handleTouchEventEnd);
+
+function handleTouchEvent(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const rect = canvas.getBoundingClientRect();
+  const x = touch.clientX - rect.left;
+  const y = touch.clientY - rect.top;
+
+  Object.entries(directionButtons).forEach(([direction, button]) => {
+    if (
+      x >= button.x &&
+      x <= button.x + button.width &&
+      y >= button.y &&
+      y <= button.y + button.height
+    ) {
+      keys[
+        `Arrow${direction.charAt(0).toUpperCase() + direction.slice(1)}`
+      ] = true;
+    }
+  });
+}
+
+function handleTouchEventEnd() {
+  Object.keys(keys).forEach((key) => (keys[key] = false));
 }
 
 function resizeCanvas() {
@@ -75,6 +159,8 @@ function resizeCanvas() {
   player.x = canvas.width / 2;
   player.y = canvas.height / 2;
   item = createItem();
+
+  setDirectionButtonsPosition();
 }
 
 // 이벤트 리스너 추가
@@ -89,31 +175,6 @@ function addEventListeners() {
 
   // 재시작 버튼 이벤트
   restartButton.addEventListener("click", restartGame);
-
-  // 방향 버튼 마우스 이벤트
-  [
-    [upButton, "ArrowUp"],
-    [leftButton, "ArrowLeft"],
-    [rightButton, "ArrowRight"],
-    [downButton, "ArrowDown"],
-  ].forEach(([button, key]) => {
-    button.addEventListener("mousedown", () => (keys[key] = true));
-    button.addEventListener("mouseup", () => (keys[key] = false));
-  });
-
-  // 방향 버튼 터치 이벤트
-  [
-    [upButton, "ArrowUp"],
-    [leftButton, "ArrowLeft"],
-    [rightButton, "ArrowRight"],
-    [downButton, "ArrowDown"],
-  ].forEach(([button, key]) => {
-    button.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      keys[key] = true;
-    });
-    button.addEventListener("touchend", () => (keys[key] = false));
-  });
 
   // 풀스크린 버튼 이벤트
   fullscreenButton.addEventListener("click", toggleFullscreen);
@@ -184,7 +245,7 @@ function checkCollision() {
 
 // 에너지 소모
 function consumeEnergy() {
-  player.energy = Math.max(player.energy - 0.15, 0);
+  player.energy = Math.max(player.energy - 0.12, 0);
   if (player.energy <= 0 && gameRunning) {
     gameOver();
   }
@@ -252,6 +313,8 @@ function draw() {
   ctx.font = "20px Arial";
   ctx.textAlign = "center";
   ctx.fillText(`Score: ${score}`, canvas.width / 2, barY + barHeight + 25);
+
+  drawDirectionButtons();
 }
 
 // 게임 루프
@@ -268,4 +331,12 @@ function gameLoop() {
 }
 
 // 게임 시작
+function init() {
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+  addEventListeners();
+  setDirectionButtonsPosition();
+  gameLoop();
+}
+
 init();
