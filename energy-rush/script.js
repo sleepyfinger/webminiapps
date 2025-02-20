@@ -1,3 +1,17 @@
+// 색상 설정 (파스텔 테마)
+const COLORS = {
+  player: "#A3C1DA", // 파스텔 블루
+  item: "#FFB6B9", // 파스텔 핑크
+  background: "#F8F4E3", // 파스텔 베이지
+  energyBar: {
+    background: "rgba(255, 255, 255, 0.8)", // 연한 흰색 배경
+    fill: "#B2E0A0", // 파스텔 연두색
+    border: "#FFD1DC", // 파스텔 연핑크
+  },
+  score: "#6A5ACD", // 파스텔 퍼플
+  canvas: "#F8F4E3", // 캔버스 배경과 동일한 베이지색
+};
+
 // DOM 요소 선택
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
@@ -7,7 +21,7 @@ const upButton = document.getElementById("upButton");
 const leftButton = document.getElementById("leftButton");
 const rightButton = document.getElementById("rightButton");
 const downButton = document.getElementById("downButton");
-const fullscreenButton = document.getElementById("fullscreenButton"); // 풀스크린 버튼
+const fullscreenButton = document.getElementById("fullscreenButton");
 
 // 게임 상태 변수
 let score = 0;
@@ -18,7 +32,7 @@ const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
   size: 20,
-  color: "blue",
+  color: COLORS.player,
   speed: 5,
   energy: 100,
 };
@@ -122,23 +136,10 @@ function createItem() {
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     size: 10,
-    color: "red",
-    speedX: (Math.random() - 0.5) * 4, // -2에서 2 사이의 랜덤 속도
+    color: COLORS.item,
+    speedX: (Math.random() - 0.5) * 4,
     speedY: (Math.random() - 0.5) * 4,
   };
-}
-
-function moveItem() {
-  item.x += item.speedX;
-  item.y += item.speedY;
-
-  // 벽에 부딪히면 방향 전환
-  if (item.x <= item.size || item.x >= canvas.width - item.size) {
-    item.speedX = -item.speedX;
-  }
-  if (item.y <= item.size || item.y >= canvas.height - item.size) {
-    item.speedY = -item.speedY;
-  }
 }
 
 // 플레이어 이동
@@ -150,6 +151,20 @@ function movePlayer() {
     if (keys.ArrowLeft && player.x > player.size) player.x -= player.speed;
     if (keys.ArrowRight && player.x < canvas.width - player.size)
       player.x += player.speed;
+  }
+}
+
+// 아이템 이동
+function moveItem() {
+  item.x += item.speedX;
+  item.y += item.speedY;
+
+  // 벽에 부딪히면 방향 전환
+  if (item.x <= item.size || item.x >= canvas.width - item.size) {
+    item.speedX = -item.speedX;
+  }
+  if (item.y <= item.size || item.y >= canvas.height - item.size) {
+    item.speedY = -item.speedY;
   }
 }
 
@@ -198,38 +213,42 @@ function restartGame() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // 배경 그리기
+  ctx.fillStyle = COLORS.background;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   // 플레이어 그리기
-  ctx.fillStyle = player.color;
+  ctx.fillStyle = COLORS.player;
   ctx.beginPath();
   ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
   ctx.fill();
 
   // 아이템 그리기
-  ctx.fillStyle = item.color;
+  ctx.fillStyle = COLORS.item;
   ctx.beginPath();
   ctx.arc(item.x, item.y, item.size, 0, Math.PI * 2);
   ctx.fill();
 
   // 에너지바 그리기
-  const barWidth = canvas.width * 0.6; // 캔버스 너비의 60%
+  const barWidth = canvas.width * 0.6;
   const barHeight = 20;
   const barX = (canvas.width - barWidth) / 2;
-  const barY = 10; // 상단에서 10px 아래
+  const barY = 10;
 
   // 에너지바 배경
-  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  ctx.fillStyle = COLORS.energyBar.background;
   ctx.fillRect(barX, barY, barWidth, barHeight);
 
   // 에너지 레벨
-  ctx.fillStyle = "green";
+  ctx.fillStyle = COLORS.energyBar.fill;
   ctx.fillRect(barX, barY, barWidth * (player.energy / 100), barHeight);
 
   // 에너지바 테두리
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = COLORS.energyBar.border;
   ctx.strokeRect(barX, barY, barWidth, barHeight);
 
   // 점수 표시
-  ctx.fillStyle = "black";
+  ctx.fillStyle = COLORS.score;
   ctx.font = "20px Arial";
   ctx.textAlign = "center";
   ctx.fillText(`Score: ${score}`, canvas.width / 2, barY + barHeight + 25);
@@ -240,7 +259,7 @@ function gameLoop() {
   if (!gameRunning) return;
 
   movePlayer();
-  moveItem(); // 아이템 이동 함수 호출
+  moveItem();
   checkCollision();
   consumeEnergy();
   draw();
