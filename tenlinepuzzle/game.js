@@ -41,7 +41,6 @@ let timeLeft = INITIAL_TIME;
 let gameOver = false;
 let scoreFont, hsFont, timeFont, cellFont, gameoverFont;
 let scoreSound;
-let restartButton;
 let resetButton;
 let scaleMaxButton;
 let scaleUpButton;
@@ -64,7 +63,6 @@ let fallingCells = [];
 function init() {
   // 오디오 및 버튼 요소 초기화
   scoreSound = document.getElementById("scoreSound");
-  restartButton = document.getElementById("restartButton");
   resetButton = document.getElementById("resetButton");
   scaleMaxButton = document.getElementById("scaleMaxButton");
   scaleUpButton = document.getElementById("scaleUpButton");
@@ -146,7 +144,6 @@ function setupEventListeners() {
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mousemove", handleMouseMove);
   canvas.addEventListener("mouseup", handleMouseUp);
-  restartButton.addEventListener("click", resetGame);
   resetButton.addEventListener("click", resetGame);
 
   // Touch event listeners
@@ -433,20 +430,18 @@ function drawGameOver() {
   ctx.fillStyle = COLOR_UI_TEXT;
   ctx.font = gameoverFont;
   ctx.textAlign = "center";
-  ctx.fillText("Game Over", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 20);
+  ctx.fillText("Game Over", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 50);
   ctx.font = hsFont;
-  ctx.fillText(
-    "High Score: " + highScore,
-    WINDOW_WIDTH / 2,
-    WINDOW_HEIGHT / 2 + 20
-  );
+  ctx.fillText("High Score: " + highScore, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
   ctx.font = scoreFont;
   ctx.fillText(
     "Final Score: " + score,
     WINDOW_WIDTH / 2,
-    WINDOW_HEIGHT / 2 + 50
+    WINDOW_HEIGHT / 2 + 30
   );
-  ctx.textAlign = "left";
+
+  // 다시 시작 버튼 그리기
+  drawRestartButton();
 
   if (score > highScore) {
     highScore = score;
@@ -454,10 +449,49 @@ function drawGameOver() {
     // 새로운 하이스코어를 로컬 스토리지에 저장
     localStorage.setItem("highScore", highScore);
   }
+}
 
-  // 다시 시작 버튼 표시
-  restartButton.style.display = "block";
-  resetButton.style.display = "none";
+function drawRestartButton() {
+  const buttonWidth = 200;
+  const buttonHeight = 50;
+  const buttonX = WINDOW_WIDTH / 2 - buttonWidth / 2;
+  const buttonY = WINDOW_HEIGHT / 2 + 70;
+
+  // 버튼 배경
+  ctx.fillStyle = "#4CAF50";
+  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+  // 버튼 텍스트
+  ctx.fillStyle = "white";
+  ctx.font = "25px GameFont"; // 폰트 크기 수정
+  ctx.textAlign = "center"; // 텍스트 가운데 정렬
+  ctx.fillText("다시 시작", WINDOW_WIDTH / 2, buttonY + 33);
+  ctx.textAlign = "left";
+
+  // 클릭 이벤트 리스너 추가
+  canvas.addEventListener("click", handleRestartClick);
+}
+
+function handleRestartClick(event) {
+  const buttonWidth = 200;
+  const buttonHeight = 50;
+  const buttonX = WINDOW_WIDTH / 2 - buttonWidth / 2;
+  const buttonY = WINDOW_HEIGHT / 2 + 70;
+
+  const rect = canvas.getBoundingClientRect();
+  // 스케일 값으로 나누어 보정
+  const x = (event.clientX - rect.left) / currentScale;
+  const y = (event.clientY - rect.top) / currentScale;
+
+  if (
+    x > buttonX &&
+    x < buttonX + buttonWidth &&
+    y > buttonY &&
+    y < buttonY + buttonHeight
+  ) {
+    resetGame();
+    canvas.removeEventListener("click", handleRestartClick);
+  }
 }
 
 // Game state management
@@ -502,10 +536,6 @@ function resetGame() {
   gameOver = false;
   fallingCells = [];
   resetGrid();
-
-  // 다시 시작 버튼 숨기기
-  restartButton.style.display = "none";
-  resetButton.style.display = "";
 }
 
 // 가중치를 적용한 랜덤 숫자 생성 함수
