@@ -8,3 +8,4 @@
 | [<img src="tenlinepuzzle/icon.png" width="128">](/tenlinepuzzle/index.html)     | 텐 라인 퍼즐     |
 | [<img src="lotto/icon.jpg" width="128">](/lotto/index.html)                     | 로또 번호 생성기 |
 | [<img src="number-baseball/icon.jpg" width="128">](/number-baseball/index.html) | 숫자야구         |
+| [<img src="mannaii/icon.png" width="128">](/mannaii/index.html)                 | 만나이 계산기    |
