@@ -198,20 +198,36 @@ function createItem() {
     y: Math.random() * canvas.height,
     size: 10,
     color: COLORS.item,
-    speedX: (Math.random() - 0.5) * 4,
-    speedY: (Math.random() - 0.5) * 4,
+    speedX: (Math.random() + 0.5) * 3,
+    speedY: (Math.random() + 0.5) * 3,
   };
 }
 
 // 플레이어 이동
 function movePlayer() {
+  let isMoving = false; // 움직임 여부 확인 변수
+
   if (player.energy > 0) {
-    if (keys.ArrowUp && player.y > player.size) player.y -= player.speed;
-    if (keys.ArrowDown && player.y < canvas.height - player.size)
+    if (keys.ArrowUp && player.y > player.size) {
+      player.y -= player.speed;
+      isMoving = true;
+    }
+    if (keys.ArrowDown && player.y < canvas.height - player.size) {
       player.y += player.speed;
-    if (keys.ArrowLeft && player.x > player.size) player.x -= player.speed;
-    if (keys.ArrowRight && player.x < canvas.width - player.size)
+      isMoving = true;
+    }
+    if (keys.ArrowLeft && player.x > player.size) {
+      player.x -= player.speed;
+      isMoving = true;
+    }
+    if (keys.ArrowRight && player.x < canvas.width - player.size) {
       player.x += player.speed;
+      isMoving = true;
+    }
+  }
+
+  if (isMoving) {
+    consumeEnergy(); // 움직일 때만 에너지 소모
   }
 }
 
@@ -237,15 +253,23 @@ function checkCollision() {
 
   if (distance < player.size + item.size) {
     item = createItem();
-    player.size += 2;
-    player.energy = Math.min(player.energy + 10, 100);
+    if (player.size < 100) player.size += 2;
+    player.energy = Math.min(player.energy + 5, 100);
     score += 10;
   }
 }
 
 // 에너지 소모
 function consumeEnergy() {
-  player.energy = Math.max(player.energy - 0.12, 0);
+  player.energy = Math.max(player.energy - 0.2, 0);
+  if (player.energy <= 0 && gameRunning) {
+    gameOver();
+  }
+}
+
+// 기본 에너지 소모
+function defaultConsumeEnergy() {
+  player.energy = Math.max(player.energy - 0.02, 0);
   if (player.energy <= 0 && gameRunning) {
     gameOver();
   }
@@ -324,9 +348,8 @@ function gameLoop() {
   movePlayer();
   moveItem();
   checkCollision();
-  consumeEnergy();
+  defaultConsumeEnergy();
   draw();
-
   requestAnimationFrame(gameLoop);
 }
 
