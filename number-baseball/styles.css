@@ -35,9 +35,10 @@ h1 {
 
 #userGuess {
   font-size: 24px;
+  letter-spacing: 20px; /* 글자 간격 조절 */
   margin: 20px 0;
   background-color: rgba(255, 255, 255, 0); /* 반투명 흰색 배경 */
-  padding: 10px;
+  padding: 10px 10px 10px 30px; /* 왼쪽 패딩 증가 */
   border-radius: 5px;
   display: inline-block;
   color: #212121; /* 검은색 */
@@ -48,11 +49,23 @@ h1 {
   font-size: 14px;
 }
 
+#mode3,
+#mode4 {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 0px 0;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 #restartBtn {
   padding: 10px 20px;
   font-size: 16px;
   margin: 20px 0;
-  background-color: #424242; /* 검은색 */
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;

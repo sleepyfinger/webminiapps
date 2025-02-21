@@ -1,6 +1,7 @@
 let answer;
 let currentGuess = "";
 let attempts = 0;
+let gameMode = 4; // 기본 모드는 4자리
 
 const userGuessDisplay = document.getElementById("userGuess");
 const numpad = document.getElementById("numpad");
@@ -8,9 +9,17 @@ const restartBtn = document.getElementById("restartBtn");
 const result = document.getElementById("result");
 const history = document.getElementById("history");
 
+document.getElementById("mode3").onclick = () => setGameMode(3);
+document.getElementById("mode4").onclick = () => setGameMode(4);
+
+function setGameMode(mode) {
+  gameMode = mode;
+  initGame();
+}
+
 function generateRandomNumber() {
   const digits = [];
-  while (digits.length < 4) {
+  while (digits.length < gameMode) {
     const randomDigit = Math.floor(Math.random() * 10);
     if (!digits.includes(randomDigit)) {
       digits.push(randomDigit);
@@ -30,9 +39,11 @@ function initGame() {
   document.getElementById("clearBtn").disabled = false;
   document.getElementById("submitBtn").disabled = false;
   restartBtn.style.display = "none";
+  userGuessDisplay.textContent = "_".repeat(gameMode);
 }
 
 function createNumpad() {
+  numpad.innerHTML = ""; // 기존 numpad 초기화
   for (let i = 1; i <= 9; i++) {
     createButton(i);
   }
@@ -50,7 +61,10 @@ function createButton(text, id, onClick) {
 }
 
 function addDigit(digit) {
-  if (currentGuess.length < 4 && !currentGuess.includes(digit.toString())) {
+  if (
+    currentGuess.length < gameMode &&
+    !currentGuess.includes(digit.toString())
+  ) {
     currentGuess += digit;
     updateGuessDisplay();
   }
@@ -62,7 +76,7 @@ function clearGuess() {
 }
 
 function updateGuessDisplay() {
-  userGuessDisplay.textContent = currentGuess.padEnd(4, "_");
+  userGuessDisplay.textContent = currentGuess.padEnd(gameMode, "_");
 }
 
 function calculateScore(userGuess, answer) {
@@ -79,15 +93,15 @@ function calculateScore(userGuess, answer) {
 }
 
 function submitGuess() {
-  if (currentGuess.length !== 4) {
-    result.textContent = "4자리 숫자를 모두 입력하세요!";
+  if (currentGuess.length !== gameMode) {
+    result.textContent = `${gameMode}자리 숫자를 모두 입력하세요!`;
     return;
   }
 
   attempts++;
   const { strikes, balls } = calculateScore(currentGuess, answer);
 
-  if (strikes === 4) {
+  if (strikes === gameMode) {
     endGame();
   } else {
     updateHistory(strikes, balls);
