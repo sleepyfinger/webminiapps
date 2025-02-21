@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>뽀모도로 타이머</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>뽀모도로 타이머</h1>
+      <div class="timer-container">
+        <div id="timer">25:00</div>
+        <svg class="progress-ring" width="300" height="300">
+          <circle
+            class=""
+            stroke="#efefef"
+            stroke-width="10"
+            fill="transparent"
+            r="140"
+            cx="150"
+            cy="150"
+          />
+          <circle
+            class="progress-ring__circle"
+            stroke="#ff6347"
+            stroke-width="10"
+            fill="transparent"
+            r="140"
+            cx="150"
+            cy="150"
+          />
+        </svg>
+      </div>
+      <div class="buttons">
+        <button id="start">시작</button>
+        <button id="reset">리셋</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
