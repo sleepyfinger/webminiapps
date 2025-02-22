@@ -18,15 +18,15 @@ const COLOR_GAME_OVER_BG = "rgba(49, 46, 46, 0.57)";
 
 // 숫자별 가중치 (비율) 설정
 const numberWeights = {
-  1: 20,
-  2: 20,
-  3: 12,
-  4: 8,
-  5: 10,
-  6: 12,
+  1: 15,
+  2: 22,
+  3: 15,
+  4: 12,
+  5: 11,
+  6: 10,
   7: 8,
-  8: 5,
-  9: 5,
+  8: 4,
+  9: 3,
 };
 
 // Global variables
@@ -774,7 +774,7 @@ function createFallingCells() {
 // 점수 업데이트
 function updateScore() {
   const baseScore = selectedCells.length;
-  const multiplier = Math.pow(1.5, selectedCells.length - 2); // 1.5의 (선택된 셀 수 - 2)제곱
+  const multiplier = Math.pow(1.25, selectedCells.length - 2); // 1.25의 (선택된 셀 수 - 2)제곱
   const earnedScore = Math.floor(baseScore * multiplier);
 
   score += earnedScore;
