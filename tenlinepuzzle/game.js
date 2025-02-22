@@ -470,18 +470,34 @@ function drawRestartButton() {
 
   // 클릭 이벤트 리스너 추가
   canvas.addEventListener("click", handleRestartClick);
+
+  // 터치 이벤트 리스너 추가
+  canvas.addEventListener("touchstart", handleRestartClick);
 }
 
 function handleRestartClick(event) {
+  let x, y;
+
+  // 터치 이벤트인지 확인
+  if (event.type === "touchstart") {
+    event.preventDefault();
+    const touch = event.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    // 스케일 값으로 나누어 보정
+    x = (touch.clientX - rect.left) / currentScale;
+    y = (touch.clientY - rect.top) / currentScale;
+  } else {
+    // 마우스 이벤트 처리 (필요한 경우)
+    const rect = canvas.getBoundingClientRect();
+    // 스케일 값으로 나누어 보정
+    x = (event.clientX - rect.left) / currentScale;
+    y = (event.clientY - rect.top) / currentScale;
+  }
+
   const buttonWidth = 200;
   const buttonHeight = 50;
   const buttonX = WINDOW_WIDTH / 2 - buttonWidth / 2;
   const buttonY = WINDOW_HEIGHT / 2 + 70;
-
-  const rect = canvas.getBoundingClientRect();
-  // 스케일 값으로 나누어 보정
-  const x = (event.clientX - rect.left) / currentScale;
-  const y = (event.clientY - rect.top) / currentScale;
 
   if (
     x > buttonX &&
@@ -491,6 +507,7 @@ function handleRestartClick(event) {
   ) {
     resetGame();
     canvas.removeEventListener("click", handleRestartClick);
+    canvas.removeEventListener("touchstart", handleRestartClick);
   }
 }
 
