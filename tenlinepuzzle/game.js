@@ -35,10 +35,11 @@ let selectedCells = [];
 let score = 0;
 let highScore = 0;
 let isDragging = false;
-let currentX = 0,
-  currentY = 0;
+let currentX = 0;
+let currentY = 0;
 let timeLeft = INITIAL_TIME;
 let gameOver = false;
+let gameStarted = false; // 게임 시작 여부 변수 추가
 let scoreFont, hsFont, timeFont, cellFont, gameoverFont;
 let scoreSound;
 let resetButton;
@@ -198,7 +199,8 @@ function getMousePosition(event) {
 
 // Game logic
 function update(dt) {
-  if (!gameOver) {
+  if (!gameOver && gameStarted) {
+    // 게임이 시작된 경우에만 시간 업데이트
     updateTime(dt);
   }
   updateDragging();
@@ -551,6 +553,7 @@ function resetGame() {
   score = 0;
   timeLeft = INITIAL_TIME;
   gameOver = false;
+  gameStarted = false; // 게임 재시작 시 게임 시작 상태 초기화
   fallingCells = [];
   resetGrid();
 }
@@ -776,6 +779,11 @@ function updateScore() {
 
   score += earnedScore;
   // timeLeft = timeLeft + selectedCells.length;
+
+  // 처음 점수를 얻었을 때 게임 시작 상태를 true로 변경
+  if (!gameStarted) {
+    gameStarted = true;
+  }
 
   // 점수 획득 시 사운드 재생
   playScoreSound();
