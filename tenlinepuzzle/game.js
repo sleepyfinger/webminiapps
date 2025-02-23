@@ -63,37 +63,18 @@ let fallingCells = [];
 
 let deferredPrompt;
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallPopup();
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredPrompt = event;
 });
 
-function showInstallPopup() {
-  const popup = document.getElementById("installPopup");
-  popup.classList.add("show");
-
-  setTimeout(() => {
-    popup.classList.remove("show");
-  }, 5000);
-}
-
-document.getElementById("installBtn").addEventListener("click", () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("사용자가 앱을 설치했습니다.");
-      }
-      deferredPrompt = null;
-    });
+const installApp = () => {
+  if (!deferredPrompt) {
+    alert("앱을 설치할 수 없는 환경입니다");
+    return;
   }
-  document.getElementById("installPopup").classList.remove("show");
-});
-
-document.getElementById("closeBtn").addEventListener("click", () => {
-  document.getElementById("installPopup").classList.remove("show");
-});
+  deferredPrompt.prompt();
+};
 
 function init() {
   // 오디오 및 버튼 요소 초기화

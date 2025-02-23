@@ -60,30 +60,9 @@
         margin: 0 5px;
         cursor: pointer;
       }
-
-      .install-popup {
-        position: fixed;
-        top: -100px;
-        left: 0;
-        right: 0;
-        background-color: #f0f0f0;
-        padding: 10px;
-        text-align: center;
-        transition: top 0.3s ease-in-out;
-        z-index: 1000;
-      }
-
-      .install-popup.show {
-        top: 0;
-      }
     </style>
   </head>
   <body>
-    <div id="installPopup" class="install-popup">
-      <p>앱을 설치하시겠습니까?</p>
-      <button id="installBtn">설치</button>
-      <button id="closeBtn">닫기</button>
-    </div>
     <div id="gameContainer">
       <img src="icon-192x192.png" width="128" />
       <h1 id="gameTitle">10 Line Puzzle</h1>
