@@ -61,6 +61,40 @@ canvas.height = WINDOW_HEIGHT;
 // 떨어지는 셀을 저장할 배열
 let fallingCells = [];
 
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallPopup();
+});
+
+function showInstallPopup() {
+  const popup = document.getElementById("installPopup");
+  popup.classList.add("show");
+
+  setTimeout(() => {
+    popup.classList.remove("show");
+  }, 5000);
+}
+
+document.getElementById("installBtn").addEventListener("click", () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === "accepted") {
+        console.log("사용자가 앱을 설치했습니다.");
+      }
+      deferredPrompt = null;
+    });
+  }
+  document.getElementById("installPopup").classList.remove("show");
+});
+
+document.getElementById("closeBtn").addEventListener("click", () => {
+  document.getElementById("installPopup").classList.remove("show");
+});
+
 function init() {
   // 오디오 및 버튼 요소 초기화
   scoreSound = document.getElementById("scoreSound");
