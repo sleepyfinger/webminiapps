@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Call My Name</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="light-theme.css" id="theme-style" />
+  </head>
+  <body>
+    <div class="container">
+      <button class="back-button" id="backButton">⬅️</button>
+      <button class="theme-button" id="theme-toggle-button">🌙</button>
+      <h1 id="title">Call My Name</h1>
+
+      <div id="mainMenu">
+        <button id="randomBtn">랜덤 이름 선택</button>
+        <button id="inputBtn">직접 이름 입력</button>
+      </div>
+
+      <div id="topicList"></div>
+
+      <form id="inputForm">
+        <input
+          type="text"
+          id="nameInput"
+          placeholder="이름을 입력하세요"
+          required
+        />
+        <button type="button" id="submitName">확인</button>
+      </form>
+
+      <div id="nameDisplay"></div>
+    </div>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

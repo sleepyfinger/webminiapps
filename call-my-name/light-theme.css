@@ -1,0 +1,39 @@
+/* light-theme.css */
+
+body {
+  background-color: #f0f2f5;
+  color: #333;
+}
+
+.container {
+  background-color: #fff;
+}
+
+h1 {
+  color: #2c3e50;
+}
+
+button {
+  color: #fff;
+}
+
+#randomBtn {
+  background-color: #3498db;
+}
+
+#inputBtn {
+  background-color: #e74c3c;
+}
+
+#submitName {
+  background-color: #27ae60;
+}
+
+#nameInput {
+  border: 1px solid #bdc3c7;
+  color: #333;
+}
+
+#nameDisplay {
+  background-color: #ecf0f1;
+}

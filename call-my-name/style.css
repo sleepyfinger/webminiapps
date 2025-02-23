@@ -1,0 +1,184 @@
+/* style.css */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.container {
+  width: 80%;
+  height: 100%;
+  background-color: #fff;
+  padding: 2rem;
+  flex-direction: column;
+  align-items: center; /* 수평 중앙 정렬 */
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin: 2rem;
+  text-align: center;
+  color: #2c3e50;
+}
+
+#mainMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#mainMenu button {
+  gap: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+#randomBtn {
+  background-color: #3498db;
+  color: #fff;
+}
+
+#inputBtn {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+#mainMenu button:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+#mainMenu button:active {
+  transform: translateY(0);
+}
+
+/* 토픽 목록 스타일 */
+#topicList {
+  display: none; /* 초기 상태에서 숨김 */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 5rem;
+  width: 100%;
+}
+
+#topicList button {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background-color: #f39c12;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+#topicList button:hover {
+  background-color: #d35400;
+  transform: translateY(-2px);
+}
+
+#topicList button:active {
+  transform: translateY(0);
+}
+
+/* 입력 폼 스타일 */
+#inputForm {
+  display: none; /* 초기 상태에서 숨김 */
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+#nameInput {
+  margin-top: 2rem;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+}
+
+#submitName {
+  background-color: #27ae60;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+#submitName:hover {
+  background-color: #219651;
+}
+
+#submitName:active {
+  transform: translateY(0);
+}
+
+/* 이름 표시 스타일 */
+#nameDisplay {
+  display: none; /* 초기 상태에서 숨김 */
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 3rem;
+  padding: 1rem;
+  background-color: #ecf0f1;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 버튼 스타일 */
+.theme-button,
+.back-button {
+  position: absolute;
+  top: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.theme-button {
+  right: 1rem;
+}
+
+.back-button {
+  left: 1rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  #mainMenu button {
+    padding: 0.7rem 1.2rem;
+  }
+
+  #nameDisplay {
+    font-size: 1.5rem;
+  }
+}
