@@ -143,6 +143,8 @@ function submitName(e) {
 
 function goBack() {
   hideAllSections();
+  fullScreenButton.style.display = "block";
+  themeToggleButton.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
   backButton.style.display = "none";
@@ -152,6 +154,8 @@ function hideAllSections() {
   [mainMenu, topicList, inputForm, nameDisplay].forEach((el) =>
     el.classList.remove("active")
   );
+  fullScreenButton.style.display = "none";
+  themeToggleButton.style.display = "none";
   title.style.display = "none";
   backButton.style.display = "none";
   nameDisplay.style.display = "none";
@@ -199,6 +203,8 @@ function toggleFullScreen() {
 function init() {
   setTheme(currentTheme);
   hideAllSections();
+  fullScreenButton.style.display = "block";
+  themeToggleButton.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
   backButton.style.display = "none";

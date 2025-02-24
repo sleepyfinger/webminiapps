@@ -180,8 +180,8 @@ button:active {
   font-size: 3rem;
   cursor: pointer;
   padding: 0.5rem;
-  right: 1rem;
-  top: calc(5rem + 40px); /* 회전 버튼과 충돌하지 않도록 위치 조정 */
+  top: 1rem;
+  right: calc(5rem + 40px);
 }
 
 .full-screen-button:hover {
