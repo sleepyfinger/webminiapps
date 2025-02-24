@@ -18,34 +18,25 @@ let currentTheme = "dark";
 let isRotated = false;
 let isFullScreen = false;
 
-fullScreenButton.onclick = () => {
-  if (!isFullScreen) {
-    // 전체화면 모드로 전환
-    const docElm = document.documentElement;
-    if (docElm.requestFullscreen) {
-      docElm.requestFullscreen();
-    } else if (docElm.mozRequestFullScreen) {
-      docElm.mozRequestFullScreen();
-    } else if (docElm.webkitRequestFullScreen) {
-      docElm.webkitRequestFullScreen();
-    } else if (docElm.msRequestFullscreen) {
-      docElm.msRequestFullscreen();
-    }
-    fullScreenButton.textContent = "⬜️"; // 아이콘 변경
-    isFullScreen = true;
-  } else {
-    // 전체화면 모드 해제
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
-    fullScreenButton.textContent = "⬛️"; // 아이콘 원복
-    isFullScreen = false;
+// 화면 꺼짐 방지
+let wakeLock = null;
+
+const requestWakeLock = async () => {
+  try {
+    wakeLock = await navigator.wakeLock.request("screen");
+    console.log("Wake Lock is active!");
+    wakeLock.addEventListener("release", () => {
+      console.log("Wake Lock was released");
+    });
+  } catch (err) {
+    console.error(`${err.name}, ${err.message}`);
+  }
+};
+
+const releaseWakeLock = async () => {
+  if (wakeLock) {
+    await wakeLock.release();
+    wakeLock = null;
   }
 };
 
@@ -80,15 +71,43 @@ function showTopics() {
   backButton.style.display = "block";
 }
 
+function adjustFontSize() {
+  const nameDisplay = document.getElementById("nameDisplay");
+  const container = nameDisplay.parentElement;
+  let fontSize = 10; // 시작 폰트 크기를 작게 설정
+  nameDisplay.style.fontSize = `${fontSize}px`;
+
+  // 폰트 크기를 점진적으로 증가시키며 최적 크기를 찾음
+  while (
+    nameDisplay.scrollWidth <= container.clientWidth &&
+    nameDisplay.scrollHeight <= container.clientHeight
+  ) {
+    fontSize++;
+    nameDisplay.style.fontSize = `${fontSize}px`;
+  }
+
+  // 마지막으로 증가된 크기에서 1px 줄여 정확히 맞는 크기로 설정
+  fontSize--;
+  nameDisplay.style.fontSize = `${fontSize}px`;
+
+  // 최대 높이의 90%를 넘지 않도록 조정
+  const maxHeight = container.clientHeight * 0.9;
+  if (nameDisplay.offsetHeight > maxHeight) {
+    nameDisplay.style.fontSize = `${
+      (fontSize * maxHeight) / nameDisplay.offsetHeight
+    }px`;
+  }
+}
+
 function selectRandomName(topic) {
   hideAllSections();
   let countdown = DEFAULT_COUNTDOWN;
   const randomName =
     names[topic][Math.floor(Math.random() * names[topic].length)];
-
   nameDisplay.style.display = "flex";
   nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
   nameDisplay.classList.add("active");
+  adjustFontSize();
 
   const timer = setInterval(() => {
     countdown--;
@@ -97,6 +116,7 @@ function selectRandomName(topic) {
     } else {
       clearInterval(timer);
       nameDisplay.textContent = randomName;
+      adjustFontSize(); // 폰트 크기 조절
       backButton.style.display = "block";
     }
   }, 1000);
@@ -113,8 +133,10 @@ function submitName(e) {
   const name = nameInput.value;
   if (name) {
     hideAllSections();
+    nameDisplay.style.display = "flex";
     nameDisplay.textContent = name;
     nameDisplay.classList.add("active");
+    adjustFontSize(); // 폰트 크기 조절
     backButton.style.display = "block";
   }
 }
@@ -141,6 +163,39 @@ function toggleTheme() {
   setTheme(currentTheme === "light" ? "dark" : "light");
 }
 
+function toggleFullScreen() {
+  if (!isFullScreen) {
+    // 전체화면 모드로 전환
+    const docElm = document.documentElement;
+    if (docElm.requestFullscreen) {
+      docElm.requestFullscreen();
+    } else if (docElm.mozRequestFullScreen) {
+      docElm.mozRequestFullScreen();
+    } else if (docElm.webkitRequestFullScreen) {
+      docElm.webkitRequestFullScreen();
+    } else if (docElm.msRequestFullscreen) {
+      docElm.msRequestFullscreen();
+    }
+    fullScreenButton.textContent = "⬜️"; // 아이콘 변경
+    isFullScreen = true;
+    requestWakeLock(); // 화면 꺼짐 방지 활성화
+  } else {
+    // 전체화면 모드 해제
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    fullScreenButton.textContent = "⬛️"; // 아이콘 원복
+    isFullScreen = false;
+    releaseWakeLock(); // 화면 꺼짐 방지 해제
+  }
+}
+
 function init() {
   setTheme(currentTheme);
   hideAllSections();
@@ -155,5 +210,17 @@ inputForm.onsubmit = submitName;
 backButton.onclick = goBack;
 themeToggleButton.onclick = toggleTheme;
 rotateButton.onclick = toggleRotation;
+fullScreenButton.onclick = toggleFullScreen;
+
+window.addEventListener("resize", () => {
+  if (nameDisplay.classList.contains("active")) {
+    adjustFontSize();
+  }
+});
+
+// 회전 버튼 클릭 시에도 폰트 크기 조정
+rotateButton.addEventListener("click", () => {
+  setTimeout(adjustFontSize, 100); // 회전 애니메이션이 완료된 후 크기 조정
+});
 
 init();
