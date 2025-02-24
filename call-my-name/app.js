@@ -8,6 +8,7 @@ const inputForm = document.getElementById("inputForm");
 const nameDisplay = document.getElementById("nameDisplay");
 const backButton = document.getElementById("backButton");
 const title = document.getElementById("title");
+const version = document.getElementById("version");
 const themeStyle = document.getElementById("theme-style");
 const themeToggleButton = document.getElementById("theme-toggle-button");
 const nameInput = document.getElementById("nameInput");
@@ -166,16 +167,18 @@ function goBack() {
   themeToggleButton.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
+  version.style.display = "block";
   backButton.style.display = "none";
 }
 
 function hideAllSections() {
-  [mainMenu, topicList, inputForm, nameDisplay].forEach((el) =>
+  [mainMenu, topicList, inputForm, nameDisplay, version].forEach((el) =>
     el.classList.remove("active")
   );
   fullScreenButton.style.display = "none";
   themeToggleButton.style.display = "none";
   title.style.display = "none";
+  version.style.display = "none";
   backButton.style.display = "none";
   retryButton.style.display = "none";
   nameDisplay.style.display = "none";
@@ -225,6 +228,7 @@ function init() {
   themeToggleButton.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
+  version.style.display = "block";
   backButton.style.display = "none";
   retryButton.style.display = "none";
 }
