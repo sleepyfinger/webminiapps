@@ -12,9 +12,23 @@ const themeStyle = document.getElementById("theme-style");
 const themeToggleButton = document.getElementById("theme-toggle-button");
 const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
+const fullScreenButton = document.getElementById("fullScreenButton");
 
 let currentTheme = "light";
 let isRotated = false;
+
+fullScreenButton.onclick = () => {
+  const docElm = document.documentElement;
+  if (docElm.requestFullscreen) {
+    docElm.requestFullscreen();
+  } else if (docElm.mozRequestFullScreen) {
+    docElm.mozRequestFullScreen();
+  } else if (docElm.webkitRequestFullScreen) {
+    docElm.webkitRequestFullScreen();
+  } else if (docElm.msRequestFullscreen) {
+    docElm.msRequestFullscreen();
+  }
+};
 
 function setTheme(theme) {
   currentTheme = theme;
