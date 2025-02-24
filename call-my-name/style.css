@@ -129,18 +129,18 @@ button:active {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.1rem;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .theme-button,
-.full-screen-button {
+.full-screen-button,
+.prevent-screen-off-button {
   background: none;
   border: none;
-  font-size: 3rem;
+  font-size: 2rem;
   cursor: pointer;
-  padding: 0.0rem;
+  padding: 0.5rem;
 }
 
 #rotateButton {
@@ -223,4 +223,15 @@ button:active {
   text-align: center;
   margin-top: 10px;
   font-weight: normal;
+}
+
+.prevent-screen-off-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.prevent-screen-off-button.active {
+  color: yellow;
 }

@@ -15,34 +15,40 @@ const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
 const fullScreenButton = document.getElementById("fullScreenButton");
 const retryButton = document.getElementById("retryButton");
+const preventScreenOffButton = document.getElementById(
+  "preventScreenOffButton"
+);
 
 let currentTheme = "dark";
 let isRotated = false;
 let isFullScreen = false;
 let currentTopic = "";
 let lastSelectedName = "";
+let wakeLock = null; // 화면 꺼짐 방지
 
-// 화면 꺼짐 방지
-let wakeLock = null;
-
-const requestWakeLock = async () => {
-  try {
-    wakeLock = await navigator.wakeLock.request("screen");
-    console.log("Wake Lock is active!");
-    wakeLock.addEventListener("release", () => {
-      console.log("Wake Lock was released");
-    });
-  } catch (err) {
-    console.error(`${err.name}, ${err.message}`);
-  }
-};
-
-const releaseWakeLock = async () => {
-  if (wakeLock) {
-    await wakeLock.release();
+preventScreenOffButton.addEventListener("click", async () => {
+  if (!wakeLock) {
+    try {
+      wakeLock = await navigator.wakeLock.request("screen");
+      preventScreenOffButton.classList.add("active");
+      preventScreenOffButton.textContent = "💡"; // 활성화 상태 아이콘
+    } catch (err) {
+      console.error(`${err.name}, ${err.message}`);
+    }
+  } else {
+    wakeLock.release();
     wakeLock = null;
+    preventScreenOffButton.classList.remove("active");
+    preventScreenOffButton.textContent = "🔆"; // 비활성화 상태 아이콘
   }
-};
+});
+
+// 페이지 가시성 변경 시 WakeLock 재요청
+document.addEventListener("visibilitychange", async () => {
+  if (wakeLock !== null && document.visibilityState === "visible") {
+    wakeLock = await navigator.wakeLock.request("screen");
+  }
+});
 
 function setTheme(theme) {
   currentTheme = theme;
@@ -204,7 +210,6 @@ function toggleFullScreen() {
     }
     fullScreenButton.textContent = "⬜️";
     isFullScreen = true;
-    requestWakeLock();
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -217,7 +222,6 @@ function toggleFullScreen() {
     }
     fullScreenButton.textContent = "⬛️";
     isFullScreen = false;
-    releaseWakeLock();
   }
 }
 
