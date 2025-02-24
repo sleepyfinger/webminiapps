@@ -1,16 +1,16 @@
-let timer;
-let timeLeft = 1500; // 25분 (초 단위)
-
+const DEFAULT_TIME = 1500; // 25분 (초 단위)
 const timerDisplay = document.getElementById("timer");
 const startButton = document.getElementById("start");
 const resetButton = document.getElementById("reset");
-
+const setTimeButtons = document.querySelectorAll(".set-time");
 const circle = document.querySelector(".progress-ring__circle");
 const radius = circle.r.baseVal.value;
 const circumference = radius * 2 * Math.PI;
-
 circle.style.strokeDasharray = `${circumference} ${circumference}`;
 circle.style.strokeDashoffset = circumference;
+
+let timer;
+let timeLeft = DEFAULT_TIME;
 
 function setProgress(percent) {
   const offset = circumference - (percent / 100) * circumference;
@@ -47,7 +47,7 @@ function pauseTimer() {
 
 function resetTimer() {
   clearInterval(timer);
-  timeLeft = 1500;
+  timeLeft = DEFAULT_TIME;
   updateDisplay();
   startButton.textContent = "시작";
   startButton.onclick = startTimer;
@@ -55,5 +55,12 @@ function resetTimer() {
 
 startButton.onclick = startTimer;
 resetButton.onclick = resetTimer;
+
+setTimeButtons.forEach((button) => {
+  button.addEventListener("click", function () {
+    timeLeft = parseInt(this.dataset.time);
+    updateDisplay();
+  });
+});
 
 updateDisplay();
