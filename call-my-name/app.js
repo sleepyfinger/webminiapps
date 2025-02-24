@@ -11,40 +11,31 @@ const title = document.getElementById("title");
 const themeStyle = document.getElementById("theme-style");
 const themeToggleButton = document.getElementById("theme-toggle-button");
 const nameInput = document.getElementById("nameInput");
+const rotateButton = document.getElementById("rotateButton");
 
 let currentTheme = "light";
+let isRotated = false;
 
-// 테마 설정 함수
 function setTheme(theme) {
   currentTheme = theme;
   themeStyle.setAttribute("href", `${currentTheme}-theme.css`);
   themeToggleButton.textContent = currentTheme === "light" ? "🌙" : "☀️";
 }
 
-// 초기 테마 설정
-setTheme(currentTheme);
-
-let isRotated = false;
-
 function toggleRotation() {
-  const body = document.body;
   isRotated = !isRotated;
-
+  document.body.classList.toggle("rotated", isRotated);
   if (isRotated) {
-    body.classList.add("rotate-landscape");
+    document.body.style.width = "100vh";
+    document.body.style.height = "100vw";
   } else {
-    body.classList.remove("rotate-landscape");
+    document.body.style.width = "";
+    document.body.style.height = "";
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const rotateButton = document.getElementById("rotateButton");
-  rotateButton.addEventListener("click", toggleRotation);
-});
-
-// 토픽 목록 표시 함수
 function showTopics() {
-  mainMenu.style.display = "none";
+  hideAllSections();
   topicList.innerHTML = "";
   topics.forEach((topic) => {
     const button = document.createElement("button");
@@ -52,21 +43,18 @@ function showTopics() {
     button.onclick = () => selectRandomName(topic);
     topicList.appendChild(button);
   });
-  topicList.style.display = "grid";
+  topicList.classList.add("active");
   backButton.style.display = "block";
-  title.style.display = "none";
 }
 
-// 랜덤 이름 선택 함수
 function selectRandomName(topic) {
+  hideAllSections();
   let countdown = DEFAULT_COUNTDOWN;
   const randomName =
     names[topic][Math.floor(Math.random() * names[topic].length)];
-  topicList.style.display = "none";
   nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
-  nameDisplay.style.display = "block";
-  title.style.display = "none";
-  backButton.style.display = "none";
+  nameDisplay.classList.add("active");
+
   const timer = setInterval(() => {
     countdown--;
     if (countdown > 0) {
@@ -79,57 +67,57 @@ function selectRandomName(topic) {
   }, 1000);
 }
 
-// 직접 입력 폼 표시 함수
 function showInputForm() {
-  mainMenu.style.display = "none";
-  inputForm.style.display = "flex";
+  hideAllSections();
+  inputForm.classList.add("active");
   backButton.style.display = "block";
-  title.style.display = "none";
-  nameDisplay.style.display = "none";
 }
 
-// 이름 제출 함수
-function submitName() {
-  const name = document.getElementById("nameInput").value;
+function submitName(e) {
+  e.preventDefault();
+  const name = nameInput.value;
   if (name) {
-    inputForm.style.display = "none";
+    hideAllSections();
     nameDisplay.textContent = name;
-    nameDisplay.style.display = "block";
-    title.style.display = "none";
+    nameDisplay.classList.add("active");
     backButton.style.display = "block";
   }
 }
 
-// 뒤로 가기 함수
 function goBack() {
-  mainMenu.style.display = "flex";
-  topicList.style.display = "none";
-  inputForm.style.display = "none";
-  nameDisplay.style.display = "none";
-  nameDisplay.textContent = "";
-  backButton.style.display = "none";
+  hideAllSections();
+  mainMenu.classList.add("active");
   title.style.display = "block";
+  backButton.style.display = "none";
+}
+
+function hideAllSections() {
+  [mainMenu, topicList, inputForm, nameDisplay].forEach((el) =>
+    el.classList.remove("active")
+  );
+  title.style.display = "none";
+  backButton.style.display = "none";
+  nameDisplay.textContent = "";
+  nameInput.value = "";
+}
+
+function toggleTheme() {
+  setTheme(currentTheme === "light" ? "dark" : "light");
 }
 
 function init() {
+  setTheme(currentTheme);
+  hideAllSections();
+  mainMenu.classList.add("active");
+  title.style.display = "block";
   backButton.style.display = "none";
 }
 
-// 테마 전환 함수
-function toggleTheme() {
-  currentTheme = currentTheme === "light" ? "dark" : "light";
-  themeStyle.setAttribute("href", `${currentTheme}-theme.css`);
-  themeToggleButton.textContent = currentTheme === "light" ? "🌙" : "☀️";
-}
-
-// 초기 테마 설정
-themeToggleButton.textContent = currentTheme === "light" ? "🌙" : "☀️";
-
-// 이벤트 리스너 등록
 document.getElementById("randomBtn").onclick = showTopics;
 document.getElementById("inputBtn").onclick = showInputForm;
-document.getElementById("submitName").onclick = submitName;
+inputForm.onsubmit = submitName;
 backButton.onclick = goBack;
 themeToggleButton.onclick = toggleTheme;
+rotateButton.onclick = toggleRotation;
 
 init();
