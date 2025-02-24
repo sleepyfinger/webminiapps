@@ -13,10 +13,13 @@ const themeToggleButton = document.getElementById("theme-toggle-button");
 const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
 const fullScreenButton = document.getElementById("fullScreenButton");
+const retryButton = document.getElementById("retryButton");
 
 let currentTheme = "dark";
 let isRotated = false;
 let isFullScreen = false;
+let currentTopic = "";
+let lastSelectedName = "";
 
 // 화면 꺼짐 방지
 let wakeLock = null;
@@ -73,36 +76,48 @@ function showTopics() {
 
 function adjustFontSize() {
   const container = nameDisplay.parentElement;
-  let fontSize = 10; // 시작 폰트 크기를 작게 설정
-  nameDisplay.style.fontSize = `${fontSize}px`;
+  let minSize = 1;
+  let maxSize = 1000;
+  let fontSize;
 
-  // 폰트 크기를 점진적으로 증가시키며 최적 크기를 찾음
-  while (
-    nameDisplay.scrollWidth <= container.clientWidth &&
-    nameDisplay.scrollHeight <= container.clientHeight
-  ) {
-    fontSize++;
+  while (maxSize - minSize > 1) {
+    fontSize = Math.floor((minSize + maxSize) / 2);
     nameDisplay.style.fontSize = `${fontSize}px`;
+
+    if (
+      nameDisplay.scrollWidth <= container.clientWidth &&
+      nameDisplay.scrollHeight <= container.clientHeight
+    ) {
+      minSize = fontSize;
+    } else {
+      maxSize = fontSize;
+    }
   }
 
-  // 마지막으로 증가된 크기에서 1px 줄여 정확히 맞는 크기로 설정
-  fontSize--;
-  nameDisplay.style.fontSize = `${fontSize}px`;
+  nameDisplay.style.fontSize = `${minSize}px`;
 
-  // 최대 넓이의 80%를 넘지 않도록 조정
   const maxWidth = container.clientWidth * 0.8;
   if (nameDisplay.offsetWidth > maxWidth) {
     nameDisplay.style.fontSize = `${
-      (fontSize * maxWidth) / nameDisplay.offsetWidth
+      (minSize * maxWidth) / nameDisplay.offsetWidth
     }px`;
   }
 }
 
 function selectRandomName(topic) {
   hideAllSections();
+  currentTopic = topic;
   let countdown = DEFAULT_COUNTDOWN;
+  let availableNames = names[topic].filter((name) => name !== lastSelectedName);
+
+  if (availableNames.length === 0) {
+    availableNames = names[topic];
+  }
+
   const randomName =
-    names[topic][Math.floor(Math.random() * names[topic].length)];
+    availableNames[Math.floor(Math.random() * availableNames.length)];
+  lastSelectedName = randomName;
+
   nameDisplay.style.display = "flex";
   nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
   nameDisplay.classList.add("active");
@@ -115,10 +130,15 @@ function selectRandomName(topic) {
     } else {
       clearInterval(timer);
       nameDisplay.textContent = randomName;
-      adjustFontSize(); // 폰트 크기 조절
+      adjustFontSize();
       backButton.style.display = "block";
+      retryButton.style.display = "block";
     }
   }, 1000);
+}
+
+function retrySelection() {
+  selectRandomName(currentTopic);
 }
 
 function showInputForm() {
@@ -135,7 +155,7 @@ function submitName(e) {
     nameDisplay.style.display = "flex";
     nameDisplay.textContent = name;
     nameDisplay.classList.add("active");
-    adjustFontSize(); // 폰트 크기 조절
+    adjustFontSize();
     backButton.style.display = "block";
   }
 }
@@ -157,6 +177,7 @@ function hideAllSections() {
   themeToggleButton.style.display = "none";
   title.style.display = "none";
   backButton.style.display = "none";
+  retryButton.style.display = "none";
   nameDisplay.style.display = "none";
   nameDisplay.textContent = "";
   nameInput.value = "";
@@ -168,7 +189,6 @@ function toggleTheme() {
 
 function toggleFullScreen() {
   if (!isFullScreen) {
-    // 전체화면 모드로 전환
     const docElm = document.documentElement;
     if (docElm.requestFullscreen) {
       docElm.requestFullscreen();
@@ -179,11 +199,10 @@ function toggleFullScreen() {
     } else if (docElm.msRequestFullscreen) {
       docElm.msRequestFullscreen();
     }
-    fullScreenButton.textContent = "⬜️"; // 아이콘 변경
+    fullScreenButton.textContent = "⬜️";
     isFullScreen = true;
-    requestWakeLock(); // 화면 꺼짐 방지 활성화
+    requestWakeLock();
   } else {
-    // 전체화면 모드 해제
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.mozCancelFullScreen) {
@@ -193,9 +212,9 @@ function toggleFullScreen() {
     } else if (document.msExitFullscreen) {
       document.msExitFullscreen();
     }
-    fullScreenButton.textContent = "⬛️"; // 아이콘 원복
+    fullScreenButton.textContent = "⬛️";
     isFullScreen = false;
-    releaseWakeLock(); // 화면 꺼짐 방지 해제
+    releaseWakeLock();
   }
 }
 
@@ -207,6 +226,7 @@ function init() {
   mainMenu.classList.add("active");
   title.style.display = "block";
   backButton.style.display = "none";
+  retryButton.style.display = "none";
 }
 
 document.getElementById("randomBtn").onclick = showTopics;
@@ -216,6 +236,7 @@ backButton.onclick = goBack;
 themeToggleButton.onclick = toggleTheme;
 rotateButton.onclick = toggleRotation;
 fullScreenButton.onclick = toggleFullScreen;
+retryButton.onclick = retrySelection;
 
 window.addEventListener("resize", () => {
   if (nameDisplay.classList.contains("active")) {
@@ -223,11 +244,11 @@ window.addEventListener("resize", () => {
   }
 });
 
-// 회전 버튼 클릭 시에도 폰트 크기 조정
-let rotateTimeout;
 rotateButton.onclick = () => {
-  clearTimeout(rotateTimeout);
-  rotateTimeout = setTimeout(toggleRotation, 100);
+  toggleRotation();
+  requestAnimationFrame(() => {
+    requestAnimationFrame(adjustFontSize);
+  });
 };
 
 init();

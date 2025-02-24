@@ -191,3 +191,27 @@ button:active {
 .full-screen-button:active {
   transform: translateY(0);
 }
+
+#retryButton {
+  display: none; /* 초기에는 숨김 */
+  margin-top: 20px; /* 단어 밑에 여백을 줌 */
+  width: 100%;
+  max-width: 400px; /* 최대 너비 설정 */
+  background-color: #3498db;
+  color: white;
+  border-radius: 5px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+#retryButton:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+#retryButton:active {
+  transform: translateY(0);
+}
