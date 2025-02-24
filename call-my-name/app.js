@@ -16,17 +16,36 @@ const fullScreenButton = document.getElementById("fullScreenButton");
 
 let currentTheme = "dark";
 let isRotated = false;
+let isFullScreen = false;
 
 fullScreenButton.onclick = () => {
-  const docElm = document.documentElement;
-  if (docElm.requestFullscreen) {
-    docElm.requestFullscreen();
-  } else if (docElm.mozRequestFullScreen) {
-    docElm.mozRequestFullScreen();
-  } else if (docElm.webkitRequestFullScreen) {
-    docElm.webkitRequestFullScreen();
-  } else if (docElm.msRequestFullscreen) {
-    docElm.msRequestFullscreen();
+  if (!isFullScreen) {
+    // 전체화면 모드로 전환
+    const docElm = document.documentElement;
+    if (docElm.requestFullscreen) {
+      docElm.requestFullscreen();
+    } else if (docElm.mozRequestFullScreen) {
+      docElm.mozRequestFullScreen();
+    } else if (docElm.webkitRequestFullScreen) {
+      docElm.webkitRequestFullScreen();
+    } else if (docElm.msRequestFullscreen) {
+      docElm.msRequestFullscreen();
+    }
+    fullScreenButton.textContent = "⬜️"; // 아이콘 변경
+    isFullScreen = true;
+  } else {
+    // 전체화면 모드 해제
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+    fullScreenButton.textContent = "⬛️"; // 아이콘 원복
+    isFullScreen = false;
   }
 };
 
