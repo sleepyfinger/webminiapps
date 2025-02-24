@@ -158,7 +158,7 @@ button:active {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  padding: 20px;
+  padding: 0px;
   box-sizing: border-box;
 }
 
@@ -193,7 +193,7 @@ button:active {
 
 #retryButton {
   display: none; /* 초기에는 숨김 */
-  margin-top: 20px; /* 단어 밑에 여백을 줌 */
+  margin: 20px;
   width: 100%;
   max-width: 400px; /* 최대 너비 설정 */
   background-color: #3498db;
@@ -225,7 +225,7 @@ button:active {
 }
 
 #copyright {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: #888;
   text-align: center;
   margin-top: 10px;

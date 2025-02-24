@@ -97,7 +97,7 @@ function adjustFontSize() {
 
   nameDisplay.style.fontSize = `${minSize}px`;
 
-  const maxWidth = container.clientWidth * 0.8;
+  const maxWidth = container.clientWidth * 0.5;
   if (nameDisplay.offsetWidth > maxWidth) {
     nameDisplay.style.fontSize = `${
       (minSize * maxWidth) / nameDisplay.offsetWidth
