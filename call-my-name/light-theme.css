@@ -35,3 +35,13 @@ button {
 #nameDisplay {
   color: #333;
 }
+
+/* 옵션 창 테마 */
+.modal-content {
+  background-color: #fff; /* container 배경색과 동일 */
+  color: #333; /* body 글자색과 동일 */
+}
+
+.option-item label {
+  color: #333; /* body 글자색과 동일 */
+}

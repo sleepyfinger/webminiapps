@@ -5,41 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Call My Name</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="dark-theme.css" id="theme-style" />
+    <link id="theme-style" rel="stylesheet" href="dark-theme.css" />
   </head>
-  <body class="dark">
+
+  <body>
     <div class="container">
-      <button class="back-button" id="backButton">⬅️</button>
-      <div class="button-grid">
-        <button id="preventScreenOffButton" class="prevent-screen-off-button">
-          💡
-        </button>
-        <button id="fullScreenButton" class="full-screen-button">⬛️</button>
-        <button id="theme-toggle-button" class="theme-button">🌙</button>
-      </div>
       <h1 id="title">Call My Name</h1>
-      <div id="version">ver 1.02</div>
-      <div id="mainMenu">
+      <p id="version">ver 1.02</p>
+      <div id="mainMenu" class="active">
         <button id="randomBtn">랜덤 이름 선택</button>
         <button id="inputBtn">직접 이름 입력</button>
       </div>
+
       <div id="topicList"></div>
-      <div id="nameDisplay"></div>
+
       <form id="inputForm">
-        <input
-          type="text"
-          id="nameInput"
-          placeholder="이름을 입력하세요"
-          required
-        />
+        <input type="text" id="nameInput" placeholder="이름을 입력하세요" />
         <button type="submit">확인</button>
       </form>
-      <button id="retryButton">다시 하기</button>
-      <button id="rotateButton" class="rotate-button">🔄</button>
 
-      <div id="copyright">Created by SleepyFinger.</div>
+      <div id="nameDisplay"></div>
+
+      <button id="retryButton">다시 하기</button>
+
+      <button id="backButton" class="back-button">⬅️</button>
+
+      <!-- 옵션 버튼 (오른쪽 상단) -->
+      <button id="optionButton" class="option-button">⚙️</button>
+
+      <!-- 옵션 창 -->
+      <div id="optionModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h3>옵션</h3>
+          <br />
+          <div class="option-item">
+            <label for="preventScreenOff">화면 꺼짐 방지</label>
+            <label class="switch">
+              <input type="checkbox" id="preventScreenOff" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="option-item">
+            <label for="fullScreen">전체 화면</label>
+            <label class="switch">
+              <input type="checkbox" id="fullScreen" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="option-item">
+            <label for="themeToggle">테마 변경</label>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button id="rotateButton">🔄</button>
+
+      <p id="copyright">Created by SleepyFinger.</p>
     </div>
 
-    <script src="app.js" type="module"></script>
+    <script type="module" src="app.js"></script>
   </body>
 </html>

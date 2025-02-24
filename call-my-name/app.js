@@ -10,14 +10,9 @@ const backButton = document.getElementById("backButton");
 const title = document.getElementById("title");
 const version = document.getElementById("version");
 const themeStyle = document.getElementById("theme-style");
-const themeToggleButton = document.getElementById("theme-toggle-button");
 const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
-const fullScreenButton = document.getElementById("fullScreenButton");
 const retryButton = document.getElementById("retryButton");
-const preventScreenOffButton = document.getElementById(
-  "preventScreenOffButton"
-);
 
 let currentTheme = "dark";
 let isRotated = false;
@@ -26,20 +21,28 @@ let currentTopic = "";
 let lastSelectedName = "";
 let wakeLock = null; // 화면 꺼짐 방지
 
-preventScreenOffButton.addEventListener("click", async () => {
-  if (!wakeLock) {
-    try {
-      wakeLock = await navigator.wakeLock.request("screen");
-      preventScreenOffButton.classList.add("active");
-      preventScreenOffButton.textContent = "💡"; // 활성화 상태 아이콘
-    } catch (err) {
-      console.error(`${err.name}, ${err.message}`);
-    }
-  } else {
-    wakeLock.release();
-    wakeLock = null;
-    preventScreenOffButton.classList.remove("active");
-    preventScreenOffButton.textContent = "🔆"; // 비활성화 상태 아이콘
+// 옵션 관련 변수
+const optionButton = document.getElementById("optionButton");
+const optionModal = document.getElementById("optionModal");
+const closeButton = document.querySelector(".close-button");
+const preventScreenOffCheckbox = document.getElementById("preventScreenOff");
+const fullScreenCheckbox = document.getElementById("fullScreen");
+const themeToggleCheckbox = document.getElementById("themeToggle");
+
+// 옵션 버튼 클릭 시 모달 표시
+optionButton.addEventListener("click", () => {
+  optionModal.classList.add("active");
+});
+
+// 닫기 버튼 클릭 시 모달 숨김
+closeButton.addEventListener("click", () => {
+  optionModal.classList.remove("active");
+});
+
+// 모달 외부 클릭 시 모달 숨김
+window.addEventListener("click", (event) => {
+  if (event.target == optionModal) {
+    optionModal.classList.remove("active");
   }
 });
 
@@ -53,7 +56,6 @@ document.addEventListener("visibilitychange", async () => {
 function setTheme(theme) {
   currentTheme = theme;
   themeStyle.setAttribute("href", `${currentTheme}-theme.css`);
-  themeToggleButton.textContent = currentTheme === "light" ? "🌙" : "☀️";
 }
 
 function toggleRotation() {
@@ -86,11 +88,9 @@ function adjustFontSize() {
   let minSize = 1;
   let maxSize = 1000;
   let fontSize;
-
   while (maxSize - minSize > 1) {
     fontSize = Math.floor((minSize + maxSize) / 2);
     nameDisplay.style.fontSize = `${fontSize}px`;
-
     if (
       nameDisplay.scrollWidth <= container.clientWidth &&
       nameDisplay.scrollHeight <= container.clientHeight
@@ -100,9 +100,7 @@ function adjustFontSize() {
       maxSize = fontSize;
     }
   }
-
   nameDisplay.style.fontSize = `${minSize}px`;
-
   const maxWidth = container.clientWidth * 0.5;
   if (nameDisplay.offsetWidth > maxWidth) {
     nameDisplay.style.fontSize = `${
@@ -116,7 +114,6 @@ function selectRandomName(topic) {
   currentTopic = topic;
   let countdown = DEFAULT_COUNTDOWN;
   let availableNames = names[topic].filter((name) => name !== lastSelectedName);
-
   if (availableNames.length === 0) {
     availableNames = names[topic];
   }
@@ -124,12 +121,10 @@ function selectRandomName(topic) {
   const randomName =
     availableNames[Math.floor(Math.random() * availableNames.length)];
   lastSelectedName = randomName;
-
   nameDisplay.style.display = "flex";
   nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
   nameDisplay.classList.add("active");
   adjustFontSize();
-
   const timer = setInterval(() => {
     countdown--;
     if (countdown > 0) {
@@ -169,8 +164,6 @@ function submitName(e) {
 
 function goBack() {
   hideAllSections();
-  fullScreenButton.style.display = "block";
-  themeToggleButton.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
   version.style.display = "block";
@@ -181,8 +174,6 @@ function hideAllSections() {
   [mainMenu, topicList, inputForm, nameDisplay, version].forEach((el) =>
     el.classList.remove("active")
   );
-  fullScreenButton.style.display = "none";
-  themeToggleButton.style.display = "none";
   title.style.display = "none";
   version.style.display = "none";
   backButton.style.display = "none";
@@ -197,60 +188,63 @@ function toggleTheme() {
 }
 
 function toggleFullScreen() {
-  if (!isFullScreen) {
-    const docElm = document.documentElement;
-    if (docElm.requestFullscreen) {
-      docElm.requestFullscreen();
-    } else if (docElm.mozRequestFullScreen) {
-      docElm.mozRequestFullScreen();
-    } else if (docElm.webkitRequestFullScreen) {
-      docElm.webkitRequestFullScreen();
-    } else if (docElm.msRequestFullscreen) {
-      docElm.msRequestFullscreen();
-    }
-    fullScreenButton.textContent = "⬜️";
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
     isFullScreen = true;
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
     }
-    fullScreenButton.textContent = "⬛️";
     isFullScreen = false;
+  }
+}
+
+async function togglePreventScreenOff() {
+  if (!wakeLock) {
+    try {
+      wakeLock = await navigator.wakeLock.request("screen");
+      console.log("Wake Lock 활성화");
+    } catch (err) {
+      console.error(`${err.name}, ${err.message}`);
+      preventScreenOffCheckbox.checked = false;
+    }
+  } else {
+    await wakeLock.release();
+    wakeLock = null;
+    console.log("Wake Lock 비활성화");
   }
 }
 
 function init() {
   setTheme(currentTheme);
   hideAllSections();
-  fullScreenButton.style.display = "block";
-  themeToggleButton.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
   version.style.display = "block";
   backButton.style.display = "none";
   retryButton.style.display = "none";
+
+  document.getElementById("randomBtn").onclick = showTopics;
+  document.getElementById("inputBtn").onclick = showInputForm;
+  inputForm.onsubmit = submitName;
+  backButton.onclick = goBack;
+  rotateButton.onclick = toggleRotation;
+  retryButton.onclick = retrySelection;
+
+  preventScreenOffCheckbox.checked = wakeLock !== null;
+  fullScreenCheckbox.checked = isFullScreen;
+  themeToggleCheckbox.checked = currentTheme === "dark";
+
+  preventScreenOffCheckbox.addEventListener("change", togglePreventScreenOff);
+  fullScreenCheckbox.addEventListener("change", toggleFullScreen);
+  themeToggleCheckbox.addEventListener("change", toggleTheme);
+
+  window.addEventListener("resize", () => {
+    if (nameDisplay.classList.contains("active")) {
+      adjustFontSize();
+    }
+  });
 }
-
-document.getElementById("randomBtn").onclick = showTopics;
-document.getElementById("inputBtn").onclick = showInputForm;
-inputForm.onsubmit = submitName;
-backButton.onclick = goBack;
-themeToggleButton.onclick = toggleTheme;
-rotateButton.onclick = toggleRotation;
-fullScreenButton.onclick = toggleFullScreen;
-retryButton.onclick = retrySelection;
-
-window.addEventListener("resize", () => {
-  if (nameDisplay.classList.contains("active")) {
-    adjustFontSize();
-  }
-});
 
 rotateButton.onclick = () => {
   toggleRotation();

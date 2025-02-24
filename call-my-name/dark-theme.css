@@ -38,6 +38,16 @@ button {
   color: #ecf0f1;
 }
 
-.version {
+#version {
   color: #aaa;
+}
+
+/* 옵션 창 테마 */
+.modal-content {
+  background-color: #2c3e50; /* container 배경색과 동일 */
+  color: #ecf0f1; /* body 글자색과 동일 */
+}
+
+.option-item label {
+  color: #ecf0f1; /* body 글자색과 동일 */
 }
