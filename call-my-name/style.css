@@ -111,7 +111,6 @@ button:active {
   width: 100%;
 }
 
-.theme-button,
 .back-button {
   position: absolute;
   background: none;
@@ -121,14 +120,27 @@ button:active {
   padding: 0.5rem;
 }
 
-.theme-button {
-  right: 1rem;
-  top: 1rem;
-}
-
 .back-button {
   left: 1rem;
   top: 1rem;
+}
+
+.button-grid {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.1rem;
+}
+
+.theme-button,
+.full-screen-button {
+  background: none;
+  border: none;
+  font-size: 3rem;
+  cursor: pointer;
+  padding: 0.0rem;
 }
 
 #rotateButton {
@@ -170,25 +182,6 @@ button:active {
   left: 0;
   width: 100vh;
   height: 100vw;
-}
-
-.full-screen-button {
-  position: absolute;
-  background: none;
-  border: none;
-  font-size: 3rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  top: 1rem;
-  right: calc(5rem + 40px);
-}
-
-.full-screen-button:hover {
-  transform: translateY(-2px);
-}
-
-.full-screen-button:active {
-  transform: translateY(0);
 }
 
 #retryButton {
