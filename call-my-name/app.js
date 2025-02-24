@@ -24,6 +24,24 @@ function setTheme(theme) {
 // 초기 테마 설정
 setTheme(currentTheme);
 
+let isRotated = false;
+
+function toggleRotation() {
+  const body = document.body;
+  isRotated = !isRotated;
+
+  if (isRotated) {
+    body.classList.add("rotate-landscape");
+  } else {
+    body.classList.remove("rotate-landscape");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rotateButton = document.getElementById("rotateButton");
+  rotateButton.addEventListener("click", toggleRotation);
+});
+
 // 토픽 목록 표시 함수
 function showTopics() {
   mainMenu.style.display = "none";
@@ -38,36 +56,6 @@ function showTopics() {
   backButton.style.display = "block";
   title.style.display = "none";
 }
-
-function handleOrientation() {
-  if (window.innerWidth <= 768) {
-    if (window.orientation === 0 || window.orientation === 180) {
-      // 세로 모드일 때 가로 모드로 강제 전환
-      document.body.style.transform = "rotate(90deg)";
-      document.body.style.transformOrigin = "left top";
-      document.body.style.width = "100vh";
-      document.body.style.height = "100vw";
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "absolute";
-      document.body.style.top = "100%";
-      document.body.style.left = "0";
-    } else {
-      // 이미 가로 모드일 때는 원래 상태로 복구
-      document.body.style.transform = "";
-      document.body.style.transformOrigin = "";
-      document.body.style.width = "";
-      document.body.style.height = "";
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-    }
-  }
-}
-
-// 페이지 로드 시와 화면 방향 변경 시 실행
-window.addEventListener("load", handleOrientation);
-window.addEventListener("orientationchange", handleOrientation);
 
 // 랜덤 이름 선택 함수
 function selectRandomName(topic) {
