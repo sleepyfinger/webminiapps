@@ -52,6 +52,8 @@ function selectRandomName(topic) {
   let countdown = DEFAULT_COUNTDOWN;
   const randomName =
     names[topic][Math.floor(Math.random() * names[topic].length)];
+
+  nameDisplay.style.display = "flex";
   nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
   nameDisplay.classList.add("active");
 
@@ -97,6 +99,7 @@ function hideAllSections() {
   );
   title.style.display = "none";
   backButton.style.display = "none";
+  nameDisplay.style.display = "none";
   nameDisplay.textContent = "";
   nameInput.value = "";
 }
