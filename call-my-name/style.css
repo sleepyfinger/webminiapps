@@ -1,8 +1,12 @@
-/* style.css */
-
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
@@ -16,17 +20,21 @@ body {
 }
 
 .container {
-  width: 80%;
+  width: 100%;
   height: 100%;
+  max-width: 800px;
   background-color: #fff;
   padding: 2rem;
+  display: flex;
   flex-direction: column;
-  align-items: center; /* 수평 중앙 정렬 */
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 h1 {
   font-size: 2.5rem;
-  margin: 2rem;
+  margin: 1rem 0 2rem;
   text-align: center;
   color: #2c3e50;
 }
@@ -35,10 +43,11 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  max-width: 400px;
 }
 
 #mainMenu button {
-  gap: 1rem;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   border: none;
@@ -66,12 +75,11 @@ h1 {
   transform: translateY(0);
 }
 
-/* 토픽 목록 스타일 */
 #topicList {
-  display: none; /* 초기 상태에서 숨김 */
+  display: none;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
-  margin-top: 5rem;
+  margin-top: 2rem;
   width: 100%;
 }
 
@@ -95,21 +103,21 @@ h1 {
   transform: translateY(0);
 }
 
-/* 입력 폼 스타일 */
 #inputForm {
-  display: none; /* 초기 상태에서 숨김 */
+  display: none;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
   width: 100%;
+  max-width: 400px;
 }
 
 #nameInput {
-  margin-top: 2rem;
   padding: 0.8rem;
   font-size: 1rem;
   border: 1px solid #bdc3c7;
   border-radius: 5px;
+  width: 100%;
 }
 
 #submitName {
@@ -131,19 +139,16 @@ h1 {
   transform: translateY(0);
 }
 
-/* 이름 표시 스타일 */
 #nameDisplay {
-  display: none; /* 초기 상태에서 숨김 */
+  display: none;
   font-size: 2rem;
   text-align: center;
-  margin-top: 3rem;
+  margin-top: 2rem;
   padding: 1rem;
-  background-color: #ecf0f1;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background-color: transparent;
 }
 
-/* 버튼 스타일 */
 .theme-button,
 .back-button {
   position: absolute;
@@ -163,15 +168,14 @@ h1 {
   left: 1rem;
 }
 
-/* 반응형 디자인 */
 @media (max-width: 480px) {
   .container {
-    width: 95%;
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   h1 {
     font-size: 2rem;
+    margin: 0.5rem 0 1.5rem;
   }
 
   #mainMenu button {
@@ -180,5 +184,6 @@ h1 {
 
   #nameDisplay {
     font-size: 1.5rem;
+    background-color: transparent;
   }
 }

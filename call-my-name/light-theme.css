@@ -1,5 +1,3 @@
-/* light-theme.css */
-
 body {
   background-color: #f0f2f5;
   color: #333;
@@ -35,5 +33,5 @@ button {
 }
 
 #nameDisplay {
-  background-color: #ecf0f1;
+  color: #333;
 }

@@ -1,4 +1,3 @@
-// data.js
 const topics = [
   "연예인",
   "음식",
