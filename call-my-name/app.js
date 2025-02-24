@@ -45,14 +45,14 @@ function selectRandomName(topic) {
   const randomName =
     names[topic][Math.floor(Math.random() * names[topic].length)];
   topicList.style.display = "none";
-  nameDisplay.textContent = `이름을 선택 중입니다... ${countdown}`;
+  nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
   nameDisplay.style.display = "block";
   title.style.display = "none";
   backButton.style.display = "none";
   const timer = setInterval(() => {
     countdown--;
     if (countdown > 0) {
-      nameDisplay.textContent = `이름을 선택 중입니다... ${countdown}`;
+      nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
     } else {
       clearInterval(timer);
       nameDisplay.textContent = randomName;

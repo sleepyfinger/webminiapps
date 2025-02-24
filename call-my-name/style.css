@@ -141,7 +141,7 @@ h1 {
 
 #nameDisplay {
   display: none;
-  font-size: 2rem;
+  font-size: 10vw;
   text-align: center;
   margin-top: 2rem;
   padding: 1rem;
