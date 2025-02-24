@@ -72,7 +72,6 @@ function showTopics() {
 }
 
 function adjustFontSize() {
-  const nameDisplay = document.getElementById("nameDisplay");
   const container = nameDisplay.parentElement;
   let fontSize = 10; // 시작 폰트 크기를 작게 설정
   nameDisplay.style.fontSize = `${fontSize}px`;
@@ -90,8 +89,8 @@ function adjustFontSize() {
   fontSize--;
   nameDisplay.style.fontSize = `${fontSize}px`;
 
-  // 최대 넓이의 90%를 넘지 않도록 조정
-  const maxWidth = container.clientWidth * 0.9;
+  // 최대 넓이의 80%를 넘지 않도록 조정
+  const maxWidth = container.clientWidth * 0.8;
   if (nameDisplay.offsetWidth > maxWidth) {
     nameDisplay.style.fontSize = `${
       (fontSize * maxWidth) / nameDisplay.offsetWidth
@@ -225,8 +224,10 @@ window.addEventListener("resize", () => {
 });
 
 // 회전 버튼 클릭 시에도 폰트 크기 조정
-rotateButton.addEventListener("click", () => {
-  setTimeout(adjustFontSize, 100); // 회전 애니메이션이 완료된 후 크기 조정
-});
+let rotateTimeout;
+rotateButton.onclick = () => {
+  clearTimeout(rotateTimeout);
+  rotateTimeout = setTimeout(toggleRotation, 100);
+};
 
 init();
