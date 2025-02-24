@@ -245,7 +245,6 @@ function init() {
   document.getElementById("inputBtn").onclick = showInputForm;
   inputForm.onsubmit = submitName;
   backButton.onclick = goBack;
-  rotateButton.onclick = toggleRotation;
   retryButton.onclick = retrySelection;
 
   preventScreenOffCheckbox.checked = wakeLock !== null;
