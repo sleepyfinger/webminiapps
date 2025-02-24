@@ -90,11 +90,11 @@ function adjustFontSize() {
   fontSize--;
   nameDisplay.style.fontSize = `${fontSize}px`;
 
-  // 최대 높이의 90%를 넘지 않도록 조정
-  const maxHeight = container.clientHeight * 0.9;
-  if (nameDisplay.offsetHeight > maxHeight) {
+  // 최대 넓이의 90%를 넘지 않도록 조정
+  const maxWidth = container.clientWidth * 0.9;
+  if (nameDisplay.offsetWidth > maxWidth) {
     nameDisplay.style.fontSize = `${
-      (fontSize * maxHeight) / nameDisplay.offsetHeight
+      (fontSize * maxWidth) / nameDisplay.offsetWidth
     }px`;
   }
 }
