@@ -117,7 +117,7 @@ button:active {
   position: absolute;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 3rem;
   cursor: pointer;
   padding: 0.5rem;
 }
@@ -140,7 +140,7 @@ button:active {
   color: white;
   width: 40px;
   height: 40px;
-  font-size: 20px;
+  font-size: 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -180,7 +180,7 @@ button:active {
   cursor: pointer;
   padding: 0.5rem;
   top: 1rem;
-  right: calc(1rem + 40px); /* 회전 버튼과 충돌하지 않도록 위치 조정 */
+  right: calc(5rem + 40px); /* 회전 버튼과 충돌하지 않도록 위치 조정 */
 }
 
 .full-screen-button:hover {

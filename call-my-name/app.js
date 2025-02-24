@@ -14,7 +14,7 @@ const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
 const fullScreenButton = document.getElementById("fullScreenButton");
 
-let currentTheme = "light";
+let currentTheme = "dark";
 let isRotated = false;
 
 fullScreenButton.onclick = () => {
