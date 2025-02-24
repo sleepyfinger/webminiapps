@@ -28,6 +28,7 @@ const closeButton = document.querySelector(".close-button");
 const preventScreenOffCheckbox = document.getElementById("preventScreenOff");
 const fullScreenCheckbox = document.getElementById("fullScreen");
 const themeToggleCheckbox = document.getElementById("themeToggle");
+const clickSound = document.getElementById("clickSound");
 
 // 옵션 버튼 클릭 시 모달 표시
 optionButton.addEventListener("click", () => {
@@ -53,6 +54,18 @@ document.addEventListener("visibilitychange", async () => {
   }
 });
 
+function playClickSound() {
+  clickSound.currentTime = 0;
+  clickSound.play();
+}
+
+function addClickSoundToButtons() {
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    button.addEventListener("click", playClickSound);
+  });
+}
+
 function setTheme(theme) {
   currentTheme = theme;
   themeStyle.setAttribute("href", `${currentTheme}-theme.css`);
@@ -76,7 +89,10 @@ function showTopics() {
   topics.forEach((topic) => {
     const button = document.createElement("button");
     button.textContent = topic;
-    button.onclick = () => selectRandomName(topic);
+    button.onclick = () => {
+      playClickSound();
+      selectRandomName(topic);
+    };
     topicList.appendChild(button);
   });
   topicList.classList.add("active");
@@ -216,6 +232,7 @@ async function togglePreventScreenOff() {
 }
 
 function init() {
+  addClickSoundToButtons();
   setTheme(currentTheme);
   hideAllSections();
   mainMenu.classList.add("active");
