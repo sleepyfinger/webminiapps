@@ -8,3 +8,4 @@
 [<img src="number-baseball/icon.jpg" width="128">](number-baseball "숫자야구")
 [<img src="mannaii/icon.png" width="128">](mannaii "만나이 계산기")
 [<img src="pomodoro/icon-192x192.png" width="128">](pomodoro "뽀모도로 타이머")
+[<img src="call-my-name/icon-192x192.png" width="128">](call-my-name "Call My Name")

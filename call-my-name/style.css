@@ -112,6 +112,7 @@ button:active {
 }
 
 .back-button {
+  display: none;
   position: absolute;
   background: none;
   border: none;
