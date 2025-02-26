@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>다른 글자 찾기 게임</title>
+    <style>
+      body {
+        font-family: "Nanum Gothic", sans-serif;
+        text-align: center;
+        background-color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        max-width: 600px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .grid {
+        display: grid;
+        gap: 10px;
+        margin: 20px auto;
+        justify-content: center;
+      }
+      .cell {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #f7f7f7;
+        border-radius: 5px;
+      }
+      .cell:hover {
+        background-color: #e5e5e5;
+      }
+      .cell.correct {
+        background-color: #ffcccc; /* 틀린 항목 색상 변경 */
+      }
+
+      #menu,
+      #game {
+        display: none;
+      }
+
+      .button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        margin: 10px;
+      }
+      .button:hover {
+        background-color: #0056b3;
+      }
+      #progressBar {
+        width: 100%;
+        height: 20px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        margin-top: 10px;
+      }
+      #progressBarFill {
+        height: 100%;
+        width: 100%;
+        background-color: #4caf50;
+        border-radius: 10px;
+        transition: width 0.1s linear;
+      }
+      #restartButton {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="menu">
+        <h1>다른 글자 찾기 게임</h1>
+        <button class="button" id="startButton">시작하기</button>
+      </div>
+      <div id="game">
+        <h2>레벨: <span id="level">1</span></h2>
+        <div id="progressBar"><div id="progressBarFill"></div></div>
+        <div id="grid" class="grid"></div>
+      </div>
+    </div>
+    <button class="button" id="restartButton">다시 시작</button>
+    <script src="game.js"></script>
+  </body>
+</html>
