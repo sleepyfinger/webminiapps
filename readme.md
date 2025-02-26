@@ -10,3 +10,4 @@
 [<img src="pomodoro/icon-192x192.png" width="128">](pomodoro "뽀모도로 타이머")
 [<img src="call-my-name/icon-192x192.png" width="128">](call-my-name "Call My Name")
 [<img src="password-generator/icon-192x192.png" width="128">](password-generator "비밀번호 생성기")
+[<img src="find-different-letters/icon-192x192.jpg" width="128">](find-different-letters "다른 글자 찾기")
