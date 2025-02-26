@@ -1,0 +1,180 @@
+:root {
+  --bg-color: #f0f4f8;
+  --text-color: #2d3748;
+  --card-bg: #ffffff;
+  --btn-bg: #4299e1;
+  --btn-text: #ffffff;
+  --progress-bg: #e2e8f0;
+  --progress-fill: #48bb78;
+  --cell-bg: #edf2f7;
+  --cell-hover: #e2e8f0;
+  --correct-bg: #f56565;
+}
+
+.dark-mode {
+  --bg-color: #1a202c;
+  --text-color: #e2e8f0;
+  --card-bg: #2d3748;
+  --btn-bg: #4299e1;
+  --btn-text: #ffffff;
+  --progress-bg: #4a5568;
+  --progress-fill: #48bb78;
+  --cell-bg: #4a5568;
+  --cell-hover: #718096;
+  --correct-bg: #f56565;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  transition: background-color 0.3s ease;
+}
+
+#app {
+  width: 90%;
+  max-width: 500px;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+#theme-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+#header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#progress {
+  flex-grow: 1;
+  margin-left: 1rem;
+}
+
+#progressBar {
+  height: 8px;
+  background-color: var(--progress-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#progressBarFill {
+  height: 100%;
+  background-color: var(--progress-fill);
+  width: 100%;
+  transition: width 0.1s linear;
+}
+
+#grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.cell {
+  aspect-ratio: 1;
+  background-color: var(--cell-bg);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.cell:hover {
+  background-color: var(--cell-hover);
+}
+
+.correct {
+  background-color: var(--correct-bg);
+  color: white;
+}
+
+.titleHighestLevel {
+  text-align: center;
+}
+
+#inGameHighestLevel {
+  display: flex;
+  justify-content: center;
+  background-color: var(--btn-bg);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9em;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dark-mode #inGameHighestLevel {
+  background-color: var(--cell-bg);
+  color: var(--text-color);
+}
+
+#copyright {
+  font-size: 0.7rem;
+  color: #888;
+  text-align: center;
+  margin-top: 10px;
+  font-weight: normal;
+}
+
+@media (max-width: 480px) {
+  #app {
+    width: 95%;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  .cell {
+    font-size: 1.2rem;
+  }
+}
