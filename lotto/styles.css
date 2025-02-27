@@ -1,9 +1,7 @@
-/* 루트 요소에 기본 font-size 설정 */
 :root {
-  font-size: 18px; /* 기본 크기 */
+  font-size: 18px;
 }
 
-/* 전체 페이지 스타일 */
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -14,7 +12,6 @@ body {
   background-color: #f0f0f0;
 }
 
-/* 메인 컨테이너 스타일 */
 .container {
   text-align: center;
   background-color: white;
@@ -22,29 +19,22 @@ body {
   border-radius: 0.625rem;
   box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
   width: auto;
-  height: auto;
   min-width: 17.5rem;
   max-width: 90vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
-/* 제목 스타일 */
 h1 {
   color: #333;
   font-size: 1.8rem;
 }
 
-/* 로또 번호 컨테이너 스타일 */
 #lotto-numbers {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
-/* 개별 로또 번호 스타일 */
 .number {
   width: 3.125rem;
   height: 3.125rem;
@@ -59,7 +49,6 @@ h1 {
   margin: 0.5rem;
 }
 
-/* 번호 생성 버튼 스타일 */
 #generate-btn {
   background-color: #4caf50;
   border: none;
@@ -69,18 +58,40 @@ h1 {
   text-decoration: none;
   display: inline-block;
   font-size: 1rem;
-  margin: 1.25rem;
+  margin: 1.25rem 0;
   cursor: pointer;
   border-radius: 0.3125rem;
 }
 
-#logo {
-  border-radius: 0.625rem;
-  max-width: 100%;
-  height: auto;
+#result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* 반응형 디자인을 위한 미디어 쿼리 */
+#result p {
+  margin: 0.5rem 0;
+}
+
+#result strong {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 480px) {
+  #result {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+}
+
 @media screen and (max-width: 768px) {
   :root {
     font-size: 14px;
