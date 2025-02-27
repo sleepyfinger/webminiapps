@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const matchCount = generatedNumbers.filter((num) =>
         lotto.numbers.includes(num)
       ).length;
+
       if (matchCount === 6) winningCounts[1]++;
       else if (matchCount === 5 && generatedNumbers.includes(lotto.bonus))
         winningCounts[2]++;
@@ -53,17 +54,16 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (matchCount === 3) winningCounts[5]++;
     });
 
-    let result = "";
-    for (let i = 1; i <= 5; i++) {
-      result += `${i}등: ${winningCounts[i]}회<br>`;
-    }
-    return result || "당첨되지 않았습니다.";
+    document.getElementById("first-place").textContent = winningCounts[1];
+    document.getElementById("second-place").textContent = winningCounts[2];
+    document.getElementById("third-place").textContent = winningCounts[3];
+    document.getElementById("fourth-place").textContent = winningCounts[4];
+    document.getElementById("fifth-place").textContent = winningCounts[5];
   }
 
   generateBtn.addEventListener("click", () => {
     const numbers = generateLottoNumbers();
     displayNumbers(numbers);
-    const winningResult = checkWinning(numbers);
-    resultDiv.innerHTML = winningResult;
+    checkWinning(numbers);
   });
 });
