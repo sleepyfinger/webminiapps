@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const lottoNumbers = document.getElementById("lotto-numbers");
   const generateBtn = document.getElementById("generate-btn");
-  const resultDiv = document.getElementById("result");
   let lottoData = [];
 
   // CSV 파일 로드
