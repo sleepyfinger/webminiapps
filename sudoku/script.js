@@ -1,6 +1,6 @@
 const BOARD_SIZE = 9;
 const BOX_SIZE = 3;
-const DIFFICULTIES = { EASY: 1, MEDIUM: 40, HARD: 50 };
+const DIFFICULTIES = { EASY: 30, MEDIUM: 40, HARD: 50 };
 const INITIAL_BOARD_VALUE = 0;
 
 const boardElement = document.getElementById("board");
@@ -71,13 +71,17 @@ function removeNumbers(numbersToRemove) {
     }
   }
 
+  console.log(numbersToRemove);
+
   let removedCount = 0;
   while (removedCount < numbersToRemove && possibleIndexes.length > 0) {
     const randomIndex = Math.floor(Math.random() * possibleIndexes.length);
     const { row, col } = possibleIndexes[randomIndex];
-    board[row][col] = INITIAL_BOARD_VALUE;
+    if (board[row][col] !== INITIAL_BOARD_VALUE) {
+      board[row][col] = INITIAL_BOARD_VALUE;
+      removedCount++;
+    }
     possibleIndexes.splice(randomIndex, 1);
-    removedCount++;
   }
 }
 
