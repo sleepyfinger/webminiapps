@@ -1,0 +1,228 @@
+/* CSS Variables for Color Scheme (Light Mode by Default) */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --board-bg: #fff;
+  --tile-bg: #fff;
+  --tile-hover: #e6e6e6;
+  --selected-bg: #a0d2ff;
+  --related-bg: #e6f3ff;
+  --button-bg: var(--primary-color);
+  --button-hover: #2980b9;
+}
+
+/* Dark Mode Color Scheme */
+.dark-mode {
+  --bg-color: #222;
+  --text-color: #f5f5f5;
+  --board-bg: #333;
+  --tile-bg: #444;
+  --tile-hover: #555;
+  --selected-bg: #1a5f7a;
+  --related-bg: #2c3e50;
+  --button-bg: var(--secondary-color);
+  --button-hover: #27ae60;
+}
+
+/* General Body Styles */
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  transition: background-color 0.3s, color 0.3s;
+  position: relative; /* Add relative positioning to body */
+}
+
+/* Container Styles */
+.container {
+  /* background-color: var(--board-bg); */
+  padding: 2rem;
+  /* border-radius: 15px; */
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
+  max-width: 500px;
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  font-size: 2.5rem;
+}
+
+/* Sudoku Board Styles */
+#board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1px;
+  margin-bottom: 2rem;
+  border: 2px solid var(--text-color);
+  padding: 2px;
+  background-color: var(--text-color);
+}
+
+.tile {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background-color: var(--tile-bg);
+  transition: background-color 0.3s; /*hover effect only background color */
+  cursor: pointer;
+}
+
+.tile:hover {
+  background-color: var(--tile-hover);
+}
+
+.tile.selected {
+  background-color: var(--selected-bg);
+}
+
+.tile.given {
+  /* Change the style of pre-filled tiles */
+  color: #000; /* Example: make pre-filled numbers bold */
+  font-weight: bold;
+}
+.tile.error {
+  background-color: #ffcccc;
+}
+
+/* Digit Input Styles */
+#digits {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr); /* Keep 9 colunms*/
+  gap: 5px;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.digit,
+button {
+  /* Common style for digit and button */
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: var(--button-bg);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.digit {
+  font-size: 1rem;
+}
+
+.digit:hover,
+button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+/* Control Button Styles */
+#controls {
+  display: flex;
+  justify-content: space-around; /* space-around for more beauty*/
+  flex-wrap: wrap;
+  gap: 5px; /* add gap here so that media query is not required*/
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  margin: 5px 0;
+  flex: 1; /* Use simple flex:1*/
+}
+
+#theme-toggle {
+  position: absolute;
+  top: 10px; /* Adjusted from 1px */
+  right: 10px; /* Adjusted from 1px */
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  width: 30px;
+  height: 30px;
+  z-index: 10; /* Added z-index */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 500px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .tile {
+    font-size: 1.3rem;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  #digits {
+    grid-template-columns: repeat(9, 1fr); /* Keep 9 colunms*/
+    gap: 2px; /* Reduce the gap on small devices*/
+  }
+
+  .digit {
+    font-size: 0.8rem; /*Reduce font size*/
+  }
+}
+
+/* Difficulty Popup Styles */
+#difficultyPopup {
+  display: none;
+  position: fixed;
+  width: 300px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--board-bg);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  text-align: center;
+}
+
+#difficultyPopup h3 {
+  margin-bottom: 15px;
+}
+
+#difficultyPopup button {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  background-color: var(--button-bg);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#difficultyPopup button:hover {
+  background-color: var(--button-hover);
+}
+
+.pencil-mark {
+  font-size: 0.8rem; /* Make pencil marks smaller */
+  display: inline-block; /* Display each mark side by side */
+  margin: 2px; /* Add some space between the marks */
+  color: grey; /* Make pencil marks less prominent */
+}

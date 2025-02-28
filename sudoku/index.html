@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>모던 스도쿠</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <button id="theme-toggle">🌓</button>
+    <div class="container">
+      <h1>모던 스도쿠</h1>
+      <div id="board"></div>
+      <div id="digits"></div>
+      <div id="controls">
+        <button id="newGame">
+          🔄<br />
+          새 게임
+        </button>
+        <button id="undo">
+          ↩️<br />
+          실행 취소
+        </button>
+        <button id="togglePencil">
+          ✏️<br />
+          연필 모드
+        </button>
+        <button id="solve">
+          ✔️<br />
+          해결
+        </button>
+      </div>
+    </div>
+    <div class="difficultyPopup" id="difficultyPopup">
+      <h2>난이도 선택</h2>
+      <button id="easy">쉬움</button>
+      <button id="medium">보통</button>
+      <button id="hard">어려움</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
