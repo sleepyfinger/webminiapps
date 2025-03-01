@@ -1,3 +1,4 @@
+/* Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -8,13 +9,17 @@ html,
 body {
   height: 100%;
   width: 100%;
+  overflow: hidden; /* 스크롤 방지 */
 }
 
 body {
   font-family: "Noto Sans KR", sans-serif;
-  background-color: #f0f2f5;
-  color: #333;
+  background-color: #f0f0f0; /* Light theme background - 부드러운 밝은 회색 */
+  color: #333; /* Light theme text color */
   transition: background-color 0.3s, color 0.3s;
+  display: flex; /* 추가: 중앙 정렬을 위한 flexbox */
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
@@ -26,21 +31,24 @@ body {
   align-items: center;
   padding: 2rem;
   position: relative;
+  background-color: #fff; /* Light theme container background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+  border-radius: 10px; /* 둥근 모서리 추가 */
+  max-width: 600px; /* 최대 너비 설정 */
+  max-height: 800px;
 }
 
 h1 {
   font-size: 2.5rem;
-  color: #2c3e50;
+  color: #34495e; /* Consistent heading color - 짙은 남색 */
   text-align: center;
+  margin-bottom: 1rem; /* 제목 아래 여백 추가 */
 }
 
-#mainMenu {
-  display: none;
-  width: 100%;
-  max-width: 400px;
-}
-
-#topicList {
+/* Menu and List Styles */
+#mainMenu,
+#topicList,
+#questionDisplay {
   display: none;
   width: 100%;
   max-width: 600px;
@@ -50,6 +58,8 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-width: 400px;
+  width: 100%;
 }
 
 #topicList.active {
@@ -59,51 +69,88 @@ h1 {
   justify-content: center;
   padding: 1rem;
   background-color: transparent;
+  width: 100%;
 }
 
+#questionDisplay.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: pre-wrap; /* 줄 바꿈 처리 */
+  overflow: hidden;
+  height: auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  min-height: 100px; /* 최소 높이 설정 */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+}
+
+/* Button Styles */
 button {
   padding: 1rem 2rem;
   font-size: 1.1rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px; /* 모서리 둥글게 */
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s; /* box-shadow 전환 추가 */
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* 그림자 추가 */
 }
 
 #randomBtn {
-  background-color: #3498db;
-  color: #fff;
+  background-color: #4a69bd; /* Deep Blue */
 }
 
 #inputBtn {
-  background-color: #e74c3c;
-  color: #fff;
+  background-color: #eb5757; /* Deep Red */
+}
+
+#submitName {
+  background-color: #27ae60; /* Primary green */
 }
 
 #topicList button {
-  background-color: #f39c12;
-  color: #fff;
+  background-color: #f0932b; /* Vivid Orange - Light theme topic button */
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
 }
 
-button:hover {
-  opacity: 0.8;
+#topicList button:hover {
+  opacity: 0.95;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#topicList button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+button:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
 }
 
 button:active {
   transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); /* 클릭 시 그림자 축소 */
 }
 
+/* Input Styles */
 #nameInput {
   padding: 0.8rem;
   font-size: 1rem;
-  border: 1px solid #bdc3c7;
+  border: 1px solid #ddd;
   border-radius: 5px;
   width: 100%;
+  color: #333;
 }
 
+/* Back Button */
 .back-button {
   display: none;
   position: absolute;
@@ -114,75 +161,40 @@ button:active {
   padding: 0.5rem;
   left: 1rem;
   top: 1rem;
+  color: #555;
+}
+.back-button:hover {
+  color: #333;
 }
 
-#rotateButton {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background-color: transparent;
-  color: black;
-  width: 40px;
-  height: 40px;
-  font-size: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: none;
-  cursor: pointer;
-}
-
-#rotateButton:hover {
-  background-color: transparent;
-}
-
-#nameDisplay {
-  display: none;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  padding: 0px;
-  box-sizing: border-box;
-}
-
-.rotated {
-  transform: rotate(-90deg);
-  transform-origin: top left;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100vh;
-  height: 100vw;
-}
-
+/* Retry Button */
 #retryButton {
   display: none;
   margin: 20px;
   width: 100%;
   max-width: 400px;
-  background-color: #3498db;
-  color: white;
-  border-radius: 5px;
+  background-color: #4a69bd; /* Deep Blue */
+  border-radius: 8px;
   padding: 0.8rem 1.5rem;
   font-size: 1rem;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 #retryButton:hover {
-  opacity: 0.8;
+  opacity: 0.95;
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #retryButton:active {
   transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
+/* Footer */
 #version {
   font-size: 0.9rem;
   color: #888;
@@ -197,9 +209,10 @@ button:active {
   color: #888;
   text-align: center;
   font-weight: normal;
+  margin-top: 10px;
 }
 
-/* 옵션 버튼 스타일 */
+/* Option Button */
 .option-button {
   position: absolute;
   top: 1rem;
@@ -210,9 +223,14 @@ button:active {
   cursor: pointer;
   padding: 0.5rem;
   z-index: 10;
+  color: #555;
 }
 
-/* 모달 스타일 */
+.option-button:hover {
+  color: #333;
+}
+
+/* Modal Styles */
 .modal {
   display: none;
   position: fixed;
@@ -234,6 +252,8 @@ button:active {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   width: 80%;
   max-width: 400px;
+  background-color: #fff; /* Light theme modal background */
+  color: #333; /* Light theme modal text color */
 }
 
 .close-button {
@@ -244,7 +264,7 @@ button:active {
   cursor: pointer;
 }
 
-/* 옵션 아이템 스타일 */
+/* Option Item Styles */
 .option-item {
   display: flex;
   justify-content: space-between;
@@ -254,9 +274,10 @@ button:active {
 
 .option-item label {
   font-size: 1.1rem;
+  color: #333; /* Light theme option label color */
 }
 
-/* 토글 스위치 스타일 */
+/* Toggle Switch Styles */
 .switch {
   position: relative;
   display: inline-block;
@@ -304,7 +325,7 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
+/* Rounded Sliders */
 .slider.round {
   border-radius: 34px;
 }
@@ -313,7 +334,124 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/* 모달 활성화 스타일 */
+/* Modal Active Style */
 .modal.active {
   display: block;
+}
+
+/* Theme-Specific Styles (Applied Dynamically) */
+body.dark-theme {
+  background-color: #1e272e; /* Dark theme background - 어두운 남색 계열 */
+  color: #f5f6fa; /* Dark theme text color - 밝은 회색 */
+}
+
+body.dark-theme .container {
+  background-color: #2c3a47; /* Dark theme container background - 약간 더 밝은 남색 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+}
+
+body.dark-theme h1 {
+  color: #686de0; /* Heading color for dark theme - 부드러운 보라색 */
+}
+
+body.dark-theme #randomBtn {
+  background-color: #546de5; /* Darker blue - 밝은 파란색 */
+}
+
+body.dark-theme #inputBtn {
+  background-color: #ee5253; /* Darker red - 밝은 빨간색 */
+}
+
+body.dark-theme #submitName {
+  background-color: #2ed573; /* Darker green - 밝은 초록색 */
+}
+
+body.dark-theme #topicList button {
+  background-color: #f9ca24; /* Darker orange - 밝은 노랑색 */
+  color: #333;
+}
+
+body.dark-theme #topicList button:hover {
+  opacity: 0.95;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme #topicList button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-theme #retryButton {
+  background-color: #546de5; /* Darker blue - 밝은 파란색 */
+}
+
+body.dark-theme #nameInput {
+  border: 1px solid #7f8c8d; /* Darker border */
+  background-color: #2c3a47; /* Dark theme nameInput background - 약간 더 밝은 남색 */
+  color: #f5f6fa;
+}
+
+body.dark-theme #questionDisplay.active {
+  border: 1px solid #7f8c8d; /* Darker border */
+  background-color: #2c3a47; /* Dark theme questionDisplay background - 약간 더 밝은 남색 */
+  color: #f5f6fa;
+}
+
+body.dark-theme #version {
+  color: #aaa;
+}
+
+body.dark-theme .modal-content {
+  background-color: #2c3a47; /* Dark modal background - 약간 더 밝은 남색 */
+  color: #f5f6fa; /* Dark modal text color - 밝은 회색 */
+}
+
+body.dark-theme .option-item label {
+  color: #f5f6fa; /* Dark option label color - 밝은 회색 */
+}
+
+body.dark-theme .option-button {
+  color: #f5f6fa;
+}
+
+body.dark-theme .option-button:hover {
+  color: #fff;
+}
+
+body.dark-theme .back-button {
+  color: #f5f6fa;
+}
+
+body.dark-theme .back-button:hover {
+  color: #fff;
+}
+
+/* Emoji Styles */
+.emoji {
+  font-size: inherit; /* 기본 글꼴 크기 상속 */
+  display: inline-block;
+  transition: color 0.3s; /* 색상 변경 시 부드러운 전환 효과 */
+}
+
+.back-button .emoji {
+  color: #555; /* Light theme back button emoji color */
+}
+
+.option-button .emoji {
+  color: #555; /* Light theme option button emoji color */
+}
+
+.back-button:hover .emoji,
+.option-button:hover .emoji {
+  color: #333;
+}
+body.dark-theme .back-button .emoji,
+body.dark-theme .option-button .emoji {
+  color: #f5f6fa;
+}
+
+body.dark-theme .back-button:hover .emoji,
+body.dark-theme .option-button:hover .emoji {
+  color: #fff;
 }

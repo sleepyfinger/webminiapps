@@ -8,12 +8,9 @@ const questionDisplay = document.getElementById("questionDisplay");
 const backButton = document.getElementById("backButton");
 const title = document.getElementById("title");
 const version = document.getElementById("version");
-const themeStyle = document.getElementById("theme-style");
-const rotateButton = document.getElementById("rotateButton");
 const retryButton = document.getElementById("retryButton");
 
 let currentTheme = "dark";
-let isRotated = false;
 let isFullScreen = false;
 let currentTopic = "";
 let lastSelectedQuestion = ""; //마지막으로 선택된 질문
@@ -30,17 +27,20 @@ const clickSound = document.getElementById("clickSound");
 
 // 옵션 버튼 클릭 시 모달 표시
 optionButton.addEventListener("click", () => {
+  playClickSound(); // 클릭 소리 재생
   optionModal.classList.add("active");
 });
 
 // 닫기 버튼 클릭 시 모달 숨김
 closeButton.addEventListener("click", () => {
+  playClickSound(); // 클릭 소리 재생
   optionModal.classList.remove("active");
 });
 
 // 모달 외부 클릭 시 모달 숨김
 window.addEventListener("click", (event) => {
   if (event.target == optionModal) {
+    playClickSound(); // 클릭 소리 재생
     optionModal.classList.remove("active");
   }
 });
@@ -66,19 +66,11 @@ function addClickSoundToButtons() {
 
 function setTheme(theme) {
   currentTheme = theme;
-  themeStyle.setAttribute("href", `${currentTheme}-theme.css`);
-}
-
-function toggleRotation() {
-  isRotated = !isRotated;
-  document.body.classList.toggle("rotated", isRotated);
-  if (isRotated) {
-    document.body.style.width = "100vh";
-    document.body.style.height = "100vw";
-  } else {
-    document.body.style.width = "";
-    document.body.style.height = "";
-  }
+  document.body.classList.remove("light-theme", "dark-theme");
+  document.body.classList.add(`${theme}-theme`);
+  localStorage.setItem("theme", theme);
+  // 테마 변경 시 체크박스 상태 동기화
+  themeToggleCheckbox.checked = currentTheme === "dark";
 }
 
 function showTopics() {
@@ -260,6 +252,9 @@ async function togglePreventScreenOff() {
 
 function init() {
   addClickSoundToButtons();
+  // 로컬 스토리지에서 테마 불러오기
+  const savedTheme = localStorage.getItem("theme");
+  currentTheme = savedTheme || "dark"; // 저장된 테마가 없으면 기본값은 dark
   setTheme(currentTheme);
   hideAllSections();
   mainMenu.classList.add("active");
@@ -278,10 +273,12 @@ function init() {
 
   preventScreenOffCheckbox.checked = wakeLock !== null;
   fullScreenCheckbox.checked = isFullScreen;
+  //초기값 반영.
   themeToggleCheckbox.checked = currentTheme === "dark";
 
   preventScreenOffCheckbox.addEventListener("change", togglePreventScreenOff);
   fullScreenCheckbox.addEventListener("change", toggleFullScreen);
+  // 테마 변경 이벤트 리스너 연결
   themeToggleCheckbox.addEventListener("change", toggleTheme);
 
   window.addEventListener("resize", () => {
@@ -290,12 +287,5 @@ function init() {
     }
   });
 }
-
-rotateButton.onclick = () => {
-  toggleRotation();
-  requestAnimationFrame(() => {
-    requestAnimationFrame(adjustFontSize);
-  });
-};
 
 init();

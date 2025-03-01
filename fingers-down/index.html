@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fingers Down</title>
     <link rel="stylesheet" href="style.css" />
-    <link id="theme-style" rel="stylesheet" href="dark-theme.css" />
   </head>
 
   <body>
@@ -13,8 +12,8 @@
 
     <div class="container">
       <h1 id="title">Fingers Down</h1>
-      <p id="version">ver 0.1</p>
-      <div id="mainMenu" class="active">
+      <p id="version">ver 0.2</p>
+      <div id="mainMenu">
         <button id="randomBtn">랜덤 질문</button>
         <button id="inputBtn">주제 선택 질문</button>
       </div>
@@ -25,10 +24,14 @@
 
       <button id="retryButton">다음 질문</button>
 
-      <button id="backButton" class="back-button">⬅️</button>
+      <button id="backButton" class="back-button">
+        <span class="emoji" role="img" aria-label="Back">⬅️</span>
+      </button>
 
       <!-- 옵션 버튼 (오른쪽 상단) -->
-      <button id="optionButton" class="option-button">⚙️</button>
+      <button id="optionButton" class="option-button">
+        <span class="emoji" role="img" aria-label="Options">⚙️</span>
+      </button>
 
       <!-- 옵션 창 -->
       <div id="optionModal" class="modal">
@@ -59,8 +62,6 @@
           </div>
         </div>
       </div>
-
-      <button id="rotateButton">🔄</button>
 
       <p id="copyright">Created by SleepyFinger.</p>
     </div>
