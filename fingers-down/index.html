@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fingers Down</title>
+    <link rel="stylesheet" href="style.css" />
+    <link id="theme-style" rel="stylesheet" href="dark-theme.css" />
+  </head>
+
+  <body>
+    <audio id="clickSound" src="click.wav"></audio>
+
+    <div class="container">
+      <h1 id="title">Fingers Down</h1>
+      <p id="version">ver 0.1</p>
+      <div id="mainMenu" class="active">
+        <button id="randomBtn">랜덤 질문</button>
+        <button id="inputBtn">주제 선택 질문</button>
+      </div>
+
+      <div id="topicList"></div>
+
+      <div id="questionDisplay"></div>
+
+      <button id="retryButton">다음 질문</button>
+
+      <button id="backButton" class="back-button">⬅️</button>
+
+      <!-- 옵션 버튼 (오른쪽 상단) -->
+      <button id="optionButton" class="option-button">⚙️</button>
+
+      <!-- 옵션 창 -->
+      <div id="optionModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h3>옵션</h3>
+          <br />
+          <div class="option-item">
+            <label for="preventScreenOff">화면 꺼짐 방지</label>
+            <label class="switch">
+              <input type="checkbox" id="preventScreenOff" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="option-item">
+            <label for="fullScreen">전체 화면</label>
+            <label class="switch">
+              <input type="checkbox" id="fullScreen" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+          <div class="option-item">
+            <label for="themeToggle">테마 변경</label>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button id="rotateButton">🔄</button>
+
+      <p id="copyright">Created by SleepyFinger.</p>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
