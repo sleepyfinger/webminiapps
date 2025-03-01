@@ -107,7 +107,7 @@ function adjustFontSize() {
     }
   }
   questionDisplay.style.fontSize = `${minSize}px`;
-  const maxWidth = container.clientWidth * 0.5;
+  const maxWidth = container.clientWidth * 0.3;
   if (questionDisplay.offsetWidth > maxWidth) {
     questionDisplay.style.fontSize = `${
       (minSize * maxWidth) / questionDisplay.offsetWidth
