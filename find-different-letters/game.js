@@ -105,7 +105,7 @@ function getRandomChar() {
  * 게임 그리드를 생성하는 함수
  * 현재 레벨에 따라 그리드 크기를 조정하고, 목표 문자와 다른 문자를 배치합니다.
  */
-function createGrid() {
+async function createGrid() {
   const gridSize = Math.min(level + GRID_SIZE_INCREMENT, MAX_GRID_WIDTH);
   grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
   grid.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
@@ -127,10 +127,24 @@ function createGrid() {
     cell.textContent = i === targetIndex ? differentChar : targetChar;
     cell.addEventListener("click", () => checkCell(i === targetIndex, cell));
     // 정답 셀인 경우, targetCell에 저장
-    if(i===targetIndex) {
-        targetCell = cell;
+    if (i === targetIndex) {
+      targetCell = cell;
     }
     grid.appendChild(cell);
+
+    // 등장 연출을 위한 초기 설정
+    cell.style.opacity = 0;
+    cell.style.transform = "scale(1)";
+    cell.style.transition = "opacity 0.3s, transform 0.3s";
+
+    // 등장 연출 실행 (비동기 처리)
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        cell.style.opacity = 1;
+        cell.style.transform = "scale(1)";
+        resolve();
+      }, 1); // 각 셀이 나타나는 시간 간격 (밀리초)
+    });
   }
 }
 
@@ -155,13 +169,13 @@ function startTimer() {
  * 다음 레벨로 진행하는 함수
  * 레벨을 증가시키고, 난이도를 업데이트하고, 새로운 그리드를 생성하고, 타이머를 시작합니다.
  */
-function nextLevel() {
+async function nextLevel() {
   updateLevelDisplay();
   difficultyLevel = Math.min(
     Math.floor((level - 1) / LEVEL_THRESHOLD),
     koreanCharsLevels.length - 1
   );
-  createGrid();
+  await createGrid();
 
   maxTime =
     level <= 9
@@ -217,13 +231,13 @@ function endGame(isSuccess) {
  * 게임을 시작하는 함수
  * 메뉴를 숨기고 게임을 표시하며, 게임 변수를 초기화하고 첫 레벨을 시작합니다.
  */
-function startGame() {
+async function startGame() {
   menu.style.display = "none";
   game.style.display = "block";
   restartButton.style.display = "none";
   level = 1;
   difficultyLevel = 0;
-  nextLevel();
+  await nextLevel();
 }
 
 // 이벤트 리스너 등록

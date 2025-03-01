@@ -136,6 +136,24 @@ h1 {
   color: white;
 }
 
+.correct:hover {
+  background-color: var(--correct-bg);
+  color: white;
+}
+
+.cell {
+  /* border: 1px solid black; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.correct {
+  background-color: red;
+}
+
 .titleHighestLevel {
   text-align: center;
 }
