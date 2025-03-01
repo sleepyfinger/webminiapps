@@ -133,7 +133,7 @@ async function createGrid() {
     grid.appendChild(cell);
 
     // 등장 연출을 위한 초기 설정
-    cell.style.opacity = 0;
+    cell.style.opacity = 1;
     cell.style.transform = "scale(1)";
     cell.style.transition = "opacity 0.3s, transform 0.3s";
 
@@ -143,7 +143,7 @@ async function createGrid() {
         cell.style.opacity = 1;
         cell.style.transform = "scale(1)";
         resolve();
-      }, 1); // 각 셀이 나타나는 시간 간격 (밀리초)
+      }, 0); // 각 셀이 나타나는 시간 간격 (밀리초)
     });
   }
 }
