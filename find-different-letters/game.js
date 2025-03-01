@@ -29,6 +29,11 @@ let maxTime;
 let lastUsedChars = [];
 let highestLevel = localStorage.getItem("highestLevel") || 1;
 
+/**
+ * 테마를 토글하는 함수 (다크 모드/라이트 모드 전환)
+ * 현재 body에 'dark-mode' 클래스가 있는지 확인하고, 있으면 제거하고 없으면 추가합니다.
+ * 테마에 따라 이모지 아이콘을 변경합니다.
+ */
 const toggleTheme = () => {
   body.classList.toggle("dark-mode");
   themeToggle.textContent = body.classList.contains("dark-mode") ? "🌞" : "🌓";
@@ -36,11 +41,18 @@ const toggleTheme = () => {
 
 themeToggle.addEventListener("click", toggleTheme);
 
-// UI 업데이트 함수
+/**
+ * 현재 레벨을 UI에 업데이트하는 함수
+ * levelDisplay 엘리먼트에 현재 레벨을 표시합니다.
+ */
 function updateLevelDisplay() {
   levelDisplay.textContent = level;
 }
 
+/**
+ * 최고 레벨을 UI에 업데이트하는 함수
+ * 'highestLevel'로 시작하는 id를 가진 모든 엘리먼트에 최고 레벨을 표시합니다.
+ */
 function updateHighestLevelDisplay() {
   const highestLevelElements = document.querySelectorAll(
     '[id^="highestLevel"]'
@@ -50,26 +62,45 @@ function updateHighestLevelDisplay() {
   });
 }
 
+/**
+ * 프로그레스 바를 업데이트하는 함수
+ * 남은 시간을 바탕으로 프로그레스 바의 너비를 조정합니다.
+ */
 function updateProgressBar() {
   const percentage = (timeLeft / maxTime) * 100;
   progressBarFill.style.width = `${percentage}%`;
 }
 
+/**
+ * 메뉴를 보여주는 함수
+ * 메뉴를 표시하고 게임 화면을 숨깁니다.
+ */
 function showMenu() {
   menu.style.display = "block";
   game.style.display = "none";
 }
 
+/**
+ * 재시작 버튼을 보여주는 함수
+ * 재시작 버튼을 표시합니다.
+ */
 function showRestartButton() {
   restartButton.style.display = "block";
 }
 
-// 게임 로직 함수
+/**
+ * 랜덤한 한글 자음 또는 모음을 반환하는 함수
+ * 현재 난이도에 맞는 한글 문자 배열에서 랜덤한 문자를 선택합니다.
+ */
 function getRandomChar() {
   const chars = koreanCharsLevels[difficultyLevel];
   return chars[Math.floor(Math.random() * chars.length)];
 }
 
+/**
+ * 게임 그리드를 생성하는 함수
+ * 현재 레벨에 따라 그리드 크기를 조정하고, 목표 문자와 다른 문자를 배치합니다.
+ */
 function createGrid() {
   const gridSize = Math.min(level + GRID_SIZE_INCREMENT, MAX_GRID_WIDTH);
   grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
@@ -100,6 +131,10 @@ function createGrid() {
   }
 }
 
+/**
+ * 게임 타이머를 시작하는 함수
+ * 일정 시간마다 남은 시간을 감소시키고, 프로그레스 바를 업데이트합니다.
+ */
 function startTimer() {
   clearInterval(timer);
   updateProgressBar();
@@ -113,6 +148,10 @@ function startTimer() {
   }, 100);
 }
 
+/**
+ * 다음 레벨로 진행하는 함수
+ * 레벨을 증가시키고, 난이도를 업데이트하고, 새로운 그리드를 생성하고, 타이머를 시작합니다.
+ */
 function nextLevel() {
   updateLevelDisplay();
   difficultyLevel = Math.min(
@@ -129,6 +168,10 @@ function nextLevel() {
   startTimer();
 }
 
+/**
+ * 셀을 클릭했을 때 호출되는 함수
+ * 클릭한 셀이 정답인지 확인하고, 정답이면 레벨을 올리고, 오답이면 게임을 종료합니다.
+ */
 function checkCell(isCorrect, cell) {
   if (timeLeft <= 0) {
     return;
@@ -145,6 +188,11 @@ function checkCell(isCorrect, cell) {
   }
 }
 
+/**
+ * 게임을 종료하는 함수
+ * 게임 타이머를 중지하고, 성공 또는 실패에 따른 UI 업데이트를 수행합니다.
+ * 최고 레벨을 갱신하고 저장합니다.
+ */
 function endGame(isSuccess) {
   clearInterval(timer);
   if (!isSuccess) {
@@ -164,6 +212,10 @@ function endGame(isSuccess) {
   }
 }
 
+/**
+ * 게임을 시작하는 함수
+ * 메뉴를 숨기고 게임을 표시하며, 게임 변수를 초기화하고 첫 레벨을 시작합니다.
+ */
 function startGame() {
   menu.style.display = "none";
   game.style.display = "block";
