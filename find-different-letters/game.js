@@ -26,8 +26,12 @@ let difficultyLevel = 0;
 let timer;
 let timeLeft;
 let maxTime;
-let lastUsedChars = [];
 let highestLevel = localStorage.getItem("highestLevel") || 1;
+
+// 정답 셀 정보 저장 변수 (전역 변수로 선언)
+let targetIndex; // 정답 셀의 인덱스
+let targetCell; // 정답 셀의 HTML element
+let differentChar; // 정답 셀의 textContent
 
 /**
  * 테마를 토글하는 함수 (다크 모드/라이트 모드 전환)
@@ -108,25 +112,24 @@ function createGrid() {
   grid.innerHTML = "";
 
   const totalCells = gridSize * gridSize;
-  let targetChar, differentChar;
+  let targetChar;
 
   do {
     targetChar = getRandomChar();
     differentChar = getRandomChar();
-  } while (
-    targetChar === differentChar ||
-    lastUsedChars.includes(targetChar) ||
-    lastUsedChars.includes(differentChar)
-  );
+  } while (targetChar === differentChar);
 
-  lastUsedChars = [targetChar, differentChar];
-  const targetIndex = Math.floor(Math.random() * totalCells);
+  targetIndex = Math.floor(Math.random() * totalCells);
 
   for (let i = 0; i < totalCells; i++) {
     const cell = document.createElement("div");
     cell.className = "cell";
     cell.textContent = i === targetIndex ? differentChar : targetChar;
     cell.addEventListener("click", () => checkCell(i === targetIndex, cell));
+    // 정답 셀인 경우, targetCell에 저장
+    if(i===targetIndex) {
+        targetCell = cell;
+    }
     grid.appendChild(cell);
   }
 }
@@ -196,11 +199,9 @@ function checkCell(isCorrect, cell) {
 function endGame(isSuccess) {
   clearInterval(timer);
   if (!isSuccess) {
-    const correctCell = Array.from(grid.children).find(
-      (cell) => cell.textContent !== grid.children[0].textContent
-    );
-    if (correctCell) {
-      correctCell.classList.add("correct");
+    // targetCell을 바로 사용
+    if (targetCell) {
+      targetCell.classList.add("correct");
     }
     showRestartButton();
   }
@@ -222,7 +223,6 @@ function startGame() {
   restartButton.style.display = "none";
   level = 1;
   difficultyLevel = 0;
-  lastUsedChars = [];
   nextLevel();
 }
 
