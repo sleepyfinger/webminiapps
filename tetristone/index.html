@@ -78,38 +78,140 @@
         0x00ffff, // Cyan
         0xff00ff, // Magenta
       ];
+
       const SHAPES = [
-        [[1, 1, 1, 1]],
         [
-          [1, 1],
-          [1, 1],
+          [[1, 2, 3, 4]],
+          [[1], [2], [3], [4]],
+          [[4, 3, 2, 1]],
+          [[4], [3], [2], [1]],
         ],
         [
-          [1, 1, 1],
-          [0, 1, 0],
+          [
+            [1, 2],
+            [4, 3],
+          ],
+          [
+            [4, 1],
+            [3, 2],
+          ],
+          [
+            [3, 4],
+            [2, 1],
+          ],
+          [
+            [2, 3],
+            [1, 4],
+          ],
         ],
         [
-          [1, 1, 1],
-          [1, 0, 0],
+          [
+            [1, 2, 3],
+            [0, 4, 0],
+          ],
+          [
+            [0, 1],
+            [4, 2],
+            [0, 3],
+          ],
+          [
+            [0, 4, 0],
+            [3, 2, 1],
+          ],
+          [
+            [3, 0],
+            [2, 4],
+            [1, 0],
+          ],
         ],
         [
-          [1, 1, 1],
-          [0, 0, 1],
+          [
+            [1, 2, 3],
+            [4, 0, 0],
+          ],
+          [
+            [4, 1],
+            [0, 2],
+            [0, 3],
+          ],
+          [
+            [0, 0, 4],
+            [3, 2, 1],
+          ],
+          [
+            [3, 0],
+            [2, 0],
+            [1, 4],
+          ],
         ],
         [
-          [1, 1, 0],
-          [0, 1, 1],
+          [
+            [1, 2, 3],
+            [0, 0, 4],
+          ],
+          [
+            [0, 1],
+            [0, 2],
+            [4, 3],
+          ],
+          [
+            [4, 0, 0],
+            [3, 2, 1],
+          ],
+          [
+            [3, 4],
+            [2, 0],
+            [1, 0],
+          ],
         ],
         [
-          [0, 1, 1],
-          [1, 1, 0],
+          [
+            [1, 2, 0],
+            [0, 3, 4],
+          ],
+          [
+            [0, 1],
+            [3, 2],
+            [4, 0],
+          ],
+          [
+            [4, 3, 0],
+            [0, 2, 1],
+          ],
+          [
+            [0, 4],
+            [2, 3],
+            [1, 0],
+          ],
+        ],
+        [
+          [
+            [0, 2, 1],
+            [4, 3, 0],
+          ],
+          [
+            [4, 0],
+            [3, 2],
+            [0, 1],
+          ],
+          [
+            [0, 3, 4],
+            [1, 2, 0],
+          ],
+          [
+            [1, 0],
+            [2, 3],
+            [0, 4],
+          ],
         ],
       ];
 
       class Piece {
         constructor(scene, shape) {
           this.scene = scene;
-          this.shape = shape;
+          this.shapeSet = shape;
+          this.shapeIndex = 0;
+          this.shape = this.shapeSet[this.shapeIndex];
           this.x = Math.floor(COLS / 2) - Math.ceil(this.shape[0].length / 2);
           this.y = 0;
           this.blocks = [];
@@ -120,7 +222,7 @@
           this.shape.forEach((row, y) => {
             row.forEach((value, x) => {
               if (value !== 0) {
-                const color = random(COLORS); // 각 블록마다 무작위 색상 선택
+                const color = COLORS[value - 1]; // 색상 인덱스를 사용하여 색상 선택
                 const block = this.scene.add
                   .rectangle(
                     (this.x + x) * BLOCK_SIZE + BLOCK_SIZE / 2,
@@ -169,16 +271,35 @@
         }
 
         rotate() {
-          const rotated = this.shape[0].map((_, i) =>
-            this.shape.map((row) => row[i]).reverse()
-          );
-          const prevShape = this.shape;
-          this.shape = rotated;
+          const prevShapeIndex = this.shapeIndex;
+          this.shapeIndex = (this.shapeIndex + 1) % this.shapeSet.length;
+          this.shape = this.shapeSet[this.shapeIndex];
           this.updateBlockPositions();
+
           if (this.collision()) {
-            this.shape = prevShape;
+            this.shapeIndex = prevShapeIndex;
+            this.shape = this.shapeSet[this.shapeIndex];
             this.updateBlockPositions();
+          } else {
+            // 회전이 성공적으로 이루어졌을 때 블록의 색상을 업데이트합니다.
+            this.updateBlockColors();
           }
+        }
+
+        updateBlockColors() {
+          let blockIndex = 0;
+          this.shape.forEach((row, y) => {
+            row.forEach((value, x) => {
+              if (value !== 0) {
+                if (blockIndex < this.blocks.length) {
+                  const color = COLORS[value - 1];
+                  this.blocks[blockIndex].fillColor = color;
+                  this.blocks[blockIndex].color = color;
+                }
+                blockIndex++;
+              }
+            });
+          });
         }
 
         updateBlockPositions() {
@@ -239,6 +360,7 @@
           this.scene.checkLines();
           this.scene.checkColorMatches();
         }
+
         hardDrop() {
           while (!this.moveDown()) {}
         }
@@ -307,6 +429,7 @@
           }
           this.drawBoard();
         }
+
         checkLines() {
           let lines = 0;
           for (let y = ROWS - 1; y >= 0; y--) {
@@ -378,6 +501,7 @@
         updateScore() {
           scoreElement.textContent = `Score: ${score}`;
         }
+
         drawBoard() {
           this.children.each((child) => {
             if (child.name === "boardBlock") {
@@ -403,6 +527,7 @@
             });
           });
         }
+
         gameOver() {
           this.isGameOver = true;
           gameOverContainer.style.display = "flex";
