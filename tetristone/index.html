@@ -7,24 +7,48 @@
     <style>
       body {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
         background-color: #f0f0f0;
-        font-family: Arial, sans-serif;
+        font-family: "Arial", sans-serif;
       }
+
+      h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        margin-bottom: 0;
+      }
+
+      #version {
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-weight: normal;
+        font-style: italic;
+      }
+
+      #copyright {
+        font-size: 0.7rem;
+        color: #888;
+        text-align: center;
+        margin-top: 10px;
+        font-weight: normal;
+      }
+
       #game-container {
         border: 2px solid #333;
+        border-radius: 10px;
         background-color: #fff;
-        position: relative; /* Add relative positioning */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
       }
-      #score {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 24px;
-      }
+
       #restart-button {
         padding: 10px 20px;
         background-color: #4caf50;
@@ -33,9 +57,13 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 18px;
-        display: block; /* Initially hidden */
-        z-index: 10;
+        transition: background-color 0.3s;
       }
+
+      #restart-button:hover {
+        background-color: #45a049;
+      }
+
       #game-over-container {
         position: absolute;
         top: 0;
@@ -46,24 +74,79 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
         z-index: 10;
       }
+
       #game-over-text {
-        font-size: 30px;
+        font-size: 36px;
         color: white;
         margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      #mobile-controls {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 0;
+        background-color: #f0f0f0;
+        position: relative;
+        bottom: 0;
+        left: 0;
+      }
+
+      #mobile-controls button {
+        font-size: 24px;
+        padding: 15px 20px;
+        margin: 0 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      #game-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+        padding: 20px;
+      }
+
+      #score-container {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 720px) {
+        #game-wrapper {
+          transform: scale(0.8);
+        }
       }
     </style>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
   </head>
   <body>
-    <div id="score">Score: 0</div>
-    <div id="game-container">
-      <div id="game-over-container">
-        <div id="game-over-text">Game Over</div>
-        <button id="restart-button">Retry</button>
+    <div id="game-wrapper">
+      <h1 id="title">TetriStone</h1>
+      <p id="version">ver 0.1</p>
+      <div id="score-container">Score: <span id="score">0</span></div>
+      <div id="game-container">
+        <div id="game-over-container">
+          <div id="game-over-text">Game Over</div>
+          <button id="restart-button">Retry</button>
+        </div>
       </div>
+      <div id="mobile-controls">
+        <button id="left-btn">←</button>
+        <button id="right-btn">→</button>
+        <button id="rotate-btn">↻</button>
+        <button id="down-btn">↓</button>
+      </div>
+      <p id="copyright">Created by SleepyFinger.</p>
     </div>
 
     <script>
@@ -222,18 +305,18 @@
           this.shape.forEach((row, y) => {
             row.forEach((value, x) => {
               if (value !== 0) {
-                const color = COLORS[value - 1]; // 색상 인덱스를 사용하여 색상 선택
+                const color = COLORS[value - 1];
                 const block = this.scene.add
                   .rectangle(
                     (this.x + x) * BLOCK_SIZE + BLOCK_SIZE / 2,
                     (this.y + y) * BLOCK_SIZE + BLOCK_SIZE / 2,
-                    BLOCK_SIZE,
-                    BLOCK_SIZE,
+                    BLOCK_SIZE - 2,
+                    BLOCK_SIZE - 2,
                     color
                   )
                   .setOrigin(0.5);
                 block.setStrokeStyle(2, 0x000000);
-                block.color = color; // 블록에 색상 속성 추가
+                block.color = color;
                 this.blocks.push(block);
               }
             });
@@ -281,7 +364,6 @@
             this.shape = this.shapeSet[this.shapeIndex];
             this.updateBlockPositions();
           } else {
-            // 회전이 성공적으로 이루어졌을 때 블록의 색상을 업데이트합니다.
             this.updateBlockColors();
           }
         }
@@ -324,10 +406,10 @@
             row.some(
               (value, dx) =>
                 value !== 0 &&
-                (this.y + dy < 0 || // check for top border collision
-                  this.y + dy >= ROWS || // check for bottom border collision
-                  this.x + dx < 0 || // check for left border collision
-                  this.x + dx >= COLS || // check for right border collision
+                (this.y + dy < 0 ||
+                  this.y + dy >= ROWS ||
+                  this.x + dx < 0 ||
+                  this.x + dx >= COLS ||
                   board[this.y + dy][this.x + dx] !== 0)
             )
           );
@@ -337,7 +419,6 @@
           this.shape.forEach((row, y) => {
             row.forEach((value, x) => {
               if (value !== 0) {
-                // Only proceed if there's a block in the shape
                 if (this.y + y < 0) {
                   this.scene.gameOver();
                 } else {
@@ -347,7 +428,7 @@
                     return block.x === blockX && block.y === blockY;
                   });
                   if (block) {
-                    board[this.y + y][this.x + x] = block.color; // 블록의 색상으로 보드에 기록
+                    board[this.y + y][this.x + x] = block.color;
                   }
                 }
               }
@@ -404,15 +485,28 @@
           this.input.keyboard.on("keydown-UP", () => currentPiece.rotate());
           this.input.keyboard.on("keydown-SPACE", () =>
             currentPiece.hardDrop()
-          ); // 스페이스바 이벤트 추가
+          );
           this.dropCounter = 0;
           this.dropInterval = 500;
           this.isGameOver = false;
 
           restartButton.addEventListener("click", () => {
-            this.scene.restart(); // Restart the scene
-            gameOverContainer.style.display = "none"; // Hide the button
+            this.scene.restart();
+            gameOverContainer.style.display = "none";
           });
+
+          document
+            .getElementById("left-btn")
+            .addEventListener("click", () => currentPiece.moveLeft());
+          document
+            .getElementById("right-btn")
+            .addEventListener("click", () => currentPiece.moveRight());
+          document
+            .getElementById("rotate-btn")
+            .addEventListener("click", () => currentPiece.rotate());
+          document
+            .getElementById("down-btn")
+            .addEventListener("click", () => currentPiece.hardDrop());
         }
 
         update(time, delta) {
@@ -492,6 +586,7 @@
           matched.forEach((match) => {
             board[match.y][match.x] = 0;
           });
+
           if (matched.length > 0) {
             score += matched.length * 50;
             this.updateScore();
@@ -499,7 +594,7 @@
         }
 
         updateScore() {
-          scoreElement.textContent = `Score: ${score}`;
+          scoreElement.textContent = `${score}`;
         }
 
         drawBoard() {
