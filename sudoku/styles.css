@@ -74,6 +74,7 @@ h1 {
   background-color: var(--tile-bg);
   transition: background-color 0.3s;
   cursor: pointer;
+  position: relative; /* 연필 마크를 위한 position 설정 */
 }
 
 .tile:hover {
@@ -191,11 +192,25 @@ button {
   background-color: var(--button-hover);
 }
 
+/* 연필 마크 스타일 - 수정됨 */
+.pencil-marks-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  pointer-events: none; /* 마크 클릭 방지 */
+}
+
 .pencil-mark {
-  font-size: 0.8rem;
-  display: inline-block;
-  margin: 2px;
+  font-size: 0.7rem; /* 크기 조절 */
   color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 반응형 디자인을 위한 미디어 쿼리 */

@@ -139,6 +139,49 @@ function createTileElement(row, col) {
     }
   } else {
     tile.dataset.pencil = "";
+    // pencil-marks-container 생성 및 추가
+    const pencilMarksContainer = document.createElement("div");
+    pencilMarksContainer.classList.add("pencil-marks-container");
+    for (let i = 1; i <= 9; i++) {
+      const pencilMark = document.createElement("span");
+      pencilMark.classList.add("pencil-mark");
+      pencilMark.textContent = i;
+      pencilMark.dataset.value = i; // 데이터 속성에 숫자 저장
+      pencilMark.style.display = "none"; // 기본적으로 숨김 처리
+
+      // 연필 마크 위치 지정
+      switch (i) {
+        case 1:
+          pencilMark.style.gridArea = "1 / 1 / 2 / 2";
+          break;
+        case 2:
+          pencilMark.style.gridArea = "1 / 2 / 2 / 3";
+          break;
+        case 3:
+          pencilMark.style.gridArea = "1 / 3 / 2 / 4";
+          break;
+        case 4:
+          pencilMark.style.gridArea = "2 / 1 / 3 / 2";
+          break;
+        case 5:
+          pencilMark.style.gridArea = "2 / 2 / 3 / 3";
+          break;
+        case 6:
+          pencilMark.style.gridArea = "2 / 3 / 3 / 4";
+          break;
+        case 7:
+          pencilMark.style.gridArea = "3 / 1 / 4 / 2";
+          break;
+        case 8:
+          pencilMark.style.gridArea = "3 / 2 / 4 / 3";
+          break;
+        case 9:
+          pencilMark.style.gridArea = "3 / 3 / 4 / 4";
+          break;
+      }
+      pencilMarksContainer.appendChild(pencilMark);
+    }
+    tile.appendChild(pencilMarksContainer);
   }
 
   tile.addEventListener("click", () => selectTile(tile, row, col));
@@ -206,18 +249,15 @@ function createNewBoard(difficulty = "medium") {
 
 /** 연필 표시 토글 */
 function togglePencilMark(tile, num) {
-  let pencilMarks = tile.dataset.pencil.split(",").filter(Boolean);
-  const index = pencilMarks.indexOf(num.toString());
-  if (index > -1) pencilMarks.splice(index, 1);
-  else pencilMarks.push(num.toString());
-  tile.dataset.pencil = pencilMarks.join(",");
-  tile.textContent = "";
-  pencilMarks.forEach((mark) => {
-    const span = document.createElement("span");
-    span.classList.add("pencil-mark");
-    span.textContent = mark;
-    tile.appendChild(span);
-  });
+  const pencilMarksContainer = tile.querySelector(".pencil-marks-container");
+  const pencilMark = pencilMarksContainer.querySelector(
+    `[data-value="${num}"]`
+  );
+  if (pencilMark.style.display === "none") {
+    pencilMark.style.display = "flex";
+  } else {
+    pencilMark.style.display = "none";
+  }
 }
 
 /** 관련 셀 강조 */
@@ -287,12 +327,22 @@ function selectTile(tile, row, col) {
         tile.dataset.pencil = "";
         tile.classList.remove("given");
         tile.classList.add("user-input");
+        // pencil mark 초기화
+        const pencilMarks = tile.querySelectorAll(".pencil-mark");
+        pencilMarks.forEach((mark) => {
+          mark.style.display = "none";
+        });
       }
     } else if (tile.classList.contains("user-input")) {
       history.push({ row, col, value: board[row][col] });
       board[row][col] = INITIAL_BOARD_VALUE;
       tile.textContent = "";
       tile.classList.remove("user-input");
+      // pencil mark 초기화
+      const pencilMarks = tile.querySelectorAll(".pencil-mark");
+      pencilMarks.forEach((mark) => {
+        mark.style.display = "none";
+      });
     }
     checkWin();
     highlightErrors();
@@ -346,6 +396,11 @@ function clearSelectedTile() {
       selectedTile.textContent = "";
       selectedTile.dataset.pencil = "";
       selectedTile.classList.remove("user-input");
+      // pencil mark 초기화
+      const pencilMarks = selectedTile.querySelectorAll(".pencil-mark");
+      pencilMarks.forEach((mark) => {
+        mark.style.display = "none";
+      });
       highlightErrors();
     }
   }
