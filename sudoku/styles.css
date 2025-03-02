@@ -11,6 +11,8 @@
   --related-bg: #e6f3ff;
   --button-bg: var(--primary-color);
   --button-hover: #2980b9;
+  --digit-selected-bg: #ffd700; /* 선택된 숫자 버튼 배경색 */
+  --digit-selected-color: #000; /* 선택된 숫자 버튼 글자색 */
 }
 
 /* 다크 모드 색상 구성표 */
@@ -24,6 +26,8 @@
   --related-bg: #2c3e50;
   --button-bg: var(--secondary-color);
   --button-hover: #27ae60;
+  --digit-selected-bg: #ffeb3b; /* 다크 모드 선택된 숫자 버튼 배경색 */
+  --digit-selected-color: #000; /* 다크 모드 선택된 숫자 버튼 글자색 */
 }
 
 /* 일반적인 body 스타일 */
@@ -89,6 +93,7 @@ h1 {
   /* 미리 채워진 타일의 스타일 변경 */
   font-weight: bold;
 }
+
 .tile.error {
   /* background-color: #ffcccc; */
 }
@@ -123,6 +128,13 @@ button {
 button:hover {
   background-color: var(--button-hover);
   transform: translateY(-2px);
+}
+
+/* 선택된 숫자 버튼 스타일 */
+.digit.selected {
+  background-color: var(--digit-selected-bg);
+  color: var(--digit-selected-color);
+  transform: none; /* 호버 시 이동 효과 제거 */
 }
 
 /* 컨트롤 버튼 스타일 */
