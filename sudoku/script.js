@@ -7,7 +7,7 @@ const boardElement = document.getElementById("board");
 const digitsElement = document.getElementById("digits");
 const newGameButton = document.getElementById("newGame");
 const solveButton = document.getElementById("solve");
-const undoButton = document.getElementById("undo");
+const clearButton = document.getElementById("clear"); // 지우개 버튼 추가
 const togglePencilButton = document.getElementById("togglePencil");
 const themeToggle = document.getElementById("theme-toggle");
 const difficultyPopup = document.getElementById("difficultyPopup");
@@ -122,14 +122,6 @@ function checkWin() {
     alert("축하합니다! 스도쿠를 완성했습니다!");
   }
 }
-/** 마지막 동작 취소 */
-function undo() {
-  if (history.length > 0) {
-    const lastMove = history.pop();
-    board[lastMove.row][lastMove.col] = lastMove.value;
-    renderBoard();
-  }
-}
 
 // --- UI 렌더링 함수 ---
 
@@ -141,6 +133,10 @@ function createTileElement(row, col) {
   if (board[row][col] !== INITIAL_BOARD_VALUE) {
     tile.textContent = board[row][col];
     tile.classList.add("given");
+    if (solution[row][col] !== board[row][col]) {
+      tile.classList.remove("given");
+      tile.classList.add("user-input");
+    }
   } else {
     tile.dataset.pencil = "";
   }
@@ -281,13 +277,22 @@ function highlightErrors() {
 
 /** 타일 선택 */
 function selectTile(tile, row, col) {
-  if (selectedNumber !== null && board[row][col] === INITIAL_BOARD_VALUE) {
-    history.push({ row, col, value: board[row][col] });
-    if (isPencilMode) togglePencilMark(tile, selectedNumber);
-    else {
-      board[row][col] = selectedNumber;
-      tile.textContent = selectedNumber;
-      tile.dataset.pencil = "";
+  if (selectedNumber !== null) {
+    if (board[row][col] === INITIAL_BOARD_VALUE) {
+      history.push({ row, col, value: board[row][col] });
+      if (isPencilMode) togglePencilMark(tile, selectedNumber);
+      else {
+        board[row][col] = selectedNumber;
+        tile.textContent = selectedNumber;
+        tile.dataset.pencil = "";
+        tile.classList.remove("given");
+        tile.classList.add("user-input");
+      }
+    } else if (tile.classList.contains("user-input")) {
+      history.push({ row, col, value: board[row][col] });
+      board[row][col] = INITIAL_BOARD_VALUE;
+      tile.textContent = "";
+      tile.classList.remove("user-input");
     }
     checkWin();
     highlightErrors();
@@ -324,6 +329,28 @@ function hideDifficultyPopup() {
   difficultyPopup.style.display = "none";
 }
 
+/** 선택된 타일의 값 지우기 */
+function clearSelectedTile() {
+  if (selectedTile) {
+    const children = [...selectedTile.parentNode.children];
+    const index = children.indexOf(selectedTile);
+    const row = Math.floor(index / BOARD_SIZE);
+    const col = index % BOARD_SIZE;
+
+    if (
+      board[row][col] !== INITIAL_BOARD_VALUE &&
+      selectedTile.classList.contains("user-input")
+    ) {
+      history.push({ row, col, value: board[row][col] });
+      board[row][col] = INITIAL_BOARD_VALUE;
+      selectedTile.textContent = "";
+      selectedTile.dataset.pencil = "";
+      selectedTile.classList.remove("user-input");
+      highlightErrors();
+    }
+  }
+}
+
 // --- 이벤트 리스너 등록 ---
 themeToggle.addEventListener("click", () =>
   document.body.classList.toggle("dark-mode")
@@ -336,7 +363,7 @@ solveButton.addEventListener("click", () => {
   renderBoard();
 });
 
-undoButton.addEventListener("click", undo);
+clearButton.addEventListener("click", clearSelectedTile); // 지우개 버튼 클릭 이벤트 추가
 
 togglePencilButton.addEventListener("click", () => {
   isPencilMode = !isPencilMode;
