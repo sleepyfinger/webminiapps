@@ -7,7 +7,8 @@ const boardElement = document.getElementById("board");
 const digitsElement = document.getElementById("digits");
 const newGameButton = document.getElementById("newGame");
 const solveButton = document.getElementById("solve");
-const clearButton = document.getElementById("clear"); // 지우개 버튼 추가
+const clearButton = document.getElementById("clear");
+const printButton = document.getElementById("print");
 const togglePencilButton = document.getElementById("togglePencil");
 const themeToggle = document.getElementById("theme-toggle");
 const difficultyPopup = document.getElementById("difficultyPopup");
@@ -406,6 +407,117 @@ function clearSelectedTile() {
   }
 }
 
+function printBoard() {
+  const boardElement = document.getElementById("board");
+
+  // 1. 인쇄용 보드 복제
+  const printContent = boardElement.cloneNode(true);
+
+  // 2. 인쇄용 보드에 ID 부여
+  if (!printContent.id) {
+    printContent.id = "print-board";
+  }
+
+  // 3. 인쇄용 타일에 클래스 추가 및 스타일 변경
+  const tiles = printContent.querySelectorAll(".tile");
+  tiles.forEach((tile) => {
+    if (tile.textContent !== "") {
+      tile.classList.add("print-tile");
+    }
+    // 테두리 스타일 추가 (모든 타일에 적용)
+    tile.style.border = "1px solid black";
+    tile.style.display = "flex";
+    tile.style.justifyContent = "center";
+    tile.style.alignItems = "center";
+    tile.style.fontSize = "20px"; // 글자 크기 조정
+    tile.style.width = "auto"; // 자동 너비
+    tile.style.height = "auto"; // 자동 높이
+    tile.style.boxSizing = "border-box";
+
+    //기존의 pencil 마크들 제거
+    const pencilContainer = tile.querySelector(".pencil-marks-container");
+    if (pencilContainer) {
+      pencilContainer.remove();
+    }
+  });
+
+  // 3-1. 보드 전체 스타일 변경
+  printContent.style.width = "450px"; // 전체 너비로 설정, 원하는 크기로 조정
+  printContent.style.height = "450px"; // 전체 높이로 설정, 원하는 크기로 조정
+  printContent.style.display = "grid";
+  printContent.style.gridTemplateColumns = "repeat(9, 1fr)";
+  printContent.style.gridTemplateRows = "repeat(9, 1fr)";
+  printContent.style.boxSizing = "border-box";
+  printContent.style.borderTop = "3px solid black";
+  printContent.style.borderLeft = "3px solid black";
+
+  const givenTiles = printContent.querySelectorAll(".given");
+  givenTiles.forEach((tile) => {
+    tile.style.fontWeight = "bold";
+  });
+
+  const blockBorderIndex = [2, 5, 8];
+  tiles.forEach((tile, index) => {
+    const row = Math.floor(index / BOARD_SIZE);
+    const col = index % BOARD_SIZE;
+    if (blockBorderIndex.includes(row)) {
+      tile.style.borderBottom = "3px solid black";
+    }
+    if (blockBorderIndex.includes(col)) {
+      tile.style.borderRight = "3px solid black";
+    }
+  });
+
+  // 4. 인쇄 전용 스타일 생성 및 적용
+  const printStyles = document.createElement("style");
+  printStyles.textContent = `
+    @media print {
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: visible;
+      }
+      #print-board, #print-board * {
+        visibility: visible;
+      }
+      #print-board {
+        position: relative;
+        transform: none;
+        top: auto;
+        left: auto;
+        margin: 0;
+        padding: 0;
+        border: none;
+      }
+      @page {
+        size: A4; /* A4 용지 크기로 설정 */
+        margin: 0; /* 여백 없앰 */
+      }
+    }
+  `;
+
+  // 5. 인쇄용 창 생성
+  const printWindow = window.open("", "print", "width=800,height=800");
+  const printDocument = printWindow.document;
+
+  // 6. 스타일 및 내용 추가
+  printDocument.head.appendChild(printStyles);
+  printDocument.body.appendChild(printContent);
+
+  // 7. 인쇄 이벤트 리스너 설정
+  printWindow.document.addEventListener("afterprint", () => {
+    setTimeout(() => {
+      printWindow.close();
+    }, 500);
+  });
+
+  // 8. 인쇄 실행
+  setTimeout(() => {
+    printWindow.print();
+  }, 500);
+}
+
 // --- 이벤트 리스너 등록 ---
 themeToggle.addEventListener("click", () =>
   document.body.classList.toggle("dark-mode")
@@ -419,6 +531,8 @@ solveButton.addEventListener("click", () => {
 });
 
 clearButton.addEventListener("click", clearSelectedTile); // 지우개 버튼 클릭 이벤트 추가
+
+printButton.addEventListener("click", () => printBoard());
 
 togglePencilButton.addEventListener("click", () => {
   isPencilMode = !isPencilMode;

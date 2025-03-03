@@ -249,3 +249,17 @@ button {
     font-size: 0.8rem;
   }
 }
+
+@media print {
+  #print-board {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+  @page {
+    size: auto; /* auto is the initial value */
+    margin: 0; /* this affects the margin in the printer settings */
+  }
+}
