@@ -1,0 +1,375 @@
+@font-face {
+  font-family: "Ownglyph_ParkDaHyun";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_ParkDaHyun.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Ownglyph_ParkDaHyun";
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #f4f4f4;
+}
+
+body {
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  background-color: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  max-width: 600px;
+  max-height: 800px;
+  width: 95%;
+  height: 95%;
+}
+
+h1 {
+  font-size: 5rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+#logo {
+  width: 128px;
+  height: 128px;
+  margin-bottom: -1.5rem;
+  border-radius: 20%;
+}
+
+#mainMenu,
+#questionDisplay {
+  display: none;
+  width: 100%;
+  max-width: 600px;
+}
+
+#mainMenu.active {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+  max-width: 450px;
+}
+
+#questionDisplay.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: pre-wrap;
+  overflow: hidden;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  min-height: 120px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+}
+
+#answerArea {
+  width: 100%;
+  max-width: 600px;
+  margin: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+#answerDisplay,
+#explanationDisplay {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  padding: 1.2rem 2.5rem;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  color: #fff;
+}
+
+#randomBtn {
+  background-color: #3498db;
+  width: 100%;
+  max-width: 450px;
+}
+
+#retryButton {
+  background-color: #3498db;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 1.2rem;
+}
+
+.showAnswerButton {
+  background-color: #2ecc71;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.2rem 0;
+}
+
+button:hover {
+  opacity: 0.95;
+  transform: translateY(-3px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.back-button {
+  display: none;
+  position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
+  left: 1rem;
+  top: 1rem;
+  color: #555;
+
+  /* option-button과 크기를 맞추기 위한 스타일 추가 */
+  --button-size: 50px; /* option-button, back-button 기본 크기 */
+  width: var(--button-size);
+  height: var(--button-size);
+  font-size: calc(var(--button-size) * 0.7);
+  line-height: var(--button-size);
+  border-radius: 50%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.back-button:hover {
+  color: #333;
+}
+
+#version {
+  font-size: 1rem;
+  color: #888;
+  text-align: center;
+  margin-top: -1rem;
+  margin-bottom: 25px;
+  font-weight: normal;
+  font-style: italic;
+}
+
+#copyright {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  font-weight: normal;
+  margin-top: 10px;
+}
+
+.option-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+  padding: 0; /* 제거 */
+  z-index: 10;
+  color: #555;
+
+  /* option-button, back-button 기본 크기 재정의 */
+  --button-size: 50px;
+  width: var(--button-size);
+  height: var(--button-size);
+  font-size: calc(var(--button-size) * 0.7); /* 35px */
+  line-height: var(--button-size);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.option-button:hover {
+  color: #333;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  width: 85%;
+  max-width: 450px;
+  background-color: #fff;
+  color: #333;
+}
+
+.close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.option-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.option-item label {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 65px;
+  height: 38px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 30px;
+  width: 30px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.modal.active {
+  display: block;
+}
+
+body.dark-theme {
+  background-color: #1e272e;
+  color: #f5f6fa;
+}
+
+body.dark-theme .container {
+  background-color: #2c3a47;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme h1 {
+  color: #686de0;
+}
+
+body.dark-theme #randomBtn,
+body.dark-theme #retryButton {
+  background-color: #546de5;
+}
+
+body.dark-theme #questionDisplay.active {
+  background-color: #34495e;
+  color: #f8f8f8;
+}
+
+body.dark-theme .showAnswerButton {
+  background-color: #27ae60;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.emoji {
+  font-size: inherit;
+  display: inline-block;
+  transition: color 0.3s;
+}
+
+.back-button .emoji,
+.option-button .emoji {
+  color: #555;
+}
+
+.back-button:hover .emoji,
+.option-button:hover .emoji {
+  color: #333;
+}
+
+body.dark-theme .back-button .emoji,
+body.dark-theme .option-button .emoji {
+  color: #f5f6fa;
+}
+
+body.dark-theme .back-button:hover .emoji,
+body.dark-theme .option-button:hover .emoji {
+  color: #fff;
+}
