@@ -45,7 +45,7 @@ body {
 }
 
 h1 {
-  font-size: 5rem;
+  font-size: 4rem;
   color: #2c3e50;
   text-align: center;
 }
@@ -53,7 +53,7 @@ h1 {
 #logo {
   width: 128px;
   height: 128px;
-  margin-bottom: -1.5rem;
+  /* margin-bottom: -1.3rem; */
   border-radius: 20%;
 }
 
@@ -174,7 +174,6 @@ button:active {
   font-size: 1rem;
   color: #888;
   text-align: center;
-  margin-top: -1rem;
   margin-bottom: 25px;
   font-weight: normal;
   font-style: italic;
