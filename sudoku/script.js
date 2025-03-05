@@ -72,8 +72,6 @@ function removeNumbers(numbersToRemove) {
     }
   }
 
-  console.log(numbersToRemove);
-
   let removedCount = 0;
   while (removedCount < numbersToRemove && possibleIndexes.length > 0) {
     const randomIndex = Math.floor(Math.random() * possibleIndexes.length);
@@ -505,16 +503,10 @@ function printBoard() {
   printDocument.head.appendChild(printStyles);
   printDocument.body.appendChild(printContent);
 
-  // 7. 인쇄 이벤트 리스너 설정
-  printWindow.document.addEventListener("afterprint", () => {
-    setTimeout(() => {
-      printWindow.close();
-    }, 500);
-  });
-
-  // 8. 인쇄 실행
+  // 7. 인쇄 실행
   setTimeout(() => {
     printWindow.print();
+    setTimeout(() => printWindow.close(), 500);
   }, 500);
 }
 
