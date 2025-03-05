@@ -12,5 +12,5 @@
 [<img src="password-generator/icon-192x192.png" width="128">](password-generator "비밀번호 생성기")
 [<img src="find-different-letters/icon-192x192.jpg" width="128">](find-different-letters "다른 글자 찾기")
 [<img src="sudoku/icon-192x192.jpg" width="128">](sudoku "스도쿠")
-[<img src="fingers-down/icon-192x192.jpg" width="128">](fingers-down "손가락 접기 게임")
+[<img src="fingers-down/icon-192x192.png" width="128">](fingers-down "손가락 접기 게임")
 [<img src="dad_jokes/icon-192x192.png" width="128">](dad_jokes "아재개그")

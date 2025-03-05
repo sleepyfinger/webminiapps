@@ -9,14 +9,6 @@ const backButton = document.getElementById("backButton");
 const title = document.getElementById("title");
 const version = document.getElementById("version");
 const retryButton = document.getElementById("retryButton");
-
-let currentTheme = "dark";
-let isFullScreen = false;
-let currentTopic = "";
-let lastSelectedQuestion = ""; //마지막으로 선택된 질문
-let wakeLock = null; // 화면 꺼짐 방지
-
-// 옵션 관련 변수
 const optionButton = document.getElementById("optionButton");
 const optionModal = document.getElementById("optionModal");
 const closeButton = document.querySelector(".close-button");
@@ -25,68 +17,46 @@ const fullScreenCheckbox = document.getElementById("fullScreen");
 const themeToggleCheckbox = document.getElementById("themeToggle");
 const clickSound = document.getElementById("clickSound");
 
-// 옵션 버튼 클릭 시 모달 표시
-optionButton.addEventListener("click", () => {
-  playClickSound(); // 클릭 소리 재생
-  optionModal.classList.add("active");
-});
+let currentTheme = "dark";
+let isFullScreen = false;
+let currentTopic = "";
+let lastSelectedQuestion = "";
+let wakeLock = null;
 
-// 닫기 버튼 클릭 시 모달 숨김
-closeButton.addEventListener("click", () => {
-  playClickSound(); // 클릭 소리 재생
-  optionModal.classList.remove("active");
-});
-
-// 모달 외부 클릭 시 모달 숨김
-window.addEventListener("click", (event) => {
-  if (event.target == optionModal) {
-    playClickSound(); // 클릭 소리 재생
-    optionModal.classList.remove("active");
-  }
-});
-
-// 페이지 가시성 변경 시 WakeLock 재요청
-document.addEventListener("visibilitychange", async () => {
-  if (wakeLock !== null && document.visibilityState === "visible") {
-    wakeLock = await navigator.wakeLock.request("screen");
-  }
-});
-
+// --- Sound ---
 function playClickSound() {
   clickSound.currentTime = 0;
   clickSound.play();
 }
 
 function addClickSoundToButtons() {
-  const buttons = document.querySelectorAll("button");
-  buttons.forEach((button) => {
+  document.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", playClickSound);
   });
 }
-
+// --- Theme ---
 function setTheme(theme) {
   currentTheme = theme;
   document.body.classList.remove("light-theme", "dark-theme");
   document.body.classList.add(`${theme}-theme`);
   localStorage.setItem("theme", theme);
-  // 테마 변경 시 체크박스 상태 동기화
   themeToggleCheckbox.checked = currentTheme === "dark";
 }
 
-function showTopics() {
-  hideAllSections();
-  topicList.innerHTML = "";
-  topics.forEach((topic) => {
-    const button = document.createElement("button");
-    button.textContent = topic;
-    button.onclick = () => {
-      playClickSound();
-      selectRandomQuestion(topic);
-    };
-    topicList.appendChild(button);
-  });
-  topicList.classList.add("active");
-  backButton.style.display = "block";
+function toggleTheme() {
+  setTheme(currentTheme === "light" ? "dark" : "light");
+}
+// --- UI ---
+function hideAllSections() {
+  [mainMenu, topicList, questionDisplay, version].forEach((el) =>
+    el.classList.remove("active")
+  );
+  title.style.display = "none";
+  version.style.display = "none";
+  backButton.style.display = "none";
+  retryButton.style.display = "none";
+  questionDisplay.style.display = "none";
+  questionDisplay.textContent = "";
 }
 
 function adjustFontSize() {
@@ -115,6 +85,30 @@ function adjustFontSize() {
   }
 }
 
+function showTopics() {
+  hideAllSections();
+  topicList.innerHTML = "";
+  topics.forEach((topic) => {
+    const button = document.createElement("button");
+    button.textContent = topic;
+    button.onclick = () => {
+      playClickSound();
+      selectRandomQuestion(topic);
+    };
+    topicList.appendChild(button);
+  });
+  topicList.classList.add("active");
+  backButton.style.display = "block";
+}
+
+function goBack() {
+  hideAllSections();
+  mainMenu.classList.add("active");
+  title.style.display = "block";
+  version.style.display = "block";
+  backButton.style.display = "none";
+}
+// --- Question ---
 function selectRandomQuestion(topic) {
   hideAllSections();
   currentTopic = topic;
@@ -149,7 +143,6 @@ function selectRandomQuestion(topic) {
   }, 1000);
 }
 
-//모든 질문에서 랜덤하게 선택
 function selectRandomQuestionFromAll() {
   hideAllSections();
   const allQuestions = [];
@@ -197,29 +190,35 @@ function retrySelection() {
     selectRandomQuestion(currentTopic);
   }
 }
+// --- Option ---
+optionButton.addEventListener("click", () => {
+  playClickSound();
+  optionModal.classList.add("active");
+});
 
-function goBack() {
-  hideAllSections();
-  mainMenu.classList.add("active");
-  title.style.display = "block";
-  version.style.display = "block";
-  backButton.style.display = "none";
-}
+closeButton.addEventListener("click", () => {
+  playClickSound();
+  optionModal.classList.remove("active");
+});
 
-function hideAllSections() {
-  [mainMenu, topicList, questionDisplay, version].forEach((el) =>
-    el.classList.remove("active")
-  );
-  title.style.display = "none";
-  version.style.display = "none";
-  backButton.style.display = "none";
-  retryButton.style.display = "none";
-  questionDisplay.style.display = "none";
-  questionDisplay.textContent = "";
-}
+window.addEventListener("click", (event) => {
+  if (event.target === optionModal) {
+    playClickSound();
+    optionModal.classList.remove("active");
+  }
+});
 
-function toggleTheme() {
-  setTheme(currentTheme === "light" ? "dark" : "light");
+async function togglePreventScreenOff() {
+  if (!wakeLock) {
+    try {
+      wakeLock = await navigator.wakeLock.request("screen");
+    } catch (err) {
+      preventScreenOffCheckbox.checked = false;
+    }
+  } else {
+    await wakeLock.release();
+    wakeLock = null;
+  }
 }
 
 function toggleFullScreen() {
@@ -227,34 +226,27 @@ function toggleFullScreen() {
     document.documentElement.requestFullscreen();
     isFullScreen = true;
   } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    }
+    document.exitFullscreen();
     isFullScreen = false;
   }
 }
-
-async function togglePreventScreenOff() {
-  if (!wakeLock) {
-    try {
-      wakeLock = await navigator.wakeLock.request("screen");
-      console.log("Wake Lock 활성화");
-    } catch (err) {
-      console.error(`${err.name}, ${err.message}`);
-      preventScreenOffCheckbox.checked = false;
-    }
-  } else {
-    await wakeLock.release();
-    wakeLock = null;
-    console.log("Wake Lock 비활성화");
+// --- Event ---
+document.addEventListener("visibilitychange", async () => {
+  if (wakeLock !== null && document.visibilityState === "visible") {
+    wakeLock = await navigator.wakeLock.request("screen");
   }
-}
+});
 
+window.addEventListener("resize", () => {
+  if (questionDisplay.classList.contains("active")) {
+    adjustFontSize();
+  }
+});
+// --- Init ---
 function init() {
   addClickSoundToButtons();
-  // 로컬 스토리지에서 테마 불러오기
   const savedTheme = localStorage.getItem("theme");
-  currentTheme = savedTheme || "dark"; // 저장된 테마가 없으면 기본값은 dark
+  currentTheme = savedTheme || "dark";
   setTheme(currentTheme);
   hideAllSections();
   mainMenu.classList.add("active");
@@ -273,19 +265,11 @@ function init() {
 
   preventScreenOffCheckbox.checked = wakeLock !== null;
   fullScreenCheckbox.checked = isFullScreen;
-  //초기값 반영.
   themeToggleCheckbox.checked = currentTheme === "dark";
 
   preventScreenOffCheckbox.addEventListener("change", togglePreventScreenOff);
   fullScreenCheckbox.addEventListener("change", toggleFullScreen);
-  // 테마 변경 이벤트 리스너 연결
   themeToggleCheckbox.addEventListener("change", toggleTheme);
-
-  window.addEventListener("resize", () => {
-    if (questionDisplay.classList.contains("active")) {
-      adjustFontSize();
-    }
-  });
 }
 
 init();
