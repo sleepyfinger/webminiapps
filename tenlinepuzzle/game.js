@@ -76,7 +76,7 @@ const installApp = () => {
   deferredPrompt.prompt();
 };
 
-// init
+// 게임 초기화
 function init() {
   scoreSound = document.getElementById("scoreSound");
   resetButton = document.getElementById("resetButton");
@@ -100,14 +100,14 @@ function init() {
   gameLoop();
 }
 
-// 터치 이벤트 리스너 설정 함수
+// 터치 이벤트 리스너 설정
 function setupTouchEventListeners() {
   canvas.addEventListener("touchstart", handleTouchStart);
   canvas.addEventListener("touchmove", handleTouchMove);
   canvas.addEventListener("touchend", handleTouchEnd);
 }
 
-// 터치 시작 이벤트 핸들러
+// 터치 시작 이벤트 처리
 function handleTouchStart(event) {
   event.preventDefault();
   const touch = event.touches[0];
@@ -119,7 +119,7 @@ function handleTouchStart(event) {
   }
 }
 
-// 터치 이동 이벤트 핸들러
+// 터치 이동 이벤트 처리
 function handleTouchMove(event) {
   event.preventDefault();
   if (!isDragging || gameOver) return;
@@ -134,7 +134,7 @@ function handleTouchMove(event) {
   }
 }
 
-// 터치 종료 이벤트 핸들러
+// 터치 종료 이벤트 처리
 function handleTouchEnd(event) {
   event.preventDefault();
   if (!isDragging) return;
@@ -149,7 +149,7 @@ function getTouchPosition(touch) {
   return { x, y };
 }
 
-// 이벤트 리스너 설정 함수 수정
+// 이벤트 리스너 설정
 function setupEventListeners() {
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mousemove", handleMouseMove);
@@ -166,7 +166,7 @@ function setupEventListeners() {
   scaleResetButton.addEventListener("click", resetScale);
 }
 
-// 마우스 클릭 이벤트 핸들러
+// 마우스 클릭 이벤트 처리
 function handleMouseDown(event) {
   if (gameOver) return;
   const { x, y } = getMousePosition(event);
@@ -177,7 +177,7 @@ function handleMouseDown(event) {
   }
 }
 
-// 마우스 이동 이벤트 핸들러
+// 마우스 이동 이벤트 처리
 function handleMouseMove(event) {
   if (!isDragging || gameOver) return;
   const { x, y } = getMousePosition(event);
@@ -190,7 +190,7 @@ function handleMouseMove(event) {
   }
 }
 
-// 마우스 릴리스 이벤트 핸들러
+// 마우스 릴리스 이벤트 처리
 function handleMouseUp(event) {
   if (!isDragging) return;
   endSelection();
@@ -204,7 +204,7 @@ function getMousePosition(event) {
   return { x, y };
 }
 
-// Game logic
+// 게임 로직 업데이트
 function update(dt) {
   if (!gameOver && gameStarted) {
     updateTime(dt);
@@ -219,7 +219,7 @@ function updateTime(dt) {
   }
 }
 
-// 캔버스 스케일 설정 함수
+// 캔버스 스케일 설정
 function setScale(scale) {
   scale = Math.max(minScale, Math.min(maxScale, scale));
   currentScale = scale;
@@ -240,11 +240,12 @@ function setScale(scale) {
   draw();
 }
 
+// 캔버스 스케일 초기화
 function resetScale() {
   setScale(1);
 }
 
-// draw
+// 그리기 함수
 function draw() {
   clearCanvas();
 
@@ -329,7 +330,7 @@ function drawSelectedCells() {
   });
 }
 
-// 선 그리기
+// 선택된 셀 연결선 그리기
 function drawLine() {
   if (selectedCells.length > 1) {
     ctx.strokeStyle = COLOR_LINE;
@@ -436,6 +437,7 @@ function drawGameOver() {
   }
 }
 
+// 다시 시작 버튼 그리기
 function drawRestartButton() {
   const buttonWidth = 200;
   const buttonHeight = 50;
@@ -456,6 +458,7 @@ function drawRestartButton() {
   canvas.addEventListener("touchstart", handleRestartClick);
 }
 
+// 다시 시작 버튼 클릭 처리
 function handleRestartClick(event) {
   let x, y;
 
@@ -488,13 +491,14 @@ function handleRestartClick(event) {
   }
 }
 
-// startSelection
+// 선택 시작
 function startSelection(gridX, gridY, mouseX, mouseY) {
   isDragging = true;
   selectCell(gridX, gridY);
   updateCurrentMousePosition(mouseX, mouseY);
 }
 
+// 선택 지속
 function continueSelection(gridX, gridY, mouseX, mouseY) {
   selectCell(gridX, gridY);
   updateCurrentMousePosition(mouseX, mouseY);
@@ -523,7 +527,7 @@ function endGame() {
   gameOver = true;
 }
 
-// resetGame
+// 게임 초기화
 function resetGame() {
   score = 0;
   timeLeft = INITIAL_TIME;
@@ -533,7 +537,7 @@ function resetGame() {
   resetGrid();
 }
 
-// 가중치를 적용한 랜덤 숫자 생성 함수
+// 가중치를 적용한 랜덤 숫자 생성
 function getRandomNumberWithWeights() {
   let totalWeight = 0;
   for (let weight in numberWeights) {
@@ -590,7 +594,7 @@ function selectCell(x, y) {
   }
 }
 
-// 셀이 선택되었는지 확인
+// 셀 선택 여부 확인
 function isCellSelected(x, y) {
   for (let cell of selectedCells) {
     if (cell.x === x && cell.y === y) {
@@ -600,14 +604,14 @@ function isCellSelected(x, y) {
   return false;
 }
 
-// 인접한 셀인지 확인
+// 인접 셀 확인
 function isAdjacent(x1, y1, cell2) {
   const dx = Math.abs(x1 - cell2.x);
   const dy = Math.abs(y1 - cell2.y);
   return dx <= 1 && dy <= 1 && !(dx === 0 && dy === 0);
 }
 
-// 좌표가 원 안에 있는지 확인
+// 원 내부 좌표 확인
 function isPointInCircle(px, py, cx, cy, radius) {
   const dx = px - cx;
   const dy = py - cy;
@@ -629,7 +633,7 @@ function getGridPosition(x, y) {
   }
 }
 
-// 유효한 그리드 위치인지 확인
+// 유효한 그리드 위치 확인
 function isValidGridPosition(x, y) {
   return x >= 1 && x <= GRID_SIZE && y >= 1 && y <= GRID_SIZE;
 }
@@ -647,64 +651,6 @@ function checkSum() {
     clearSelectedCells();
   } else {
     clearSelectedCells();
-  }
-}
-
-// 떨어지는 셀 클래스
-class FallingCell {
-  constructor(x, y, number) {
-    this.x = (x - 0.5) * CELL_SIZE;
-    this.y = (y - 0.5) * CELL_SIZE;
-    this.number = number;
-    this.speedX = (Math.random() - 0.5) * 10;
-    this.speedY = Math.random() * -10;
-    this.gravity = 0.5;
-    this.alpha = 1;
-    this.radius = CELL_SIZE * 0.45;
-    this.rotation = Math.random() * Math.PI * 2;
-    this.rotationSpeed = (Math.random() - 0.5) * 0.2;
-    this.friction = 0.98;
-  }
-
-  update() {
-    this.speedY += this.gravity;
-
-    if (this.y + this.radius > canvas.height / currentScale) {
-      this.y = canvas.height / currentScale - this.radius;
-      this.speedY = -this.speedY * 0.7;
-    }
-
-    this.speedX *= this.friction;
-    this.x += this.speedX;
-    this.y += this.speedY;
-    this.alpha -= 0.011;
-    this.rotation += this.rotationSpeed;
-  }
-
-  draw() {
-    ctx.save();
-    ctx.globalAlpha = Math.max(0, this.alpha);
-
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.rotation);
-
-    ctx.fillStyle = `${COLOR_CELL_BG} 1)`;
-    ctx.beginPath();
-    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
-    ctx.fill();
-
-    ctx.strokeStyle = `${COLOR_CELL_BORDER} 1)`;
-    ctx.beginPath();
-    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
-    ctx.stroke();
-
-    ctx.fillStyle = `${COLOR_TEXT} 1)`;
-    ctx.font = cellFont;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(this.number.toString(), 0, 0);
-
-    ctx.restore();
   }
 }
 
@@ -777,3 +723,61 @@ let lastTime = Date.now();
 
 // 게임 시작
 init();
+
+// 떨어지는 셀 클래스
+class FallingCell {
+  constructor(x, y, number) {
+    this.x = (x - 0.5) * CELL_SIZE;
+    this.y = (y - 0.5) * CELL_SIZE;
+    this.number = number;
+    this.speedX = (Math.random() - 0.5) * 10;
+    this.speedY = Math.random() * -10;
+    this.gravity = 0.5;
+    this.alpha = 1;
+    this.radius = CELL_SIZE * 0.45;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+    this.friction = 0.98;
+  }
+
+  update() {
+    this.speedY += this.gravity;
+
+    if (this.y + this.radius > canvas.height / currentScale) {
+      this.y = canvas.height / currentScale - this.radius;
+      this.speedY = -this.speedY * 0.7;
+    }
+
+    this.speedX *= this.friction;
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.alpha -= 0.011;
+    this.rotation += this.rotationSpeed;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+
+    ctx.fillStyle = `${COLOR_CELL_BG} 1)`;
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.strokeStyle = `${COLOR_CELL_BORDER} 1)`;
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx.fillStyle = `${COLOR_TEXT} 1)`;
+    ctx.font = cellFont;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(this.number.toString(), 0, 0);
+
+    ctx.restore();
+  }
+}
