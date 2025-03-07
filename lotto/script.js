@@ -5,10 +5,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const numRangeSlider = document.getElementById("num-range-slider");
   const numCountValue = document.getElementById("num-count-value");
   const numRangeValue = document.getElementById("num-range-value");
+  const showResultCheckbox = document.getElementById("show-result");
+  const resultGrid = document.getElementById("result-grid");
+
   let lottoData = [];
 
   numCountValue.textContent = numCountSlider.value;
   numRangeValue.textContent = numRangeSlider.value;
+
+  if (!showResultCheckbox.checked) {
+    resultGrid.style.display = "none";
+  }
 
   fetch("lotto.csv")
     .then((response) => response.text())
@@ -59,9 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkWinning(generatedNumbers) {
-    // 등수 계산은 번호 개수가 6개이고 범위가 45일 때만 실행
-    if (numCountSlider.value !== "6" || numRangeSlider.value !== "45") {
-      document.getElementById("result-grid").style.display = "none";
+    if (!showResultCheckbox.checked) {
+      resultGrid.style.display = "none";
+      return;
+    }
+
+    if (numCountSlider.value !== "6") {
+      resultGrid.style.display = "none";
       return;
     }
 
@@ -84,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("third-place").textContent = winningCounts[3];
     document.getElementById("fourth-place").textContent = winningCounts[4];
     document.getElementById("fifth-place").textContent = winningCounts[5];
-    document.getElementById("result-grid").style.display = "grid";
+    resultGrid.style.display = "grid";
   }
 
   generateBtn.addEventListener("click", () => {
