@@ -36,11 +36,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function displayNumbers(numbers) {
     lottoNumbers.innerHTML = "";
-    numbers.forEach((number) => {
+    let delay = 0;
+    numbers.forEach((number, index) => {
       const numberElement = document.createElement("div");
       numberElement.classList.add("number");
       numberElement.textContent = number;
+      numberElement.style.opacity = 0;
+      numberElement.style.transform = "translateY(-20px)";
+
+      numberElement.style.transition = `opacity 0.5s ease-in-out, transform 0.5s ease-in-out`;
+      numberElement.style.transitionDelay = `${delay}s`;
+
       lottoNumbers.appendChild(numberElement);
+
+      setTimeout(() => {
+        numberElement.style.opacity = 1;
+        numberElement.style.transform = "translateY(0)";
+      }, 10);
+
+      delay += 0.2;
     });
   }
 
