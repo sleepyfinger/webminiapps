@@ -1,9 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
   const lottoNumbers = document.getElementById("lotto-numbers");
   const generateBtn = document.getElementById("generate-btn");
+  const numCountSlider = document.getElementById("num-count-slider");
+  const numRangeSlider = document.getElementById("num-range-slider");
+  const numCountValue = document.getElementById("num-count-value");
+  const numRangeValue = document.getElementById("num-range-value");
   let lottoData = [];
 
-  // CSV 파일 로드
+  numCountValue.textContent = numCountSlider.value;
+  numRangeValue.textContent = numRangeSlider.value;
+
   fetch("lotto.csv")
     .then((response) => response.text())
     .then((data) => {
@@ -20,10 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-  function generateLottoNumbers() {
+  function generateLottoNumbers(count, range) {
     const numbers = new Set();
-    while (numbers.size < 6) {
-      numbers.add(Math.floor(Math.random() * 45) + 1);
+    while (numbers.size < count) {
+      numbers.add(Math.floor(Math.random() * range) + 1);
     }
     return Array.from(numbers).sort((a, b) => a - b);
   }
@@ -39,6 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkWinning(generatedNumbers) {
+    // 등수 계산은 번호 개수가 6개이고 범위가 45일 때만 실행
+    if (numCountSlider.value !== "6" || numRangeSlider.value !== "45") {
+      document.getElementById("result-grid").style.display = "none";
+      return;
+    }
+
     let winningCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     lottoData.forEach((lotto) => {
       const matchCount = generatedNumbers.filter((num) =>
@@ -58,11 +70,28 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("third-place").textContent = winningCounts[3];
     document.getElementById("fourth-place").textContent = winningCounts[4];
     document.getElementById("fifth-place").textContent = winningCounts[5];
+    document.getElementById("result-grid").style.display = "grid";
   }
 
   generateBtn.addEventListener("click", () => {
-    const numbers = generateLottoNumbers();
+    // 슬라이더 값 가져오기
+    const numCount = parseInt(numCountSlider.value);
+    const numRange = parseInt(numRangeSlider.value);
+
+    // 로또 번호 생성
+    const numbers = generateLottoNumbers(numCount, numRange);
     displayNumbers(numbers);
+
+    // 번호가 6개고 범위가 45인경우 등수 체크
     checkWinning(numbers);
+  });
+
+  // 슬라이더 이벤트 리스너 추가
+  numCountSlider.addEventListener("input", () => {
+    numCountValue.textContent = numCountSlider.value;
+  });
+
+  numRangeSlider.addEventListener("input", () => {
+    numRangeValue.textContent = numRangeSlider.value;
   });
 });

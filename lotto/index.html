@@ -10,8 +10,41 @@
     <div class="container">
       <img id="logo" src="icon.jpg" width="128" />
       <h1>로또 번호 생성기</h1>
-      <p id="version">ver 1.0</p>
+      <p id="version">ver 1.1</p>
       <div id="lotto-numbers"></div>
+
+      <!-- 번호 개수 선택 슬라이더 -->
+      <div class="slider-container">
+        <label class="slider-label" for="num-count-slider">
+          번호 개수:
+          <span id="num-count-value" class="slider-value">6</span></label
+        >
+        <input
+          type="range"
+          min="1"
+          max="6"
+          value="6"
+          class="slider"
+          id="num-count-slider"
+        />
+      </div>
+
+      <!-- 번호 범위 선택 슬라이더 -->
+      <div class="slider-container">
+        <label class="slider-label" for="num-range-slider">
+          번호 범위:
+          <span id="num-range-value" class="slider-value">45</span>
+        </label>
+        <input
+          type="range"
+          min="10"
+          max="45"
+          value="45"
+          class="slider"
+          id="num-range-slider"
+        />
+      </div>
+
       <button id="generate-btn">번호 생성</button>
       <div id="result-grid">
         <div class="grid-header">등수</div>
