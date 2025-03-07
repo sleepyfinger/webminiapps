@@ -163,7 +163,7 @@ function setupEventListeners() {
   scaleDownButton.addEventListener("click", () =>
     setScale(currentScale - 0.25)
   );
-  scaleResetButton.addEventListener("click", resetScale);
+  scaleResetButton.addEventListener("click", () => setScale(1));
 }
 
 // 마우스 클릭 이벤트 처리
@@ -238,11 +238,6 @@ function setScale(scale) {
   gameoverFont = `20px GameFont`;
 
   draw();
-}
-
-// 캔버스 스케일 초기화
-function resetScale() {
-  setScale(1);
 }
 
 // 그리기 함수
@@ -428,66 +423,58 @@ function drawGameOver() {
     WINDOW_HEIGHT / 2 + 30
   );
 
+  // 다시 시작 버튼 그리기 및 클릭 처리
+  const drawRestartButton = () => {
+    const buttonWidth = 200;
+    const buttonHeight = 50;
+    const buttonX = WINDOW_WIDTH / 2 - buttonWidth / 2;
+    const buttonY = WINDOW_HEIGHT / 2 + 70;
+
+    ctx.fillStyle = "#4CAF50";
+    ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+    ctx.fillStyle = "white";
+    ctx.font = "25px GameFont";
+    ctx.textAlign = "center";
+    ctx.fillText("다시 시작", WINDOW_WIDTH / 2, buttonY + 33);
+    ctx.textAlign = "left";
+
+    const handleRestartClick = (event) => {
+      let x, y;
+
+      if (event.type === "touchstart") {
+        event.preventDefault();
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        x = (touch.clientX - rect.left) / currentScale;
+        y = (touch.clientY - rect.top) / currentScale;
+      } else {
+        const rect = canvas.getBoundingClientRect();
+        x = (event.clientX - rect.left) / currentScale;
+        y = (event.clientY - rect.top) / currentScale;
+      }
+
+      if (
+        x > buttonX &&
+        x < buttonX + buttonWidth &&
+        y > buttonY &&
+        y < buttonY + buttonHeight
+      ) {
+        resetGame();
+        canvas.removeEventListener("click", handleRestartClick);
+        canvas.removeEventListener("touchstart", handleRestartClick);
+      }
+    };
+
+    canvas.addEventListener("click", handleRestartClick);
+    canvas.addEventListener("touchstart", handleRestartClick);
+  };
+
   drawRestartButton();
 
   if (score > highScore) {
     highScore = score;
-
     localStorage.setItem("highScore", highScore);
-  }
-}
-
-// 다시 시작 버튼 그리기
-function drawRestartButton() {
-  const buttonWidth = 200;
-  const buttonHeight = 50;
-  const buttonX = WINDOW_WIDTH / 2 - buttonWidth / 2;
-  const buttonY = WINDOW_HEIGHT / 2 + 70;
-
-  ctx.fillStyle = "#4CAF50";
-  ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
-
-  ctx.fillStyle = "white";
-  ctx.font = "25px GameFont";
-  ctx.textAlign = "center";
-  ctx.fillText("다시 시작", WINDOW_WIDTH / 2, buttonY + 33);
-  ctx.textAlign = "left";
-
-  canvas.addEventListener("click", handleRestartClick);
-
-  canvas.addEventListener("touchstart", handleRestartClick);
-}
-
-// 다시 시작 버튼 클릭 처리
-function handleRestartClick(event) {
-  let x, y;
-
-  if (event.type === "touchstart") {
-    event.preventDefault();
-    const touch = event.touches[0];
-    const rect = canvas.getBoundingClientRect();
-    x = (touch.clientX - rect.left) / currentScale;
-    y = (touch.clientY - rect.top) / currentScale;
-  } else {
-    const rect = canvas.getBoundingClientRect();
-    x = (event.clientX - rect.left) / currentScale;
-    y = (event.clientY - rect.top) / currentScale;
-  }
-
-  const buttonWidth = 200;
-  const buttonHeight = 50;
-  const buttonX = WINDOW_WIDTH / 2 - buttonWidth / 2;
-  const buttonY = WINDOW_HEIGHT / 2 + 70;
-
-  if (
-    x > buttonX &&
-    x < buttonX + buttonWidth &&
-    y > buttonY &&
-    y < buttonY + buttonHeight
-  ) {
-    resetGame();
-    canvas.removeEventListener("click", handleRestartClick);
-    canvas.removeEventListener("touchstart", handleRestartClick);
   }
 }
 
@@ -654,6 +641,64 @@ function checkSum() {
   }
 }
 
+// 떨어지는 셀 클래스
+class FallingCell {
+  constructor(x, y, number) {
+    this.x = (x - 0.5) * CELL_SIZE;
+    this.y = (y - 0.5) * CELL_SIZE;
+    this.number = number;
+    this.speedX = (Math.random() - 0.5) * 10;
+    this.speedY = Math.random() * -10;
+    this.gravity = 0.5;
+    this.alpha = 1;
+    this.radius = CELL_SIZE * 0.45;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+    this.friction = 0.98;
+  }
+
+  update() {
+    this.speedY += this.gravity;
+
+    if (this.y + this.radius > canvas.height / currentScale) {
+      this.y = canvas.height / currentScale - this.radius;
+      this.speedY = -this.speedY * 0.7;
+    }
+
+    this.speedX *= this.friction;
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.alpha -= 0.011;
+    this.rotation += this.rotationSpeed;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+
+    ctx.fillStyle = `${COLOR_CELL_BG} 1)`;
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.strokeStyle = `${COLOR_CELL_BORDER} 1)`;
+    ctx.beginPath();
+    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
+    ctx.stroke();
+
+    ctx.fillStyle = `${COLOR_TEXT} 1)`;
+    ctx.font = cellFont;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(this.number.toString(), 0, 0);
+
+    ctx.restore();
+  }
+}
+
 // 떨어지는 셀 업데이트
 function updateFallingCells() {
   for (let i = fallingCells.length - 1; i >= 0; i--) {
@@ -723,61 +768,3 @@ let lastTime = Date.now();
 
 // 게임 시작
 init();
-
-// 떨어지는 셀 클래스
-class FallingCell {
-  constructor(x, y, number) {
-    this.x = (x - 0.5) * CELL_SIZE;
-    this.y = (y - 0.5) * CELL_SIZE;
-    this.number = number;
-    this.speedX = (Math.random() - 0.5) * 10;
-    this.speedY = Math.random() * -10;
-    this.gravity = 0.5;
-    this.alpha = 1;
-    this.radius = CELL_SIZE * 0.45;
-    this.rotation = Math.random() * Math.PI * 2;
-    this.rotationSpeed = (Math.random() - 0.5) * 0.2;
-    this.friction = 0.98;
-  }
-
-  update() {
-    this.speedY += this.gravity;
-
-    if (this.y + this.radius > canvas.height / currentScale) {
-      this.y = canvas.height / currentScale - this.radius;
-      this.speedY = -this.speedY * 0.7;
-    }
-
-    this.speedX *= this.friction;
-    this.x += this.speedX;
-    this.y += this.speedY;
-    this.alpha -= 0.011;
-    this.rotation += this.rotationSpeed;
-  }
-
-  draw() {
-    ctx.save();
-    ctx.globalAlpha = Math.max(0, this.alpha);
-
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.rotation);
-
-    ctx.fillStyle = `${COLOR_CELL_BG} 1)`;
-    ctx.beginPath();
-    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
-    ctx.fill();
-
-    ctx.strokeStyle = `${COLOR_CELL_BORDER} 1)`;
-    ctx.beginPath();
-    ctx.arc(0, 0, this.radius, 0, 2 * Math.PI);
-    ctx.stroke();
-
-    ctx.fillStyle = `${COLOR_TEXT} 1)`;
-    ctx.font = cellFont;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(this.number.toString(), 0, 0);
-
-    ctx.restore();
-  }
-}
