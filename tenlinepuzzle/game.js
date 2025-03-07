@@ -87,11 +87,13 @@ function init() {
 
   resetGame();
 
-  scoreFont = "16px GameFont";
-  hsFont = "12px GameFont";
-  timeFont = "20px GameFont";
-  cellFont = "20px GameFont";
-  gameoverFont = "20px GameFont";
+  const bodyFont = window.getComputedStyle(document.body).fontFamily;
+
+  scoreFont = `16px ${bodyFont}`;
+  hsFont = `12px ${bodyFont}`;
+  timeFont = `20px ${bodyFont}`;
+  cellFont = `20px ${bodyFont}`;
+  gameoverFont = `20px ${bodyFont}`;
 
   highScore = localStorage.getItem("highScore") || 0;
 
@@ -231,11 +233,6 @@ function setScale(scale) {
   canvas.style.height = `${WINDOW_HEIGHT * currentScale}px`;
 
   ctx.scale(currentScale, currentScale);
-
-  scoreFont = `16px GameFont`;
-  timeFont = `20px GameFont`;
-  cellFont = `20px GameFont`;
-  gameoverFont = `20px GameFont`;
 
   draw();
 }
@@ -434,7 +431,7 @@ function drawGameOver() {
     ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
 
     ctx.fillStyle = "white";
-    ctx.font = "25px GameFont";
+    ctx.font = "25px";
     ctx.textAlign = "center";
     ctx.fillText("다시 시작", WINDOW_WIDTH / 2, buttonY + 33);
     ctx.textAlign = "left";

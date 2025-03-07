@@ -7,7 +7,6 @@ self.addEventListener("install", (event) => {
           "index.html",
           "game.js",
           "get_score.mp3",
-          "RiaSans-ExtraBold.otf",
           "icon_naver_blog.png",
         ])
       )
