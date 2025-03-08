@@ -201,6 +201,22 @@ h1 {
   font-weight: normal;
 }
 
+#copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+#copyright a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#copyright i {
+  font-size: 1.2em;
+}
+
 @media (max-width: 480px) {
   #app {
     width: 95%;
