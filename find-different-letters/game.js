@@ -33,6 +33,22 @@ let targetIndex; // 정답 셀의 인덱스
 let targetCell; // 정답 셀의 HTML element
 let differentChar; // 정답 셀의 textContent
 
+// Sound Pool 생성
+const soundPool = {
+  buttonClick: new Audio("./sounds/buttonClick.wav"),
+  cellClick: new Audio("./sounds/cellClick.mp3"),
+  success: new Audio("./sounds/success.wav"),
+  fail: new Audio("./sounds/fail.wav"),
+};
+
+// 사운드 재생 함수
+function playSound(soundName) {
+  if (soundPool[soundName]) {
+    soundPool[soundName].currentTime = 0; // 처음부터 재생
+    soundPool[soundName].play();
+  }
+}
+
 /**
  * 테마를 토글하는 함수 (다크 모드/라이트 모드 전환)
  * 현재 body에 'dark-mode' 클래스가 있는지 확인하고, 있으면 제거하고 없으면 추가합니다.
@@ -43,7 +59,10 @@ const toggleTheme = () => {
   themeToggle.textContent = body.classList.contains("dark-mode") ? "🌞" : "🌓";
 };
 
-themeToggle.addEventListener("click", toggleTheme);
+themeToggle.addEventListener("click", () => {
+  toggleTheme();
+  playSound("buttonClick");
+});
 
 /**
  * 현재 레벨을 UI에 업데이트하는 함수
@@ -125,7 +144,10 @@ async function createGrid() {
     const cell = document.createElement("div");
     cell.className = "cell";
     cell.textContent = i === targetIndex ? differentChar : targetChar;
-    cell.addEventListener("click", () => checkCell(i === targetIndex, cell));
+    cell.addEventListener("click", () => {
+      playSound("cellClick");
+      checkCell(i === targetIndex, cell);
+    });
     // 정답 셀인 경우, targetCell에 저장
     if (i === targetIndex) {
       targetCell = cell;
@@ -195,6 +217,7 @@ function checkCell(isCorrect, cell) {
   }
 
   if (isCorrect) {
+    playSound("success");
     level++;
     if (level > MAX_LEVEL) {
       endGame(true);
@@ -213,6 +236,7 @@ function checkCell(isCorrect, cell) {
 function endGame(isSuccess) {
   clearInterval(timer);
   if (!isSuccess) {
+    playSound("fail");
     // targetCell을 바로 사용
     if (targetCell) {
       targetCell.classList.add("correct");
@@ -241,8 +265,14 @@ async function startGame() {
 }
 
 // 이벤트 리스너 등록
-startButton.addEventListener("click", startGame);
-restartButton.addEventListener("click", startGame);
+startButton.addEventListener("click", () => {
+  playSound("buttonClick");
+  startGame();
+});
+restartButton.addEventListener("click", () => {
+  playSound("buttonClick");
+  startGame();
+});
 
 // 초기화
 updateHighestLevelDisplay();
