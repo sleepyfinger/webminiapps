@@ -42,10 +42,17 @@ const soundPool = {
 };
 
 // 사운드 재생 함수
-function playSound(soundName) {
+function playSound(soundName, delay = 0) {
   if (soundPool[soundName]) {
-    soundPool[soundName].currentTime = 0; // 처음부터 재생
-    soundPool[soundName].play();
+    if (delay > 0) {
+      setTimeout(() => {
+        soundPool[soundName].currentTime = 0; // 처음부터 재생
+        soundPool[soundName].play();
+      }, delay);
+    } else {
+      soundPool[soundName].currentTime = 0; // 처음부터 재생
+      soundPool[soundName].play();
+    }
   }
 }
 
@@ -217,7 +224,7 @@ function checkCell(isCorrect, cell) {
   }
 
   if (isCorrect) {
-    playSound("success");
+    playSound("success", 400); // 0.1초 지연
     level++;
     if (level > MAX_LEVEL) {
       endGame(true);
