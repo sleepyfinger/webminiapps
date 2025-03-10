@@ -154,19 +154,6 @@ button:active {
   background-color: transparent;
 }
 
-#nameDisplay {
-  display: none;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  padding: 0px;
-  box-sizing: border-box;
-}
-
 .rotated {
   transform: rotate(-90deg);
   transform-origin: top left;
@@ -347,4 +334,31 @@ input:checked + .slider:before {
 
 .modal.active {
   display: block;
+}
+
+#nameDisplay {
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+#nameText {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#descriptionText {
+  font-size: 1rem;
+  color: #666;
+  white-space: normal;
+  word-wrap: break-word;
 }

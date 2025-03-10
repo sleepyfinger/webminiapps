@@ -13,14 +13,14 @@ const themeStyle = document.getElementById("theme-style");
 const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
 const retryButton = document.getElementById("retryButton");
-const logo = document.getElementById("logo"); // Add logo
+const logo = document.getElementById("logo");
 
 let currentTheme = "dark";
 let isRotated = false;
 let isFullScreen = false;
 let currentTopic = "";
 let lastSelectedName = "";
-let wakeLock = null; // 화면 꺼짐 방지
+let wakeLock = null;
 
 // 옵션 관련 변수
 const optionButton = document.getElementById("optionButton");
@@ -30,6 +30,10 @@ const preventScreenOffCheckbox = document.getElementById("preventScreenOff");
 const fullScreenCheckbox = document.getElementById("fullScreen");
 const themeToggleCheckbox = document.getElementById("themeToggle");
 const clickSound = document.getElementById("clickSound");
+
+// 이름과 설명을 표시할 요소 가져오기
+const nameText = document.getElementById("nameText");
+const descriptionText = document.getElementById("descriptionText");
 
 // 옵션 버튼 클릭 시 모달 표시
 optionButton.addEventListener("click", () => {
@@ -108,21 +112,21 @@ function adjustFontSize() {
   let fontSize;
   while (maxSize - minSize > 1) {
     fontSize = Math.floor((minSize + maxSize) / 2);
-    nameDisplay.style.fontSize = `${fontSize}px`;
+    nameText.style.fontSize = `${fontSize}px`;
     if (
-      nameDisplay.scrollWidth <= container.clientWidth &&
-      nameDisplay.scrollHeight <= container.clientHeight
+      nameText.scrollWidth <= container.clientWidth &&
+      nameText.scrollHeight <= container.clientHeight
     ) {
       minSize = fontSize;
     } else {
       maxSize = fontSize;
     }
   }
-  nameDisplay.style.fontSize = `${minSize}px`;
+  nameText.style.fontSize = `${minSize}px`;
   const maxWidth = container.clientWidth * 0.5;
-  if (nameDisplay.offsetWidth > maxWidth) {
-    nameDisplay.style.fontSize = `${
-      (minSize * maxWidth) / nameDisplay.offsetWidth
+  if (nameText.offsetWidth > maxWidth) {
+    nameText.style.fontSize = `${
+      (minSize * maxWidth) / nameText.offsetWidth
     }px`;
   }
 }
@@ -132,25 +136,37 @@ function selectRandomName(topic) {
   logo.style.display = "none";
   currentTopic = topic;
   let countdown = DEFAULT_COUNTDOWN;
-  let availableNames = names[topic].filter((name) => name !== lastSelectedName);
+  let availableNames = names[topic].filter((nameArr) => {
+    return nameArr[0] !== lastSelectedName;
+  });
+
   if (availableNames.length === 0) {
     availableNames = names[topic];
   }
 
-  const randomName =
-    availableNames[Math.floor(Math.random() * availableNames.length)];
+  let randomName;
+  let description;
+
+  const randomIndex = Math.floor(Math.random() * availableNames.length);
+  const nameArr = availableNames[randomIndex];
+  randomName = nameArr[0]; // 배열의 첫 번째 요소가 이름
+  description = nameArr[1]; // 배열의 두 번째 요소가 설명
+
   lastSelectedName = randomName;
   nameDisplay.style.display = "flex";
-  nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
+  nameText.textContent = `이름을 선택 중... ${countdown}`;
+  descriptionText.textContent = "";
   nameDisplay.classList.add("active");
   adjustFontSize();
+
   const timer = setInterval(() => {
     countdown--;
     if (countdown > 0) {
-      nameDisplay.textContent = `이름을 선택 중... ${countdown}`;
+      nameText.textContent = `이름을 선택 중... ${countdown}`;
     } else {
       clearInterval(timer);
-      nameDisplay.textContent = randomName;
+      nameText.textContent = randomName;
+      descriptionText.textContent = description;
       adjustFontSize();
       backButton.style.display = "block";
       retryButton.style.display = "block";
@@ -176,7 +192,8 @@ function submitName(e) {
     hideAllSections();
     logo.style.display = "none";
     nameDisplay.style.display = "flex";
-    nameDisplay.textContent = name;
+    nameText.textContent = name;
+    descriptionText.textContent = "";
     nameDisplay.classList.add("active");
     adjustFontSize();
     backButton.style.display = "block";
@@ -201,7 +218,8 @@ function hideAllSections() {
   backButton.style.display = "none";
   retryButton.style.display = "none";
   nameDisplay.style.display = "none";
-  nameDisplay.textContent = "";
+  nameText.textContent = "";
+  descriptionText.textContent = "";
   nameInput.value = "";
 }
 
