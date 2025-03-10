@@ -6,6 +6,10 @@
     <title>Call My Name</title>
     <link rel="stylesheet" href="style.css" />
     <link id="theme-style" rel="stylesheet" href="dark-theme.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
   </head>
 
   <body>
@@ -17,8 +21,8 @@
       <p id="version">ver 1.04</p>
 
       <div id="mainMenu" class="active">
-        <button id="randomBtn">랜덤 이름 선택</button>
-        <button id="inputBtn">직접 이름 입력</button>
+        <button id="randomBtn">랜덤 이름</button>
+        <button id="inputBtn">직접 입력</button>
       </div>
 
       <div id="topicList"></div>
@@ -69,7 +73,16 @@
 
       <button id="rotateButton">🔄</button>
 
-      <p id="copyright">Created by SleepyFinger.</p>
+      <p id="copyright">
+        <a
+          href="https://blog.naver.com/sleepyfinger/223772468437"
+          target="_blank"
+          title="개발자 블로그 방문"
+        >
+          <i class="fas fa-comment-alt"></i>
+          Created by SleepyFinger.
+        </a>
+      </p>
     </div>
 
     <script type="module" src="app.js"></script>

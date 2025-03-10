@@ -227,6 +227,15 @@ button:active {
   font-weight: normal;
 }
 
+#copyright a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#copyright i {
+  font-size: 1.2em;
+}
+
 .option-button {
   position: absolute;
   top: 1rem;
