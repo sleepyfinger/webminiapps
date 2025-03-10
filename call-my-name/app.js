@@ -97,7 +97,11 @@ function showTopics() {
     button.textContent = topic;
     button.onclick = () => {
       playClickSound();
-      selectRandomName(topic);
+      if (topic === "전체") {
+        selectRandomNameFromAllTopics(); // "전체" 항목 선택 시 함수 호출
+      } else {
+        selectRandomName(topic);
+      }
     };
     topicList.appendChild(button);
   });
@@ -129,6 +133,50 @@ function adjustFontSize() {
       (minSize * maxWidth) / nameText.offsetWidth
     }px`;
   }
+}
+
+function selectRandomNameFromAllTopics() {
+  hideAllSections();
+  logo.style.display = "none";
+  currentTopic = "전체"; //전체일경우
+  let countdown = DEFAULT_COUNTDOWN;
+
+  const allNames = Object.values(names).flat(); // 모든 주제의 이름을 하나의 배열로 합침
+  let availableNames = allNames.filter((nameArr) => {
+    return nameArr[0] !== lastSelectedName;
+  });
+  if (availableNames.length === 0) {
+    availableNames = allNames;
+  }
+  let randomName;
+  let description;
+
+  const randomIndex = Math.floor(Math.random() * availableNames.length);
+  const nameArr = availableNames[randomIndex];
+  randomName = nameArr[0];
+  description = nameArr[1];
+
+  lastSelectedName = randomName;
+
+  nameDisplay.style.display = "flex";
+  nameText.textContent = `이름을 선택 중... ${countdown}`;
+  descriptionText.textContent = "";
+  nameDisplay.classList.add("active");
+  adjustFontSize();
+
+  const timer = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      nameText.textContent = `이름을 선택 중... ${countdown}`;
+    } else {
+      clearInterval(timer);
+      nameText.textContent = randomName;
+      descriptionText.textContent = description;
+      adjustFontSize();
+      backButton.style.display = "block";
+      retryButton.style.display = "block";
+    }
+  }, 1000);
 }
 
 function selectRandomName(topic) {
@@ -175,7 +223,11 @@ function selectRandomName(topic) {
 }
 
 function retrySelection() {
-  selectRandomName(currentTopic);
+  if (currentTopic === "전체") {
+    selectRandomNameFromAllTopics();
+  } else {
+    selectRandomName(currentTopic);
+  }
 }
 
 function showInputForm() {
