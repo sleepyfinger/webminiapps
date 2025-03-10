@@ -11,7 +11,22 @@
       <img id="logo" src="icon.jpg" />
       <h1>로또 번호 생성기</h1>
       <p id="version">ver 1.2</p>
-      <div id="lotto-numbers"></div>
+
+      <div id="lotto-numbers-container"></div>
+
+      <!-- 로또 번호 세트 개수 선택 슬라이더 -->
+      <div class="slider-container">
+        <label class="slider-label" for="num-set-slider"> 세트 </label>
+        <input
+          type="range"
+          min="1"
+          max="5"
+          value="1"
+          class="slider"
+          id="num-set-slider"
+        />
+        <span id="num-set-value" class="slider-value">1</span>
+      </div>
 
       <!-- 번호 개수 선택 슬라이더 -->
       <div class="slider-container">

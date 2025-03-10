@@ -1,17 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const lottoNumbers = document.getElementById("lotto-numbers");
   const generateBtn = document.getElementById("generate-btn");
+  const lottoNumbersContainer = document.getElementById(
+    "lotto-numbers-container"
+  );
+  const numSetSlider = document.getElementById("num-set-slider");
   const numCountSlider = document.getElementById("num-count-slider");
   const numRangeSlider = document.getElementById("num-range-slider");
   const numCountValue = document.getElementById("num-count-value");
   const numRangeValue = document.getElementById("num-range-value");
   const showResultCheckbox = document.getElementById("show-result");
   const resultGrid = document.getElementById("result-grid");
+  const numSetValue = document.getElementById("num-set-value");
+  const firstPlaceDiv = document.getElementById("first-place");
+  const secondPlaceDiv = document.getElementById("second-place");
+  const thirdPlaceDiv = document.getElementById("third-place");
+  const fourthPlaceDiv = document.getElementById("fourth-place");
+  const fifthPlaceDiv = document.getElementById("fifth-place");
 
   let lottoData = [];
 
   numCountValue.textContent = numCountSlider.value;
   numRangeValue.textContent = numRangeSlider.value;
+  numSetValue.textContent = numSetSlider.value;
 
   if (!showResultCheckbox.checked) {
     resultGrid.style.display = "none";
@@ -33,6 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+  numSetSlider.addEventListener("input", () => {
+    numSetValue.textContent = numSetSlider.value;
+  });
+
   function generateLottoNumbers(count, range) {
     const numbers = new Set();
     while (numbers.size < count) {
@@ -41,28 +55,27 @@ document.addEventListener("DOMContentLoaded", () => {
     return Array.from(numbers).sort((a, b) => a - b);
   }
 
-  function displayNumbers(numbers) {
-    lottoNumbers.innerHTML = "";
+  function displayLottoNumbers(numbers, setNum) {
+    const setDiv = document.createElement("div");
+    setDiv.classList.add("lotto-set");
+
     let delay = 0;
-    numbers.forEach((number, index) => {
-      const numberElement = document.createElement("div");
-      numberElement.classList.add("number");
-      numberElement.textContent = number;
-      numberElement.style.opacity = 0;
-      numberElement.style.transform = "translateY(-20px)";
-
-      numberElement.style.transition = `opacity 0.5s ease-in-out, transform 0.5s ease-in-out`;
-      numberElement.style.transitionDelay = `${delay}s`;
-
-      lottoNumbers.appendChild(numberElement);
-
+    numbers.forEach((number) => {
+      const numberSpan = document.createElement("span");
+      numberSpan.textContent = number;
+      numberSpan.classList.add("lotto-number");
+      numberSpan.style.opacity = 0;
+      numberSpan.style.transform = "translateY(-20px)";
+      numberSpan.style.transition = `opacity 0.5s ease-in-out, transform 0.5s ease-in-out`;
+      numberSpan.style.transitionDelay = `${delay}s`;
+      setDiv.appendChild(numberSpan);
       setTimeout(() => {
-        numberElement.style.opacity = 1;
-        numberElement.style.transform = "translateY(0)";
+        numberSpan.style.opacity = 1;
+        numberSpan.style.transform = "translateY(0)";
       }, 10);
-
       delay += 0.2;
     });
+    lottoNumbersContainer.appendChild(setDiv);
   }
 
   function checkWinning(generatedNumbers) {
@@ -99,16 +112,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   generateBtn.addEventListener("click", () => {
-    // 슬라이더 값 가져오기
-    const numCount = parseInt(numCountSlider.value);
-    const numRange = parseInt(numRangeSlider.value);
+    const numSets = parseInt(numSetSlider.value);
+    lottoNumbersContainer.innerHTML = ""; // 기존 내용 초기화
+    for (let i = 0; i < numSets; i++) {
+      const lottoNumbers = generateLottoNumbers(
+        parseInt(numCountSlider.value),
+        parseInt(numRangeSlider.value)
+      );
+      displayLottoNumbers(lottoNumbers, i);
 
-    // 로또 번호 생성
-    const numbers = generateLottoNumbers(numCount, numRange);
-    displayNumbers(numbers);
-
-    // 번호가 6개고 범위가 45인경우 등수 체크
-    checkWinning(numbers);
+      checkWinning(lottoNumbers);
+    }
   });
 
   // 슬라이더 이벤트 리스너 추가

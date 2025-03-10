@@ -29,14 +29,19 @@ h1 {
   font-size: 1.8rem;
 }
 
-#lotto-numbers {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+#lotto-numbers-container {
+  margin-bottom: 10px;
 }
 
-.number {
+.lotto-set {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.lotto-number {
   width: 3.125rem;
   height: 3.125rem;
   color: #333;
