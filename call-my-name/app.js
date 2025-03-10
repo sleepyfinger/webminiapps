@@ -13,6 +13,7 @@ const themeStyle = document.getElementById("theme-style");
 const nameInput = document.getElementById("nameInput");
 const rotateButton = document.getElementById("rotateButton");
 const retryButton = document.getElementById("retryButton");
+const logo = document.getElementById("logo"); // Add logo
 
 let currentTheme = "dark";
 let isRotated = false;
@@ -85,6 +86,7 @@ function toggleRotation() {
 
 function showTopics() {
   hideAllSections();
+  logo.style.display = "none";
   topicList.innerHTML = "";
   topics.forEach((topic) => {
     const button = document.createElement("button");
@@ -127,6 +129,7 @@ function adjustFontSize() {
 
 function selectRandomName(topic) {
   hideAllSections();
+  logo.style.display = "none";
   currentTopic = topic;
   let countdown = DEFAULT_COUNTDOWN;
   let availableNames = names[topic].filter((name) => name !== lastSelectedName);
@@ -161,6 +164,7 @@ function retrySelection() {
 
 function showInputForm() {
   hideAllSections();
+  logo.style.display = "none";
   inputForm.classList.add("active");
   backButton.style.display = "block";
 }
@@ -170,6 +174,7 @@ function submitName(e) {
   const name = nameInput.value;
   if (name) {
     hideAllSections();
+    logo.style.display = "none";
     nameDisplay.style.display = "flex";
     nameDisplay.textContent = name;
     nameDisplay.classList.add("active");
@@ -180,6 +185,7 @@ function submitName(e) {
 
 function goBack() {
   hideAllSections();
+  logo.style.display = "block";
   mainMenu.classList.add("active");
   title.style.display = "block";
   version.style.display = "block";
@@ -240,6 +246,7 @@ function init() {
   version.style.display = "block";
   backButton.style.display = "none";
   retryButton.style.display = "none";
+  logo.style.display = "block";
 
   document.getElementById("randomBtn").onclick = showTopics;
   document.getElementById("inputBtn").onclick = showInputForm;

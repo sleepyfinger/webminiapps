@@ -34,11 +34,17 @@ h1 {
   text-align: center;
 }
 
-#mainMenu,
-#inputForm {
+#mainMenu {
   display: none;
   width: 100%;
   max-width: 400px;
+}
+
+#mainMenu.active {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
 }
 
 #topicList {
@@ -47,7 +53,12 @@ h1 {
   max-width: 600px;
 }
 
-#mainMenu.active,
+#inputForm {
+  display: none;
+  width: 100%;
+  max-width: 400px;
+}
+
 #inputForm.active {
   display: flex;
   flex-direction: column;
@@ -190,6 +201,15 @@ button:active {
   transform: translateY(0);
 }
 
+#logo {
+  width: 128px;
+  height: 128px;
+  border-radius: 20%;
+  justify-content: center;
+  display: block;
+  margin-bottom: -20px;
+}
+
 #version {
   font-size: 0.9rem;
   color: #888;
@@ -207,7 +227,6 @@ button:active {
   font-weight: normal;
 }
 
-/* 옵션 버튼 스타일 */
 .option-button {
   position: absolute;
   top: 1rem;
@@ -220,7 +239,6 @@ button:active {
   z-index: 10;
 }
 
-/* 모달 스타일 */
 .modal {
   display: none;
   position: fixed;
@@ -252,7 +270,6 @@ button:active {
   cursor: pointer;
 }
 
-/* 옵션 아이템 스타일 */
 .option-item {
   display: flex;
   justify-content: space-between;
@@ -264,7 +281,6 @@ button:active {
   font-size: 1.1rem;
 }
 
-/* 토글 스위치 스타일 */
 .switch {
   position: relative;
   display: inline-block;
@@ -312,7 +328,6 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-/* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
@@ -321,7 +336,6 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/* 모달 활성화 스타일 */
 .modal.active {
   display: block;
 }
