@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lottoNumbersContainer.appendChild(setDiv);
   }
 
-  function checkWinning(generatedNumbers) {
+  function checkWinning(generatedNumbersArray) {
     if (!showResultCheckbox.checked) {
       resultGrid.style.display = "none";
       return;
@@ -90,39 +90,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     let winningCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-    lottoData.forEach((lotto) => {
-      const matchCount = generatedNumbers.filter((num) =>
-        lotto.numbers.includes(num)
-      ).length;
 
-      if (matchCount === 6) winningCounts[1]++;
-      else if (matchCount === 5 && generatedNumbers.includes(lotto.bonus))
-        winningCounts[2]++;
-      else if (matchCount === 5) winningCounts[3]++;
-      else if (matchCount === 4) winningCounts[4]++;
-      else if (matchCount === 3) winningCounts[5]++;
+    generatedNumbersArray.forEach((generatedNumbers) => {
+      lottoData.forEach((lotto) => {
+        const matchCount = generatedNumbers.filter((num) =>
+          lotto.numbers.includes(num)
+        ).length;
+
+        if (matchCount === 6) winningCounts[1]++;
+        else if (matchCount === 5 && generatedNumbers.includes(lotto.bonus))
+          winningCounts[2]++;
+        else if (matchCount === 5) winningCounts[3]++;
+        else if (matchCount === 4) winningCounts[4]++;
+        else if (matchCount === 3) winningCounts[5]++;
+      });
     });
 
-    document.getElementById("first-place").textContent = winningCounts[1];
-    document.getElementById("second-place").textContent = winningCounts[2];
-    document.getElementById("third-place").textContent = winningCounts[3];
-    document.getElementById("fourth-place").textContent = winningCounts[4];
-    document.getElementById("fifth-place").textContent = winningCounts[5];
+    firstPlaceDiv.textContent = winningCounts[1];
+    secondPlaceDiv.textContent = winningCounts[2];
+    thirdPlaceDiv.textContent = winningCounts[3];
+    fourthPlaceDiv.textContent = winningCounts[4];
+    fifthPlaceDiv.textContent = winningCounts[5];
     resultGrid.style.display = "grid";
   }
 
   generateBtn.addEventListener("click", () => {
     const numSets = parseInt(numSetSlider.value);
     lottoNumbersContainer.innerHTML = ""; // 기존 내용 초기화
+    const allLottoNumbers = []; // 모든 세트의 로또 번호를 담을 배열
+
     for (let i = 0; i < numSets; i++) {
       const lottoNumbers = generateLottoNumbers(
         parseInt(numCountSlider.value),
         parseInt(numRangeSlider.value)
       );
       displayLottoNumbers(lottoNumbers, i);
-
-      checkWinning(lottoNumbers);
+      allLottoNumbers.push(lottoNumbers); // 생성된 로또 번호를 배열에 추가
     }
+
+    checkWinning(allLottoNumbers);
   });
 
   // 슬라이더 이벤트 리스너 추가
