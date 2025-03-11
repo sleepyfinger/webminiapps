@@ -1,18 +1,29 @@
+:root {
+  --primary-color: #34495e;
+  --secondary-color: #2c3e50;
+  --text-color: #ecf0f1;
+  --accent-color: #e74c3c;
+}
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(to bottom, #34495e, #2c3e50);
-  color: #ecf0f1;
+  background: linear-gradient(
+    to bottom,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: var(--text-color);
   font-family: "Arial", sans-serif;
   user-select: none;
   overflow: hidden;
 }
 
 h1 {
-  color: #ecf0f1;
+  color: var(--text-color);
   margin-bottom: 20px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -26,13 +37,13 @@ h1 {
   border: none;
   border-radius: 5px;
   background-color: #bdc3c7;
-  color: #2c3e50;
+  color: var(--secondary-color);
 }
 
 #playButton {
   padding: 10px 20px;
-  background-color: #e74c3c;
-  color: #ecf0f1;
+  background-color: var(--accent-color);
+  color: var(--text-color);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -66,14 +77,17 @@ h1 {
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
-  background: linear-gradient(to bottom, #2c3e50, #34495e);
+  background: linear-gradient(
+    to bottom,
+    var(--secondary-color),
+    var(--primary-color)
+  );
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
 }
 
 .note {
   position: absolute;
-  transition: opacity 0.3s ease, top 0.3s ease, background-color 0.3s ease;
   box-sizing: border-box;
   z-index: 2;
   border-radius: 5px;
@@ -92,7 +106,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   width: 400px;
-  color: #ecf0f1;
+  color: var(--text-color);
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -148,4 +162,15 @@ h1 {
   border-top: 3px solid white;
   box-sizing: border-box;
   transition: background-color 0.1s linear;
+}
+
+@media (max-width: 600px) {
+  #gameArea {
+    width: 300px;
+    height: 225px;
+  }
+
+  #ui {
+    width: 300px;
+  }
 }

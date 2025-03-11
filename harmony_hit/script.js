@@ -1,11 +1,11 @@
 let tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
-
 let firstScriptTag = document.getElementsByTagName("script")[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 let player;
 let videoDuration = 0;
+let originalVolume = 100;
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
@@ -23,17 +23,22 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-function onPlayerReady(event) {
-  console.log("Player is ready.");
+function onPlayerReady() {
+  originalVolume = player.getVolume();
 }
 
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING) {
-    console.log("Player is playing.");
     videoDuration = player.getDuration();
-    game.start();
+    if (game.isPaused) {
+      game.resume();
+    } else {
+      game.reset();
+      game.start();
+    }
+  } else if (event.data === YT.PlayerState.PAUSED) {
+    game.pause();
   } else if (event.data === YT.PlayerState.ENDED) {
-    console.log("Player ended.");
     game.reset();
   }
 }
@@ -70,14 +75,32 @@ class Conductor {
     this.crotchet = 60 / bpm;
     this.songPosition = 0;
     this.startTime = 0;
+    this.pausedTime = 0;
+    this.isPaused = false;
   }
 
   start() {
     this.startTime = player.getCurrentTime();
+    this.isPaused = false;
+    this.pausedTime = 0;
+  }
+
+  pause() {
+    if (this.startTime !== 0 && !this.isPaused) {
+      this.pausedTime = player.getCurrentTime();
+      this.isPaused = true;
+    }
+  }
+
+  resume() {
+    if (this.startTime !== 0 && this.isPaused) {
+      this.startTime += player.getCurrentTime() - this.pausedTime;
+      this.isPaused = false;
+    }
   }
 
   update() {
-    if (this.startTime !== 0) {
+    if (this.startTime !== 0 && !this.isPaused) {
       this.songPosition = player.getCurrentTime() - this.startTime;
     }
   }
@@ -86,7 +109,6 @@ class Conductor {
 class Note {
   constructor(lane, time, speed) {
     this.lane = lane;
-    this.x = this.getLaneX(lane);
     this.time = time;
     this.speed = speed;
     this.isHit = false;
@@ -95,8 +117,9 @@ class Note {
     this.fillColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
     this.hitTime = null;
     this.noteWidth = 100;
-    this.noteHeight = 50;
+    this.noteHeight = 20;
     this.startNoteY = -this.noteHeight;
+    this.x = this.getLaneX(lane);
     this.y = this.startNoteY;
     this.createNote();
   }
@@ -117,26 +140,23 @@ class Note {
     document.getElementById("gameArea").appendChild(this.element);
   }
 
-  update(conductor) {
-    if (!this.isHit) {
+  update(conductor, hitLineY, gameHeight) {
+    if (!this.isHit && !conductor.isPaused) {
       const timeToReachTarget = this.targetY / this.speed;
       const timeElapsed = conductor.songPosition - this.time;
       const visibleTimeElapsed = timeElapsed;
-      if (visibleTimeElapsed < -timeToReachTarget) {
-        return;
-      }
+      if (visibleTimeElapsed < -timeToReachTarget) return;
 
       this.y = this.startNoteY + visibleTimeElapsed * this.speed;
       this.element.style.top = this.y + "px";
+
       if (visibleTimeElapsed >= timeToReachTarget) {
-        this.isHit = true;
         this.hitTime = conductor.songPosition;
         this.checkHit(conductor.songPosition);
-        this.element.classList.add("end");
-        setTimeout(() => {
-          this.remove();
-        }, 500);
       }
+    }
+    if (this.y > gameHeight || this.isHit) {
+      this.remove();
     }
   }
 
@@ -146,23 +166,24 @@ class Note {
     const goodWindow = 0.1;
     const timeDiff = Math.abs(this.hitTime - this.time);
     let result = "Miss";
+
     if (timeDiff <= perfectWindow) {
-      console.log("Perfect!");
       result = "Perfect";
+      this.isHit = true;
     } else if (timeDiff <= goodWindow) {
-      console.log("Good!");
       result = "Good";
+      this.isHit = true;
     } else if (timeDiff <= hitWindow) {
-      console.log("Hit!");
       result = "Hit";
-    } else {
-      console.log("Miss!");
+      this.isHit = true;
     }
     return result;
   }
 
   remove() {
-    this.element.remove();
+    if (this.element && this.element.parentNode) {
+      this.element.remove();
+    }
   }
 }
 
@@ -180,43 +201,38 @@ class Game {
     this.gameHeight = 300;
     this.lanes = [0, 1, 2, 3];
     this.keyMap = ["d", "f", "j", "k"];
-    this.laneColors = ["red", "blue", "green", "yellow"];
     this.scoreElement = document.getElementById("score");
     this.comboElement = document.getElementById("combo");
     this.gameArea = document.getElementById("gameArea");
     this.hitLineY = 250;
     this.keyElements = [];
-    this.laneAreas = [];
     this.noteSpeed = 250;
-    this.notePatterns = [
-      [0],
-      [1],
-      [2],
-      [3],
-      [0, 1],
-      [1, 2],
-      [2, 3],
-      [0, 2],
-      [1, 3],
-      [0, 1, 2],
-      [1, 2, 3],
-      [0, 1, 2, 3],
-    ];
-    this.patternIndex = 0;
-    this.noteQueue = [];
     this.isGenerating = false;
+    this.isPaused = false;
+    this.muteTimeout = null;
+    this.volumeTransitionDuration = 100; // 볼륨 전환 시간 (0.1초)
   }
 
   start() {
-    this.reset();
     this.isPlaying = true;
+    this.isPaused = false;
     this.conductor.start();
-    this.gameLoop();
     this.lastNoteGenerateTime = player.getCurrentTime();
     this.createHitLine();
     this.createLaneLines();
     this.createKeyUI();
-    this.initNoteQueue();
+    this.gameLoop();
+  }
+
+  pause() {
+    this.isPaused = true;
+    this.conductor.pause();
+  }
+
+  resume() {
+    this.isPaused = false;
+    this.conductor.resume();
+    this.gameLoop();
   }
 
   createHitLine() {
@@ -239,78 +255,75 @@ class Game {
     const keyArea = document.createElement("div");
     keyArea.classList.add("keyArea");
     for (let i = 0; i < this.keyMap.length; i++) {
-      const laneArea = document.createElement("div");
-      laneArea.classList.add("laneArea");
       const keyElement = document.createElement("div");
       keyElement.textContent = this.keyMap[i].toUpperCase();
       keyElement.classList.add("keyElement");
-      laneArea.appendChild(keyElement);
-      keyArea.appendChild(laneArea);
-      this.keyElements.push({ keyElement, laneArea });
+      keyArea.appendChild(keyElement);
+      this.keyElements.push({ keyElement });
     }
     this.gameArea.appendChild(keyArea);
   }
 
   reset() {
     this.isPlaying = false;
+    this.isPaused = false;
     this.conductor.startTime = 0;
     this.notes.forEach((note) => note.remove());
     this.notes = [];
-    document.getElementById("gameArea").innerHTML = "";
+    this.gameArea.innerHTML = "";
     this.lastNoteGenerateTime = 0;
     this.score = 0;
     this.combo = 0;
     this.keyElements = [];
-    this.laneAreas = [];
-    this.patternIndex = 0;
-    this.noteQueue = [];
     this.isGenerating = false;
     this.updateUI();
-  }
-
-  initNoteQueue() {
-    for (let i = 0; i < 10; i++) {
-      this.enqueueNotePattern();
+    this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+    if (this.muteTimeout) {
+      clearTimeout(this.muteTimeout);
     }
   }
 
-  enqueueNotePattern() {
-    const pattern =
-      this.notePatterns[Math.floor(Math.random() * this.notePatterns.length)];
-    this.noteQueue.push(pattern);
-  }
-
-  dequeueNotePattern() {
-    return this.noteQueue.shift();
+  getRandomLane() {
+    return Math.floor(Math.random() * this.lanes.length);
   }
 
   generateNotes() {
-    if (this.isGenerating) return;
+    if (this.conductor.isPaused || this.isGenerating) return;
     this.isGenerating = true;
+
     const now = player.getCurrentTime();
     const generateTime = now + this.noteAppearOffset;
-    if (now - this.lastNoteGenerateTime >= this.noteGenerateInterval) {
+
+    if (
+      now < videoDuration * 0.9 &&
+      now - this.lastNoteGenerateTime >= this.noteGenerateInterval
+    ) {
       this.lastNoteGenerateTime = now;
-      const pattern = this.dequeueNotePattern();
-      if (pattern) {
-        if (generateTime < videoDuration) {
-          pattern.forEach((lane) => {
-            this.notes.push(new Note(lane, generateTime, this.noteSpeed));
-          });
-        }
-        this.enqueueNotePattern();
+      if (generateTime < videoDuration) {
+        const lane = this.getRandomLane();
+        this.notes.push(new Note(lane, generateTime, this.noteSpeed));
       }
-      this.isGenerating = false;
     }
+    this.isGenerating = false;
   }
 
   gameLoop() {
     if (this.isPlaying) {
       this.conductor.update();
       this.generateNotes();
-      this.notes.forEach((note) => note.update(this.conductor));
-      requestAnimationFrame(() => this.gameLoop());
+      this.notes.forEach((note) =>
+        note.update(this.conductor, this.hitLineY, this.gameHeight)
+      );
+      if (!this.conductor.isPaused) {
+        requestAnimationFrame(() => this.gameLoop());
+      }
     }
+  }
+
+  adjustVolume(volume, duration) {
+    player.setPlaybackRate(1);
+    player.setVolume(volume);
+    player.setPlaybackRate(1);
   }
 
   hitNote(lane) {
@@ -320,8 +333,8 @@ class Game {
       .filter(
         (note) =>
           !note.isHit &&
-          note.y >= this.hitLineY - 20 &&
-          note.y <= this.hitLineY + 20 &&
+          note.y >= this.hitLineY - note.height &&
+          note.y <= this.hitLineY + note.height &&
           note.lane === lane
       )
       .reduce((prev, curr) => {
@@ -329,21 +342,36 @@ class Game {
         const currDiff = Math.abs(now - curr.time);
         return prevDiff < currDiff ? prev : curr;
       }, null);
+
     if (closestNote && Math.abs(now - closestNote.time) <= hitWindow) {
       closestNote.isHit = true;
       closestNote.hitTime = now;
       closestNote.element.classList.add("hit");
       const hitResult = closestNote.checkHit(now);
       this.updateScore(hitResult);
+
+      if (this.muteTimeout) {
+        clearTimeout(this.muteTimeout);
+        this.muteTimeout = null;
+        this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+      }
+
       this.showKeyEffect(lane);
-      setTimeout(() => {
-        closestNote.remove();
-      }, 500);
     } else {
+      this.adjustVolume(originalVolume * 0.1, this.volumeTransitionDuration);
+
+      if (this.muteTimeout) {
+        clearTimeout(this.muteTimeout);
+      }
+      this.muteTimeout = setTimeout(() => {
+        this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+        this.muteTimeout = null;
+      }, 500);
+
       this.combo = 0;
       this.showKeyEffect(lane, true);
+      this.updateUI();
     }
-    this.updateUI();
   }
 
   updateScore(hitResult) {
@@ -359,6 +387,7 @@ class Game {
     } else {
       this.combo = 0;
     }
+    this.updateUI();
   }
 
   updateUI() {
@@ -367,25 +396,13 @@ class Game {
   }
 
   showKeyEffect(lane, isMiss = false) {
-    if (lane < 0 || lane >= this.keyElements.length) {
-      console.error(`Invalid lane index: ${lane}`);
-      return;
-    }
-
-    const { keyElement, laneArea } = this.keyElements[lane];
+    if (lane < 0 || lane >= this.keyElements.length) return;
+    const { keyElement } = this.keyElements[lane];
     keyElement.style.transition = "background-color 0.1s linear";
-    if (isMiss) {
-      keyElement.style.backgroundColor = `red`;
-    } else {
-      keyElement.style.backgroundColor = `green`;
-    }
+    keyElement.style.backgroundColor = isMiss ? `red` : `green`;
     setTimeout(() => {
       keyElement.style.backgroundColor = "transparent";
     }, 100);
-  }
-
-  getLaneBackgroundColor(lane) {
-    return this.laneColors[lane];
   }
 }
 
