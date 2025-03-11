@@ -191,8 +191,8 @@ class Note {
 
 class Game {
   constructor() {
-  this.conductor = new Conductor(120);
-  this.notes = [];
+    this.conductor = new Conductor(120);
+    this.notes = [];
     this.isPlaying = false;
     this.noteGenerateInterval = 0.35;
     this.lastNoteGenerateTime = 0;
@@ -351,7 +351,7 @@ class Game {
           this.muteTimeout = null;
           this.adjustVolume(originalVolume, this.volumeTransitionDuration);
         }
-        this.showKeyEffect(lane);
+        this.showKeyEffect(lane, hitResult);
       } else {
         this.adjustVolume(originalVolume * 0.1, this.volumeTransitionDuration);
         if (this.muteTimeout) {
@@ -364,12 +364,12 @@ class Game {
         }, 500);
 
         this.combo = 0;
-        this.showKeyEffect(lane, true);
+        this.showKeyEffect(lane, hitResult);
         this.updateUI();
       }
     } else {
       this.combo = 0;
-      this.showKeyEffect(lane, true);
+      this.showKeyEffect(lane, hitResult);
       this.updateUI();
     }
   }
@@ -395,11 +395,21 @@ class Game {
     this.comboElement.textContent = `Combo : ${this.combo}`;
   }
 
-  showKeyEffect(lane, isMiss = false) {
+  showKeyEffect(lane, hitResult) {
     if (lane < 0 || lane >= this.keyElements.length) return;
     const { keyElement } = this.keyElements[lane];
     keyElement.style.transition = "background-color 0.1s linear";
-    keyElement.style.backgroundColor = isMiss ? `red` : `green`;
+
+    if (hitResult === "Perfect") {
+      keyElement.style.backgroundColor = "green";
+    } else if (hitResult === "Good") {
+      keyElement.style.backgroundColor = "blue";
+    } else if (hitResult === "Hit") {
+      keyElement.style.backgroundColor = "yellow";
+    } else {
+      keyElement.style.backgroundColor = "red";
+    }
+
     setTimeout(() => {
       keyElement.style.backgroundColor = "transparent";
     }, 100);
