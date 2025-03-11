@@ -150,9 +150,9 @@ class Note {
       this.y = this.startNoteY + visibleTimeElapsed * this.speed;
       this.element.style.top = this.y + "px";
 
-      if (visibleTimeElapsed >= timeToReachTarget) {
-        this.hitTime = conductor.songPosition;
-        this.checkHit(conductor.songPosition);
+      if (this.y > gameHeight) {
+        this.remove();
+        return;
       }
     }
     if (this.y > gameHeight || this.isHit) {
@@ -160,20 +160,22 @@ class Note {
     }
   }
 
-  checkHit(songPosition) {
-    const hitWindow = 0.2;
-    const perfectWindow = 0.05;
-    const goodWindow = 0.1;
-    const timeDiff = Math.abs(this.hitTime - this.time);
+  checkHit(hitY) {
+    const perfectWindow = 10;
+    const goodWindow = 25;
+    const hitWindow = 50;
+
+    const centerY = this.y + this.noteHeight / 2;
+    const distance = Math.abs(centerY - hitY);
     let result = "Miss";
 
-    if (timeDiff <= perfectWindow) {
+    if (distance <= perfectWindow) {
       result = "Perfect";
       this.isHit = true;
-    } else if (timeDiff <= goodWindow) {
+    } else if (distance <= goodWindow) {
       result = "Good";
       this.isHit = true;
-    } else if (timeDiff <= hitWindow) {
+    } else if (distance <= hitWindow) {
       result = "Hit";
       this.isHit = true;
     }
@@ -189,10 +191,10 @@ class Note {
 
 class Game {
   constructor() {
-    this.conductor = new Conductor(120);
-    this.notes = [];
+  this.conductor = new Conductor(120);
+  this.notes = [];
     this.isPlaying = false;
-    this.noteGenerateInterval = 0.5;
+    this.noteGenerateInterval = 0.35;
     this.lastNoteGenerateTime = 0;
     this.noteAppearOffset = 2;
     this.score = 0;
@@ -327,47 +329,45 @@ class Game {
   }
 
   hitNote(lane) {
-    const hitWindow = 0.2;
     const now = this.conductor.songPosition;
     const closestNote = this.notes
-      .filter(
-        (note) =>
-          !note.isHit &&
-          note.y >= this.hitLineY - note.height &&
-          note.y <= this.hitLineY + note.height &&
-          note.lane === lane
-      )
+      .filter((note) => !note.isHit && note.lane === lane)
       .reduce((prev, curr) => {
-        const prevDiff = Math.abs(now - curr.time);
-        const currDiff = Math.abs(now - curr.time);
+        const prevDiff = Math.abs(prev.y + prev.noteHeight / 2 - this.hitLineY);
+        const currDiff = Math.abs(curr.y + curr.noteHeight / 2 - this.hitLineY);
         return prevDiff < currDiff ? prev : curr;
-      }, null);
+      }, this.notes.find((note) => !note.isHit && note.lane === lane) || null);
 
-    if (closestNote && Math.abs(now - closestNote.time) <= hitWindow) {
-      closestNote.isHit = true;
-      closestNote.hitTime = now;
-      closestNote.element.classList.add("hit");
-      const hitResult = closestNote.checkHit(now);
-      this.updateScore(hitResult);
+    if (closestNote) {
+      const hitResult = closestNote.checkHit(this.hitLineY);
 
-      if (this.muteTimeout) {
-        clearTimeout(this.muteTimeout);
-        this.muteTimeout = null;
-        this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+      if (hitResult !== "Miss") {
+        closestNote.isHit = true;
+        closestNote.hitTime = now;
+        closestNote.element.classList.add("hit");
+        this.updateScore(hitResult);
+        if (this.muteTimeout) {
+          clearTimeout(this.muteTimeout);
+          this.muteTimeout = null;
+          this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+        }
+        this.showKeyEffect(lane);
+      } else {
+        this.adjustVolume(originalVolume * 0.1, this.volumeTransitionDuration);
+        if (this.muteTimeout) {
+          clearTimeout(this.muteTimeout);
+        }
+
+        this.muteTimeout = setTimeout(() => {
+          this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+          this.muteTimeout = null;
+        }, 500);
+
+        this.combo = 0;
+        this.showKeyEffect(lane, true);
+        this.updateUI();
       }
-
-      this.showKeyEffect(lane);
     } else {
-      this.adjustVolume(originalVolume * 0.1, this.volumeTransitionDuration);
-
-      if (this.muteTimeout) {
-        clearTimeout(this.muteTimeout);
-      }
-      this.muteTimeout = setTimeout(() => {
-        this.adjustVolume(originalVolume, this.volumeTransitionDuration);
-        this.muteTimeout = null;
-      }, 500);
-
       this.combo = 0;
       this.showKeyEffect(lane, true);
       this.updateUI();
