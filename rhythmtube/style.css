@@ -1,8 +1,13 @@
 :root {
-  --primary-color: #34495e;
-  --secondary-color: #2c3e50;
-  --text-color: #ecf0f1;
+  /* Modern Color Palette */
+  --primary-color: #222831; /* Dark Charcoal */
+  --secondary-color: #393e46; /* Dark Gray */
+  --text-color: #eeeeee; /* Light Gray */
   --accent-color: #e74c3c;
+  --hover-color: #009da3; /* Slightly darker teal for hover */
+  --background-light: #4c5058;
+  --scrollbar-thumb: #555; /* Darker Gray for Scrollbar */
+  --scrollbar-track: #2b3038;
 }
 
 body {
@@ -11,11 +16,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(
-    to bottom,
-    var(--primary-color),
-    var(--secondary-color)
-  );
+  background: var(--primary-color); /* Solid Dark Background */
   color: var(--text-color);
   font-family: "Arial", sans-serif;
   user-select: none;
@@ -23,20 +24,35 @@ body {
 }
 
 h1 {
+  color: var(--accent-color); /* Teal Header */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Stronger Text Shadow */
+  margin-bottom: 10px; /* Added margin */
+}
+
+#version {
+  font-size: 0.8rem;
   color: var(--text-color);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  margin-top: -10px;
+  font-weight: normal;
+  font-style: italic;
 }
 
 #inputArea {
   margin-bottom: 20px;
+  display: flex; /* Use flexbox to align the elements horizontally */
+  gap: 10px; /* Add some space between the elements */
+  align-items: center;
 }
 
 #videoUrl {
   padding: 10px;
-  border: none;
+  border: 1px solid var(--secondary-color); /* Dark Gray Border */
   border-radius: 5px;
-  background-color: #bdc3c7;
-  color: var(--secondary-color);
+  background-color: var(--background-light);
+  color: var(--text-color);
+  flex-grow: 1;
+  min-width: 200px;
 }
 
 #playButton {
@@ -50,7 +66,7 @@ h1 {
 }
 
 #playButton:hover {
-  background-color: #c0392b;
+  background-color: var(--hover-color);
 }
 
 #gameContainer {
@@ -59,29 +75,31 @@ h1 {
   align-items: center;
   border-radius: 10px;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); /* Slightly Transparent Background */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Added Box Shadow */
 }
 
 #player {
   margin-bottom: 20px;
-  border: 3px solid #7f8c8d;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  border: 3px solid var(--secondary-color);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Added Box Shadow */
   border-radius: 10px;
 }
 
 #gameArea {
   width: 400px;
   height: 300px;
-  border: 3px solid #7f8c8d;
+  border: 3px solid var(--secondary-color);
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
-  background: linear-gradient(
-    to bottom,
-    var(--secondary-color),
-    var(--primary-color)
-  );
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  background: var(--secondary-color); /* Darker Background */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Added Box Shadow */
   border-radius: 10px;
 }
 
@@ -117,7 +135,7 @@ h1 {
 .hitLine {
   width: 100%;
   height: 3px;
-  background-color: white;
+  background-color: var(--text-color); /* White Hit Line */
   position: absolute;
   left: 0px;
   z-index: 3;
@@ -126,7 +144,7 @@ h1 {
 .laneLine {
   width: 3px;
   height: 100%;
-  background-color: gray;
+  background-color: #666; /* Darker Gray for Lane Lines */
   position: absolute;
   top: 0px;
   z-index: 3;
@@ -156,28 +174,20 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: var(--text-color); /* White Key Letters */
   font-size: 20px;
-  border-top: 3px solid white;
+  border-top: 3px solid var(--text-color); /* White Key Border */
   box-sizing: border-box;
   transition: background-color 0.1s linear;
 }
 
-#version {
-  font-size: 0.9rem;
-  color: #718096;
-  text-align: center;
-  margin-top: -15px;
-  font-weight: normal;
-  font-style: italic;
-}
-
 #copyright {
-  color: #718096;
+  color: #999; /* Lighter Gray for Copyright */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
+  margin-top: 20px;
 }
 
 #copyright a {
@@ -200,12 +210,13 @@ h1 {
   }
 }
 
+/* Song List Styles */
 #songListContainer {
   width: 95%;
   max-width: 800px;
   max-height: 200px;
   overflow-y: auto;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--secondary-color);
   margin-top: 20px;
   padding: 10px;
   margin-bottom: 20px;
@@ -219,6 +230,9 @@ h1 {
   transition: background-color 0.2s ease;
   border-radius: 5px;
   padding: 5px;
+  background-color: var(
+    --background-light
+  ); /* Add background for each songItem */
 }
 
 .songItem:hover {
@@ -231,6 +245,7 @@ h1 {
   margin-right: 10px;
   border-radius: 5px;
   object-fit: cover;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow to thumbnail */
 }
 
 .songDetails {
@@ -240,7 +255,7 @@ h1 {
 .songTitle {
   font-weight: bold;
   margin-bottom: 5px;
-  color: #fff;
+  color: var(--text-color); /* White Song Title */
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   overflow: hidden;
@@ -248,15 +263,8 @@ h1 {
 }
 
 .songDescription {
-  color: #ccc;
+  color: #aaa; /* Light Gray Description */
   font-size: 0.8em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.songDetails div {
-  color: #ccc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -267,11 +275,11 @@ h1 {
 }
 
 #songListContainer::-webkit-scrollbar-thumb {
-  background-color: #888;
+  background-color: var(--scrollbar-thumb);
   border-radius: 5px;
 }
 
 #songListContainer::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: var(--scrollbar-track);
   border-radius: 5px;
 }
