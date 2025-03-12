@@ -1,92 +1,3 @@
-function dataLoaded(data) {
-  displaySongList(data);
-}
-
-function displaySongList(songs) {
-  const songListContainer = document.getElementById("songListContainer");
-  songListContainer.innerHTML = "";
-
-  songs.forEach((song) => {
-    if (!song.title || !song.thumbnail || !song.description) {
-      getYoutubeData(song.url).then((data) => {
-        song.title = data.title;
-        song.thumbnail = data.thumbnail;
-        song.description = data.description;
-        createSongItem(song, songListContainer);
-      });
-    } else {
-      createSongItem(song, songListContainer);
-    }
-  });
-}
-
-function createSongItem(song, songListContainer) {
-  const songItem = document.createElement("div");
-  songItem.classList.add("songItem");
-
-  const thumbnail = document.createElement("img");
-  thumbnail.src = song.thumbnail;
-  thumbnail.classList.add("songThumbnail");
-  thumbnail.alt = song.title;
-
-  const songDetails = document.createElement("div");
-  songDetails.classList.add("songDetails");
-
-  const title = document.createElement("div");
-  title.classList.add("songTitle");
-  title.textContent = song.title;
-
-  const description = document.createElement("div");
-  description.classList.add("songDescription");
-  description.textContent = song.description || "No description available";
-
-  songDetails.appendChild(title);
-  songDetails.appendChild(description);
-
-  songItem.appendChild(thumbnail);
-  songItem.appendChild(songDetails);
-
-  songItem.addEventListener("click", () => {
-    console.log("Selected song:", song.title);
-    videoUrlInput.value = song.url;
-    playVideo();
-  });
-
-  songListContainer.appendChild(songItem);
-}
-
-async function getYoutubeData(url) {
-  const videoId = getVideoIdFromUrl(url);
-  if (!videoId) {
-    console.error("Invalid YouTube URL:", url);
-    return null;
-  }
-
-  try {
-    const response = await fetch(
-      `https://www.youtube.com/oembed?url=${url}&format=json`
-    );
-    const data = await response.json();
-    return {
-      title: data.title,
-      thumbnail: data.thumbnail_url,
-      description: data.author_name,
-    };
-  } catch (error) {
-    console.error("Error fetching YouTube data:", error);
-    return {
-      title: "Error fetching title",
-      thumbnail: "",
-      description: "Error fetching description",
-    };
-  }
-}
-
-let tag = document.createElement("script");
-tag.src = "https://www.youtube.com/iframe_api";
-let firstScriptTag = document.getElementsByTagName("script")[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
 let player;
 let videoDuration = 0;
 let originalVolume = 100;
@@ -96,16 +7,14 @@ const maxVolume = 1.0;
 const minVolume = 0.0;
 let isVideoPlaying = false;
 let currentSongIndex = 0;
-let repeatModes = ["none", "one", "all", "random"];
+const repeatModes = ["none", "one", "all", "random"];
 let currentRepeatModeIndex = 3;
-
 const soundPools = {
   d: [],
   f: [],
   j: [],
   k: [],
 };
-
 const maxSounds = 4;
 const soundFiles = {
   d: "sound/tr707-kick-drum-241400.mp3",
@@ -115,6 +24,7 @@ const soundFiles = {
 };
 const keyMap = ["d", "f", "j", "k"];
 const laneSoundMap = { 0: "d", 1: "f", 2: "j", 3: "k" };
+
 function loadSounds() {
   for (const key of keyMap) {
     for (let i = 0; i < maxSounds; i++) {
@@ -140,10 +50,10 @@ loadSounds();
 function setInitialVolume() {
   bgmVolume = parseFloat(bgmVolumeControl.value);
   sfxVolume = parseFloat(sfxVolumeControl.value);
-
   if (player) {
     player.setVolume(originalVolume * bgmVolume);
   }
+
   for (const key in soundPools) {
     soundPools[key].forEach((sound) => (sound.volume = sfxVolume));
   }
@@ -181,7 +91,6 @@ function onPlayerStateChange(event) {
     } else if (game.isPaused) {
       game.resume();
     }
-
     setInitialVolume();
   } else if (event.data === YT.PlayerState.PAUSED) {
     game.pause();
@@ -200,7 +109,6 @@ const sfxVolumeControl = document.getElementById("sfxVolumeControl");
 playButton.addEventListener("click", () => {
   playVideo();
 });
-
 function playVideo() {
   game.reset();
   const videoUrl = videoUrlInput.value;
@@ -223,12 +131,14 @@ function loadNextVideo() {
   if (songData.length == 0) {
     return;
   }
+
   if (repeatModes[currentRepeatModeIndex] === "random") {
     shuffleArray(songData);
     currentSongIndex = 0;
   } else {
     currentSongIndex = (currentSongIndex + 1) % songData.length;
   }
+
   videoUrlInput.value = songData[currentSongIndex].url;
   playVideo();
 }
@@ -257,21 +167,18 @@ repeatButton.addEventListener("click", () => {
   repeatMode = repeatModes[currentRepeatModeIndex];
   updateRepeatButtonStyles();
 });
-
 bgmVolumeControl.addEventListener("input", () => {
   bgmVolume = parseFloat(bgmVolumeControl.value);
   if (player) {
     player.setVolume(originalVolume * bgmVolume);
   }
 });
-
 sfxVolumeControl.addEventListener("input", () => {
   sfxVolume = parseFloat(sfxVolumeControl.value);
   for (const key in soundPools) {
     soundPools[key].forEach((sound) => (sound.volume = sfxVolume));
   }
 });
-
 function updateRepeatButtonStyles() {
   const repeatIcon = repeatButton.querySelector("i");
   if (repeatModes[currentRepeatModeIndex] === "one") {
@@ -385,15 +292,14 @@ class Note {
       const timeElapsed = conductor.songPosition - this.time;
       const visibleTimeElapsed = timeElapsed;
       if (visibleTimeElapsed < -timeToReachTarget) return;
-
       this.y = this.startNoteY + visibleTimeElapsed * this.speed;
       this.element.style.top = this.y + "px";
-
       if (this.y > gameHeight) {
         this.remove();
         return;
       }
     }
+
     if (this.y > gameHeight || this.isHit) {
       this.remove();
     }
@@ -403,11 +309,9 @@ class Note {
     const perfectWindow = 10;
     const goodWindow = 25;
     const hitWindow = 50;
-
     const centerY = this.y + this.noteHeight / 2;
     const distance = Math.abs(centerY - hitY);
     let result = "Miss";
-
     if (distance <= perfectWindow) {
       result = "Perfect";
       this.isHit = true;
@@ -418,6 +322,7 @@ class Note {
       result = "Hit";
       this.isHit = true;
     }
+
     return result;
   }
 
@@ -502,6 +407,7 @@ class Game {
       keyArea.appendChild(keyElement);
       this.keyElements.push({ keyElement });
     }
+
     this.gameArea.appendChild(keyArea);
   }
 
@@ -531,10 +437,8 @@ class Game {
   generateNotes() {
     if (this.conductor.isPaused || this.isGenerating) return;
     this.isGenerating = true;
-
     const now = player.getCurrentTime();
     const generateTime = now + this.noteAppearOffset;
-
     if (
       now < videoDuration * 0.9 &&
       now - this.lastNoteGenerateTime >= this.noteGenerateInterval
@@ -555,7 +459,6 @@ class Game {
       this.notes.forEach((note) =>
         note.update(this.conductor, this.hitLineY, this.gameHeight)
       );
-
       this.notes.forEach((note) => {
         if (!note.isHit && note.y > this.gameHeight) {
           this.updateScore("Miss");
@@ -583,10 +486,8 @@ class Game {
         const currDiff = Math.abs(curr.y + curr.noteHeight / 2 - this.hitLineY);
         return prevDiff < currDiff ? prev : curr;
       }, this.notes.find((note) => !note.isHit && note.lane === lane) || null);
-
     if (closestNote) {
       const hitResult = closestNote.checkHit(this.hitLineY);
-
       if (hitResult !== "Miss") {
         closestNote.isHit = true;
         closestNote.hitTime = now;
@@ -600,6 +501,7 @@ class Game {
             this.volumeTransitionDuration
           );
         }
+
         this.showKeyEffect(lane, hitResult);
       } else {
         this.adjustVolume(
@@ -642,6 +544,7 @@ class Game {
     } else {
       this.combo = 0;
     }
+
     this.updateUI();
     this.showHitResultEffect(hitResult);
   }
@@ -655,7 +558,6 @@ class Game {
     if (lane < 0 || lane >= this.keyElements.length) return;
     const { keyElement } = this.keyElements[lane];
     keyElement.style.transition = "background-color 0.1s linear";
-
     if (hitResult === "Perfect") {
       keyElement.style.backgroundColor = "green";
     } else if (hitResult === "Good") {
@@ -675,14 +577,11 @@ class Game {
     const resultElement = document.createElement("div");
     resultElement.textContent = hitResult;
     resultElement.classList.add("hitResultEffect");
-
     resultElement.style.position = "absolute";
     resultElement.style.top = "20%";
     resultElement.style.left = "50%";
     resultElement.style.transform = "translate(-50%, -50%)";
-
     this.gameArea.appendChild(resultElement);
-
     resultElement.animate(
       [
         { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
@@ -693,7 +592,6 @@ class Game {
         easing: "ease-out",
       }
     );
-
     setTimeout(() => {
       resultElement.remove();
     }, 500);
@@ -701,7 +599,6 @@ class Game {
 }
 
 const game = new Game();
-
 document.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "d":
@@ -718,3 +615,83 @@ document.addEventListener("keydown", (event) => {
       break;
   }
 });
+
+let tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+let firstScriptTag = document.getElementsByTagName("script")[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+function dataLoaded(data) {
+  displaySongList(data);
+}
+
+function displaySongList(songs) {
+  const songListContainer = document.getElementById("songListContainer");
+  songListContainer.innerHTML = "";
+  songs.forEach((song) => {
+    if (!song.title || !song.thumbnail || !song.description) {
+      getYoutubeData(song.url).then((data) => {
+        song.title = data.title;
+        song.thumbnail = data.thumbnail;
+        song.description = data.description;
+        createSongItem(song, songListContainer);
+      });
+    } else {
+      createSongItem(song, songListContainer);
+    }
+  });
+}
+
+function createSongItem(song, songListContainer) {
+  const songItem = document.createElement("div");
+  songItem.classList.add("songItem");
+  const thumbnail = document.createElement("img");
+  thumbnail.src = song.thumbnail;
+  thumbnail.classList.add("songThumbnail");
+  thumbnail.alt = song.title;
+  const songDetails = document.createElement("div");
+  songDetails.classList.add("songDetails");
+  const title = document.createElement("div");
+  title.classList.add("songTitle");
+  title.textContent = song.title;
+  const description = document.createElement("div");
+  description.classList.add("songDescription");
+  description.textContent = song.description || "No description available";
+  songDetails.appendChild(title);
+  songDetails.appendChild(description);
+  songItem.appendChild(thumbnail);
+  songItem.appendChild(songDetails);
+  songItem.addEventListener("click", () => {
+    console.log("Selected song:", song.title);
+    videoUrlInput.value = song.url;
+    playVideo();
+  });
+  songListContainer.appendChild(songItem);
+}
+
+async function getYoutubeData(url) {
+  const videoId = getVideoIdFromUrl(url);
+  if (!videoId) {
+    console.error("Invalid YouTube URL:", url);
+    return null;
+  }
+
+  try {
+    const response = await fetch(
+      `https://www.youtube.com/oembed?url=${url}&format=json`
+    );
+    const data = await response.json();
+    return {
+      title: data.title,
+      thumbnail: data.thumbnail_url,
+      description: data.author_name,
+    };
+  } catch (error) {
+    console.error("Error fetching YouTube data:", error);
+    return {
+      title: "Error fetching title",
+      thumbnail: "",
+      description: "Error fetching description",
+    };
+  }
+}
