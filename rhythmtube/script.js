@@ -47,8 +47,8 @@ function createSongItem(song, songListContainer) {
 
   songItem.addEventListener("click", () => {
     console.log("Selected song:", song.title);
-    const videoUrlInput = document.getElementById("videoUrl");
     videoUrlInput.value = song.url;
+    playVideo();
   });
 
   songListContainer.appendChild(songItem);
@@ -130,6 +130,11 @@ const videoUrlInput = document.getElementById("videoUrl");
 const playButton = document.getElementById("playButton");
 
 playButton.addEventListener("click", () => {
+  playVideo();
+});
+
+function playVideo() {
+  game.reset();
   const videoUrl = videoUrlInput.value;
   const videoId = getVideoIdFromUrl(videoUrl);
   if (videoId) {
@@ -137,7 +142,7 @@ playButton.addEventListener("click", () => {
   } else {
     alert("유효한 유튜브 URL을 입력해주세요.");
   }
-});
+}
 
 function getVideoIdFromUrl(url) {
   const regex =
@@ -149,6 +154,7 @@ function getVideoIdFromUrl(url) {
 function loadVideoById(videoId) {
   if (player) {
     player.loadVideoById(videoId);
+    game.start();
   }
 }
 
@@ -295,7 +301,7 @@ class Game {
     this.isGenerating = false;
     this.isPaused = false;
     this.muteTimeout = null;
-    this.volumeTransitionDuration = 100; // 볼륨 전환 시간 (0.1초)
+    this.volumeTransitionDuration = 100;
   }
 
   start() {
