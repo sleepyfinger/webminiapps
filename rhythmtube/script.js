@@ -407,6 +407,13 @@ class Game {
       this.notes.forEach((note) =>
         note.update(this.conductor, this.hitLineY, this.gameHeight)
       );
+      
+      this.notes.forEach((note) => {
+        if (!note.isHit && note.y > this.gameHeight) {
+          this.updateScore("Miss");
+          note.isHit = true;
+        }
+      });
       if (!this.conductor.isPaused) {
         requestAnimationFrame(() => this.gameLoop());
       }
@@ -453,14 +460,14 @@ class Game {
           this.adjustVolume(originalVolume, this.volumeTransitionDuration);
           this.muteTimeout = null;
         }, 500);
-
+        this.updateScore("Miss");
         this.combo = 0;
         this.showKeyEffect(lane, hitResult);
         this.updateUI();
       }
     } else {
       this.combo = 0;
-      this.showKeyEffect(lane, hitResult);
+      this.showKeyEffect(lane, "Miss");
       this.updateUI();
     }
   }
@@ -479,6 +486,7 @@ class Game {
       this.combo = 0;
     }
     this.updateUI();
+    this.showHitResultEffect(hitResult);
   }
 
   updateUI() {
@@ -504,6 +512,34 @@ class Game {
     setTimeout(() => {
       keyElement.style.backgroundColor = "transparent";
     }, 100);
+  }
+
+  showHitResultEffect(hitResult) {
+    const resultElement = document.createElement("div");
+    resultElement.textContent = hitResult;
+    resultElement.classList.add("hitResultEffect");
+
+    resultElement.style.position = "absolute";
+    resultElement.style.top = "20%";
+    resultElement.style.left = "50%";
+    resultElement.style.transform = "translate(-50%, -50%)";
+
+    this.gameArea.appendChild(resultElement);
+
+    resultElement.animate(
+      [
+        { opacity: 1, transform: "translate(-50%, -50%) scale(1)" },
+        { opacity: 0, transform: "translate(-50%, -80%) scale(1.5)" },
+      ],
+      {
+        duration: 500,
+        easing: "ease-out",
+      }
+    );
+
+    setTimeout(() => {
+      resultElement.remove();
+    }, 500);
   }
 }
 
