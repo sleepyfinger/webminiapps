@@ -2,7 +2,7 @@ let player;
 let videoDuration = 0;
 let originalVolume = 100;
 let bgmVolume = 1.0;
-let sfxVolume = 0.1;
+let sfxVolume = 0;
 const maxVolume = 1.0;
 const minVolume = 0.0;
 let isVideoPlaying = false;
