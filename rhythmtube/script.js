@@ -89,6 +89,7 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 let player;
 let videoDuration = 0;
 let originalVolume = 100;
+let isVideoPlaying = false;
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
@@ -113,16 +114,18 @@ function onPlayerReady() {
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING) {
     videoDuration = player.getDuration();
-    if (game.isPaused) {
-      game.resume();
-    } else {
-      game.reset();
+    isVideoPlaying = true;
+    if (!game.isPlaying) {
       game.start();
+    } else if (game.isPaused) {
+      game.resume();
     }
   } else if (event.data === YT.PlayerState.PAUSED) {
     game.pause();
+    isVideoPlaying = false;
   } else if (event.data === YT.PlayerState.ENDED) {
     game.reset();
+    isVideoPlaying = false;
   }
 }
 
@@ -154,7 +157,6 @@ function getVideoIdFromUrl(url) {
 function loadVideoById(videoId) {
   if (player) {
     player.loadVideoById(videoId);
-    game.start();
   }
 }
 
