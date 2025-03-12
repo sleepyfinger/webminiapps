@@ -181,6 +181,8 @@ function onPlayerStateChange(event) {
     } else if (game.isPaused) {
       game.resume();
     }
+
+    setInitialVolume();
   } else if (event.data === YT.PlayerState.PAUSED) {
     game.pause();
     isVideoPlaying = false;
@@ -593,17 +595,26 @@ class Game {
         if (this.muteTimeout) {
           clearTimeout(this.muteTimeout);
           this.muteTimeout = null;
-          this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+          this.adjustVolume(
+            originalVolume * bgmVolume,
+            this.volumeTransitionDuration
+          );
         }
         this.showKeyEffect(lane, hitResult);
       } else {
-        this.adjustVolume(originalVolume * 0.1, this.volumeTransitionDuration);
+        this.adjustVolume(
+          originalVolume * bgmVolume * 0.1,
+          this.volumeTransitionDuration
+        );
         if (this.muteTimeout) {
           clearTimeout(this.muteTimeout);
         }
 
         this.muteTimeout = setTimeout(() => {
-          this.adjustVolume(originalVolume, this.volumeTransitionDuration);
+          this.adjustVolume(
+            originalVolume * bgmVolume,
+            this.volumeTransitionDuration
+          );
           this.muteTimeout = null;
         }, 500);
         this.updateScore("Miss");
