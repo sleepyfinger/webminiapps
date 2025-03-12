@@ -200,12 +200,11 @@ h1 {
   }
 }
 
-/* Song List Styles */
 #songListContainer {
-  width: 95%; /* Adjust the width as needed */
-  max-width: 800px; /* Add a max-width to prevent it from getting too wide on larger screens */
-  max-height: 200px; /* Adjust the height as needed */
-  overflow-y: auto; /* Enable vertical scrolling */
+  width: 95%;
+  max-width: 800px;
+  max-height: 200px;
+  overflow-y: auto;
   border-top: 1px solid #ccc;
   margin-top: 20px;
   padding: 10px;
@@ -243,6 +242,14 @@ h1 {
   margin-bottom: 5px;
   color: #fff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.songDescription {
+  color: #ccc;
+  font-size: 0.8em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

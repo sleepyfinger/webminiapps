@@ -7,10 +7,11 @@ function displaySongList(songs) {
   songListContainer.innerHTML = "";
 
   songs.forEach((song) => {
-    if (!song.title || !song.thumbnail) {
+    if (!song.title || !song.thumbnail || !song.description) {
       getYoutubeData(song.url).then((data) => {
         song.title = data.title;
         song.thumbnail = data.thumbnail;
+        song.description = data.description;
         createSongItem(song, songListContainer);
       });
     } else {
@@ -34,11 +35,12 @@ function createSongItem(song, songListContainer) {
   title.classList.add("songTitle");
   title.textContent = song.title;
 
-  const url = document.createElement("div");
-  url.textContent = song.url;
+  const description = document.createElement("div");
+  description.classList.add("songDescription");
+  description.textContent = song.description || "No description available";
 
   songDetails.appendChild(title);
-  songDetails.appendChild(url);
+  songDetails.appendChild(description);
 
   songItem.appendChild(thumbnail);
   songItem.appendChild(songDetails);
@@ -60,12 +62,22 @@ async function getYoutubeData(url) {
   }
 
   try {
-    const response = await fetch(`https://noembed.com/embed?url=${url}`);
+    const response = await fetch(
+      `https://www.youtube.com/oembed?url=${url}&format=json`
+    );
     const data = await response.json();
-    return { title: data.title, thumbnail: data.thumbnail_url };
+    return {
+      title: data.title,
+      thumbnail: data.thumbnail_url,
+      description: data.author_name,
+    };
   } catch (error) {
     console.error("Error fetching YouTube data:", error);
-    return { title: "Error fetching title", thumbnail: "" };
+    return {
+      title: "Error fetching title",
+      thumbnail: "",
+      description: "Error fetching description",
+    };
   }
 }
 
