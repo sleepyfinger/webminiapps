@@ -90,10 +90,64 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 let player;
 let videoDuration = 0;
 let originalVolume = 100;
+let bgmVolume = 1.0;
+let sfxVolume = 0.1;
+const maxVolume = 1.0;
+const minVolume = 0.0;
 let isVideoPlaying = false;
 let currentSongIndex = 0;
 let repeatModes = ["none", "one", "all", "random"];
-let currentRepeatModeIndex = 0;
+let currentRepeatModeIndex = 3;
+
+const soundPools = {
+  d: [],
+  f: [],
+  j: [],
+  k: [],
+};
+
+const maxSounds = 4;
+const soundFiles = {
+  d: "sound/tr707-kick-drum-241400.mp3",
+  f: "sound/tr707-snare-drum-241412.mp3",
+  j: "sound/tr909-kick-drum-241402.mp3",
+  k: "sound/tr909-snare-drum-241413.mp3",
+};
+const keyMap = ["d", "f", "j", "k"];
+const laneSoundMap = { 0: "d", 1: "f", 2: "j", 3: "k" };
+function loadSounds() {
+  for (const key of keyMap) {
+    for (let i = 0; i < maxSounds; i++) {
+      const sound = new Audio(soundFiles[key]);
+      sound.preload = "auto";
+      soundPools[key].push(sound);
+    }
+  }
+}
+
+function playSound(key) {
+  if (soundPools[key]) {
+    const pool = soundPools[key];
+    const sound = pool[Math.floor(Math.random() * pool.length)];
+    sound.currentTime = 0;
+    sound.volume = sfxVolume;
+    sound.play();
+  }
+}
+
+loadSounds();
+
+function setInitialVolume() {
+  bgmVolume = parseFloat(bgmVolumeControl.value);
+  sfxVolume = parseFloat(sfxVolumeControl.value);
+
+  if (player) {
+    player.setVolume(originalVolume * bgmVolume);
+  }
+  for (const key in soundPools) {
+    soundPools[key].forEach((sound) => (sound.volume = sfxVolume));
+  }
+}
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
@@ -113,6 +167,9 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady() {
   originalVolume = player.getVolume();
+  setInitialVolume();
+  player.setPlaybackRate(1);
+  updateRepeatButtonStyles();
 }
 
 function onPlayerStateChange(event) {
@@ -136,6 +193,8 @@ function onPlayerStateChange(event) {
 const videoUrlInput = document.getElementById("videoUrl");
 const playButton = document.getElementById("playButton");
 const repeatButton = document.getElementById("repeatButton");
+const bgmVolumeControl = document.getElementById("bgmVolumeControl");
+const sfxVolumeControl = document.getElementById("sfxVolumeControl");
 playButton.addEventListener("click", () => {
   playVideo();
 });
@@ -150,12 +209,14 @@ function playVideo() {
     alert("유효한 유튜브 URL을 입력해주세요.");
   }
 }
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
 function loadNextVideo() {
   if (songData.length == 0) {
     return;
@@ -175,6 +236,7 @@ function loadVideoById(videoId) {
     player.loadVideoById(videoId);
   }
 }
+
 function handleVideoEnded() {
   if (repeatModes[currentRepeatModeIndex] === "one") {
     playVideo();
@@ -192,6 +254,20 @@ repeatButton.addEventListener("click", () => {
   currentRepeatModeIndex = (currentRepeatModeIndex + 1) % repeatModes.length;
   repeatMode = repeatModes[currentRepeatModeIndex];
   updateRepeatButtonStyles();
+});
+
+bgmVolumeControl.addEventListener("input", () => {
+  bgmVolume = parseFloat(bgmVolumeControl.value);
+  if (player) {
+    player.setVolume(originalVolume * bgmVolume);
+  }
+});
+
+sfxVolumeControl.addEventListener("input", () => {
+  sfxVolume = parseFloat(sfxVolumeControl.value);
+  for (const key in soundPools) {
+    soundPools[key].forEach((sound) => (sound.volume = sfxVolume));
+  }
 });
 
 function updateRepeatButtonStyles() {
@@ -491,12 +567,12 @@ class Game {
   }
 
   adjustVolume(volume, duration) {
-    player.setPlaybackRate(1);
     player.setVolume(volume);
     player.setPlaybackRate(1);
   }
 
   hitNote(lane) {
+    playSound(laneSoundMap[lane]);
     const now = this.conductor.songPosition;
     const closestNote = this.notes
       .filter((note) => !note.isHit && note.lane === lane)
