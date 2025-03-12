@@ -19,6 +19,7 @@ function displaySongList(songs) {
     }
   });
 }
+
 function createSongItem(song, songListContainer) {
   const songItem = document.createElement("div");
   songItem.classList.add("songItem");
@@ -90,6 +91,9 @@ let player;
 let videoDuration = 0;
 let originalVolume = 100;
 let isVideoPlaying = false;
+let currentSongIndex = 0;
+let repeatModes = ["none", "one", "all", "random"];
+let currentRepeatModeIndex = 0;
 
 function onYouTubeIframeAPIReady() {
   player = new YT.Player("player", {
@@ -124,14 +128,14 @@ function onPlayerStateChange(event) {
     game.pause();
     isVideoPlaying = false;
   } else if (event.data === YT.PlayerState.ENDED) {
-    game.reset();
     isVideoPlaying = false;
+    handleVideoEnded();
   }
 }
 
 const videoUrlInput = document.getElementById("videoUrl");
 const playButton = document.getElementById("playButton");
-
+const repeatButton = document.getElementById("repeatButton");
 playButton.addEventListener("click", () => {
   playVideo();
 });
@@ -146,18 +150,84 @@ function playVideo() {
     alert("유효한 유튜브 URL을 입력해주세요.");
   }
 }
-
-function getVideoIdFromUrl(url) {
-  const regex =
-    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-  const match = url.match(regex);
-  return match && match[7].length === 11 ? match[7] : false;
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+function loadNextVideo() {
+  if (songData.length == 0) {
+    return;
+  }
+  if (repeatModes[currentRepeatModeIndex] === "random") {
+    shuffleArray(songData);
+    currentSongIndex = 0;
+  } else {
+    currentSongIndex = (currentSongIndex + 1) % songData.length;
+  }
+  videoUrlInput.value = songData[currentSongIndex].url;
+  playVideo();
 }
 
 function loadVideoById(videoId) {
   if (player) {
     player.loadVideoById(videoId);
   }
+}
+function handleVideoEnded() {
+  if (repeatModes[currentRepeatModeIndex] === "one") {
+    playVideo();
+  } else if (
+    repeatModes[currentRepeatModeIndex] == "all" ||
+    repeatModes[currentRepeatModeIndex] == "random"
+  ) {
+    loadNextVideo();
+  } else {
+    game.reset();
+  }
+}
+
+repeatButton.addEventListener("click", () => {
+  currentRepeatModeIndex = (currentRepeatModeIndex + 1) % repeatModes.length;
+  repeatMode = repeatModes[currentRepeatModeIndex];
+  updateRepeatButtonStyles();
+});
+
+function updateRepeatButtonStyles() {
+  const repeatIcon = repeatButton.querySelector("i");
+  if (repeatModes[currentRepeatModeIndex] === "one") {
+    repeatButton.classList.add("active");
+    repeatIcon.classList.remove("fa-redo");
+    repeatIcon.classList.remove("fa-retweet");
+    repeatIcon.classList.remove("fa-random");
+    repeatIcon.classList.add("fa-redo-alt");
+  } else if (repeatModes[currentRepeatModeIndex] === "all") {
+    repeatButton.classList.add("active");
+    repeatIcon.classList.remove("fa-redo");
+    repeatIcon.classList.remove("fa-redo-alt");
+    repeatIcon.classList.remove("fa-random");
+    repeatIcon.classList.add("fa-retweet");
+  } else if (repeatModes[currentRepeatModeIndex] === "random") {
+    repeatButton.classList.add("active");
+    repeatIcon.classList.remove("fa-redo");
+    repeatIcon.classList.remove("fa-redo-alt");
+    repeatIcon.classList.remove("fa-retweet");
+    repeatIcon.classList.add("fa-random");
+  } else {
+    repeatButton.classList.remove("active");
+    repeatIcon.classList.remove("fa-redo-alt");
+    repeatIcon.classList.remove("fa-retweet");
+    repeatIcon.classList.remove("fa-random");
+    repeatIcon.classList.add("fa-redo");
+  }
+}
+
+function getVideoIdFromUrl(url) {
+  const regex =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.match(regex);
+  return match && match[7].length === 11 ? match[7] : false;
 }
 
 class Conductor {
@@ -407,7 +477,7 @@ class Game {
       this.notes.forEach((note) =>
         note.update(this.conductor, this.hitLineY, this.gameHeight)
       );
-      
+
       this.notes.forEach((note) => {
         if (!note.isHit && note.y > this.gameHeight) {
           this.updateScore("Miss");

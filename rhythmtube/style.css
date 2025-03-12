@@ -284,3 +284,47 @@ h1 {
   user-select: none;
   pointer-events: none;
 }
+
+.repeatButton {
+  padding: 10px 15px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.repeatButton:hover {
+  background-color: var(--hover-color);
+}
+
+.repeatButton.active {
+  background-color: var(--accent-color);
+}
+
+.repeatButton.active::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--text-color);
+}
+
+.repeatButton .fa-redo {
+  color: #fff;
+}
+
+.repeatButton .fa-redo-alt {
+  color: #fff;
+}
+
+.repeatButton .fa-retweet {
+  color: #fff;
+}
+.repeatButton .fa-random {
+  color: #fff;
+}
