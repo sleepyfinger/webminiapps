@@ -1,12 +1,11 @@
 :root {
-  /* Modern Color Palette */
-  --primary-color: #222831; /* Dark Charcoal */
-  --secondary-color: #393e46; /* Dark Gray */
-  --text-color: #eeeeee; /* Light Gray */
+  --primary-color: #222831;
+  --secondary-color: #393e46;
+  --text-color: #eeeeee;
   --accent-color: #e74c3c;
-  --hover-color: #009da3; /* Slightly darker teal for hover */
+  --hover-color: #e74d3c9a;
   --background-light: #4c5058;
-  --scrollbar-thumb: #555; /* Darker Gray for Scrollbar */
+  --scrollbar-thumb: #555;
   --scrollbar-track: #2b3038;
 }
 
@@ -16,7 +15,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: var(--primary-color); /* Solid Dark Background */
+  background: var(--primary-color);
   color: var(--text-color);
   font-family: "Arial", sans-serif;
   user-select: none;
@@ -24,9 +23,9 @@ body {
 }
 
 h1 {
-  color: var(--accent-color); /* Teal Header */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Stronger Text Shadow */
-  margin-bottom: 10px; /* Added margin */
+  color: var(--accent-color);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 10px;
 }
 
 #version {
@@ -40,14 +39,14 @@ h1 {
 
 #inputArea {
   margin-bottom: 20px;
-  display: flex; /* Use flexbox to align the elements horizontally */
-  gap: 10px; /* Add some space between the elements */
+  display: flex;
+  gap: 10px;
   align-items: center;
 }
 
 #videoUrl {
   padding: 10px;
-  border: 1px solid var(--secondary-color); /* Dark Gray Border */
+  border: 1px solid var(--secondary-color);
   border-radius: 5px;
   background-color: var(--background-light);
   color: var(--text-color);
@@ -75,19 +74,14 @@ h1 {
   align-items: center;
   border-radius: 10px;
   padding: 20px;
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.05
-  ); /* Slightly Transparent Background */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Added Box Shadow */
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 #player {
   margin-bottom: 20px;
   border: 3px solid var(--secondary-color);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Added Box Shadow */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
 }
 
@@ -98,8 +92,8 @@ h1 {
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
-  background: var(--secondary-color); /* Darker Background */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Added Box Shadow */
+  background: var(--secondary-color);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
 }
 
@@ -135,7 +129,7 @@ h1 {
 .hitLine {
   width: 100%;
   height: 3px;
-  background-color: var(--text-color); /* White Hit Line */
+  background-color: var(--text-color);
   position: absolute;
   left: 0px;
   z-index: 3;
@@ -144,7 +138,7 @@ h1 {
 .laneLine {
   width: 3px;
   height: 100%;
-  background-color: #666; /* Darker Gray for Lane Lines */
+  background-color: #666;
   position: absolute;
   top: 0px;
   z-index: 3;
@@ -174,15 +168,15 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--text-color); /* White Key Letters */
+  color: var(--text-color);
   font-size: 20px;
-  border-top: 3px solid var(--text-color); /* White Key Border */
+  border-top: 3px solid var(--text-color);
   box-sizing: border-box;
   transition: background-color 0.1s linear;
 }
 
 #copyright {
-  color: #999; /* Lighter Gray for Copyright */
+  color: #999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,7 +204,6 @@ h1 {
   }
 }
 
-/* Song List Styles */
 #songListContainer {
   width: 95%;
   max-width: 800px;
@@ -230,9 +223,7 @@ h1 {
   transition: background-color 0.2s ease;
   border-radius: 5px;
   padding: 5px;
-  background-color: var(
-    --background-light
-  ); /* Add background for each songItem */
+  background-color: var(--background-light);
 }
 
 .songItem:hover {
@@ -245,7 +236,7 @@ h1 {
   margin-right: 10px;
   border-radius: 5px;
   object-fit: cover;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3); /* Add shadow to thumbnail */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .songDetails {
@@ -255,7 +246,7 @@ h1 {
 .songTitle {
   font-weight: bold;
   margin-bottom: 5px;
-  color: var(--text-color); /* White Song Title */
+  color: var(--text-color);
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
   overflow: hidden;
@@ -263,7 +254,7 @@ h1 {
 }
 
 .songDescription {
-  color: #aaa; /* Light Gray Description */
+  color: #aaa;
   font-size: 0.8em;
   white-space: nowrap;
   overflow: hidden;
