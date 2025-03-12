@@ -355,7 +355,7 @@ class Game {
     this.conductor = new Conductor(120);
     this.notes = [];
     this.isPlaying = false;
-    this.noteGenerateInterval = 0.35;
+    this.noteGenerateInterval = 0.38;
     this.lastNoteGenerateTime = 0;
     this.noteAppearOffset = 2;
     this.score = 0;
@@ -458,7 +458,7 @@ class Game {
     const generateTime = now + this.noteAppearOffset;
 
     if (
-      now < videoDuration * 0.95 &&
+      now < videoDuration * 0.9 &&
       now - this.lastNoteGenerateTime >= this.noteGenerateInterval
     ) {
       this.lastNoteGenerateTime = now;
