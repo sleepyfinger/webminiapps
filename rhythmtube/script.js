@@ -1,3 +1,74 @@
+function dataLoaded(data) {
+  displaySongList(data);
+}
+
+function displaySongList(songs) {
+  const songListContainer = document.getElementById("songListContainer");
+  songListContainer.innerHTML = "";
+
+  songs.forEach((song) => {
+    if (!song.title || !song.thumbnail) {
+      getYoutubeData(song.url).then((data) => {
+        song.title = data.title;
+        song.thumbnail = data.thumbnail;
+        createSongItem(song, songListContainer);
+      });
+    } else {
+      createSongItem(song, songListContainer);
+    }
+  });
+}
+function createSongItem(song, songListContainer) {
+  const songItem = document.createElement("div");
+  songItem.classList.add("songItem");
+
+  const thumbnail = document.createElement("img");
+  thumbnail.src = song.thumbnail;
+  thumbnail.classList.add("songThumbnail");
+  thumbnail.alt = song.title;
+
+  const songDetails = document.createElement("div");
+  songDetails.classList.add("songDetails");
+
+  const title = document.createElement("div");
+  title.classList.add("songTitle");
+  title.textContent = song.title;
+
+  const url = document.createElement("div");
+  url.textContent = song.url;
+
+  songDetails.appendChild(title);
+  songDetails.appendChild(url);
+
+  songItem.appendChild(thumbnail);
+  songItem.appendChild(songDetails);
+
+  songItem.addEventListener("click", () => {
+    console.log("Selected song:", song.title);
+    const videoUrlInput = document.getElementById("videoUrl");
+    videoUrlInput.value = song.url;
+  });
+
+  songListContainer.appendChild(songItem);
+}
+
+async function getYoutubeData(url) {
+  const videoId = getVideoIdFromUrl(url);
+  if (!videoId) {
+    console.error("Invalid YouTube URL:", url);
+    return null;
+  }
+
+  try {
+    const response = await fetch(`https://noembed.com/embed?url=${url}`);
+    const data = await response.json();
+    return { title: data.title, thumbnail: data.thumbnail_url };
+  } catch (error) {
+    console.error("Error fetching YouTube data:", error);
+    return { title: "Error fetching title", thumbnail: "" };
+  }
+}
+
 let tag = document.createElement("script");
 tag.src = "https://www.youtube.com/iframe_api";
 let firstScriptTag = document.getElementsByTagName("script")[0];
@@ -297,7 +368,7 @@ class Game {
     const generateTime = now + this.noteAppearOffset;
 
     if (
-      now < videoDuration * 0.9 &&
+      now < videoDuration * 0.95 &&
       now - this.lastNoteGenerateTime >= this.noteGenerateInterval
     ) {
       this.lastNoteGenerateTime = now;

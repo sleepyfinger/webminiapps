@@ -199,3 +199,72 @@ h1 {
     width: 300px;
   }
 }
+
+/* Song List Styles */
+#songListContainer {
+  width: 95%; /* Adjust the width as needed */
+  max-width: 800px; /* Add a max-width to prevent it from getting too wide on larger screens */
+  max-height: 200px; /* Adjust the height as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border-top: 1px solid #ccc;
+  margin-top: 20px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.songItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.songItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.songThumbnail {
+  width: 100px;
+  height: 60px;
+  margin-right: 10px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.songDetails {
+  flex-grow: 1;
+}
+
+.songTitle {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.songDetails div {
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#songListContainer::-webkit-scrollbar {
+  width: 10px;
+}
+
+#songListContainer::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 5px;
+}
+
+#songListContainer::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
