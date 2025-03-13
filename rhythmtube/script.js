@@ -103,6 +103,7 @@ function onPlayerStateChange(event) {
 
 const videoUrlInput = document.getElementById("videoUrl");
 const playButton = document.getElementById("playButton");
+const randButton = document.getElementById("randButton");
 const repeatButton = document.getElementById("repeatButton");
 const bgmVolumeControl = document.getElementById("bgmVolumeControl");
 const sfxVolumeControl = document.getElementById("sfxVolumeControl");
@@ -126,6 +127,10 @@ function playVideo() {
     alert("유효한 유튜브 URL을 입력해주세요.");
   }
 }
+
+randButton.addEventListener("click", () => {
+  loadNextVideo();
+});
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
