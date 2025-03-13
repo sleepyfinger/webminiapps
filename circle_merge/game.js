@@ -8,6 +8,7 @@ const STEP_SIZE = 30;
 const STAGE_COUNT = 40;
 const GRAVITY = 0.8;
 const MERGE_COOLDOWN = 100; // 병합 후 쿨다운 시간 (ms)
+const WALL_THICKNESS = 20; // 벽 두께 추가
 
 // 단계별 크기 및 색상 설정
 const CIRCLE_SIZES = Array.from(
@@ -42,19 +43,31 @@ const render = Render.create({
 function createWalls() {
   const wallOptions = { isStatic: true };
   return [
-    Bodies.rectangle(CANVAS_WIDTH / 2, 0, CANVAS_WIDTH, 20, wallOptions),
+    Bodies.rectangle(
+      CANVAS_WIDTH / 2,
+      0,
+      CANVAS_WIDTH,
+      WALL_THICKNESS,
+      wallOptions
+    ), // 벽 두께 적용
     Bodies.rectangle(
       CANVAS_WIDTH / 2,
       CANVAS_HEIGHT,
       CANVAS_WIDTH,
-      20,
+      WALL_THICKNESS, // 벽 두께 적용
       wallOptions
     ),
-    Bodies.rectangle(0, CANVAS_HEIGHT / 2, 20, CANVAS_HEIGHT, wallOptions),
     Bodies.rectangle(
-      CANVAS_WIDTH,
+      WALL_THICKNESS / 2,
       CANVAS_HEIGHT / 2,
-      20,
+      WALL_THICKNESS,
+      CANVAS_HEIGHT,
+      wallOptions
+    ), // 벽 두께 적용
+    Bodies.rectangle(
+      CANVAS_WIDTH - WALL_THICKNESS / 2,
+      CANVAS_HEIGHT / 2,
+      WALL_THICKNESS, // 벽 두께 적용
       CANVAS_HEIGHT,
       wallOptions
     ),
@@ -65,7 +78,10 @@ function createWalls() {
 function createCircle(x, y, size) {
   const index = CIRCLE_SIZES.indexOf(size);
   return Bodies.circle(
-    Math.max(size / 2, Math.min(CANVAS_WIDTH - size / 2, x)),
+    Math.max(
+      WALL_THICKNESS + size / 2,
+      Math.min(CANVAS_WIDTH - WALL_THICKNESS - size / 2, x)
+    ), // 벽 두께 반영
     Math.max(size / 2, Math.min(CANVAS_HEIGHT - size / 2, y)),
     size / 2,
     {
@@ -74,8 +90,22 @@ function createCircle(x, y, size) {
       render: { fillStyle: CIRCLE_COLORS[index] },
       collisionFilter: { group: Body.nextGroup(true) },
       label: `Circle-${index + 1}`,
+      isSensor: false,
     }
   );
+}
+
+// Preview circle 생성 함수
+function createPreviewCircle(x, y, size) {
+  const index = CIRCLE_SIZES.indexOf(size);
+  return Bodies.circle(x, y, size / 2, {
+    isStatic: true,
+    isSensor: true,
+    render: {
+      fillStyle: CIRCLE_COLORS[index],
+      opacity: 0.5,
+    },
+  });
 }
 
 // 병합 관리 및 처리 시스템
@@ -132,12 +162,60 @@ const collisionHandler = (event) => {
 // 이벤트 핸들러 등록
 Events.on(engine, "collisionStart", collisionHandler);
 
-// 클릭 이벤트
-document.addEventListener("click", (e) => {
+// 마우스 및 터치 이벤트 관련 변수
+let previewCircle = null;
+let isDragging = false;
+let currentX = 0;
+
+// 이벤트 핸들러 함수
+function handleDown(e) {
   const rect = render.canvas.getBoundingClientRect();
-  const circle = createCircle(e.clientX - rect.left, 50, CIRCLE_SIZES[0]);
-  World.add(engine.world, circle);
-});
+  currentX = (e.clientX || e.touches[0].clientX) - rect.left;
+  isDragging = true;
+
+  // preview 원 생성
+  previewCircle = createPreviewCircle(currentX, 50, CIRCLE_SIZES[0]);
+  World.add(engine.world, previewCircle);
+}
+
+function handleMove(e) {
+  if (isDragging && previewCircle) {
+    const rect = render.canvas.getBoundingClientRect();
+    currentX = (e.clientX || e.touches[0].clientX) - rect.left;
+
+    // 미리보기 원이 벽을 벗어나지 않도록 위치 조정
+    const minX = WALL_THICKNESS + CIRCLE_SIZES[0] / 2; // 벽 두께를 고려하여 최소 x 값 조정
+    const maxX = CANVAS_WIDTH - WALL_THICKNESS - CIRCLE_SIZES[0] / 2; // 벽 두께를 고려하여 최대 x 값 조정
+    const constrainedX = Math.max(minX, Math.min(maxX, currentX));
+
+    Body.setPosition(previewCircle, { x: constrainedX, y: 50 });
+  }
+}
+
+function handleUp(e) {
+  if (isDragging) {
+    isDragging = false;
+    // preview 원 제거 후 실제 원 생성
+    World.remove(engine.world, previewCircle);
+    const rect = render.canvas.getBoundingClientRect();
+
+    // 미리보기 원과 동일한 제한 적용
+    const minX = WALL_THICKNESS + CIRCLE_SIZES[0] / 2; // 벽 두께를 고려하여 최소 x 값 조정
+    const maxX = CANVAS_WIDTH - WALL_THICKNESS - CIRCLE_SIZES[0] / 2; // 벽 두께를 고려하여 최대 x 값 조정
+    const constrainedX = Math.max(minX, Math.min(maxX, currentX));
+
+    const circle = createCircle(constrainedX, 50, CIRCLE_SIZES[0]);
+    World.add(engine.world, circle);
+    previewCircle = null;
+  }
+}
+document.addEventListener("mousedown", handleDown);
+document.addEventListener("mousemove", handleMove);
+document.addEventListener("mouseup", handleUp);
+
+document.addEventListener("touchstart", handleDown);
+document.addEventListener("touchmove", handleMove);
+document.addEventListener("touchend", handleUp);
 
 // 게임 초기화 및 실행
 function initializeGame() {
