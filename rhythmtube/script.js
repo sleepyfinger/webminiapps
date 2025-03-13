@@ -106,15 +106,22 @@ const playButton = document.getElementById("playButton");
 const repeatButton = document.getElementById("repeatButton");
 const bgmVolumeControl = document.getElementById("bgmVolumeControl");
 const sfxVolumeControl = document.getElementById("sfxVolumeControl");
+
 playButton.addEventListener("click", () => {
   playVideo();
 });
+
 function playVideo() {
   game.reset();
   const videoUrl = videoUrlInput.value;
   const videoId = getVideoIdFromUrl(videoUrl);
   if (videoId) {
     loadVideoById(videoId);
+
+    const song = songData.find((s) => s.url === videoUrl);
+    if (song) {
+      scrollToSong(song, document.getElementById("songListContainer"));
+    }
   } else {
     alert("유효한 유튜브 URL을 입력해주세요.");
   }
@@ -645,28 +652,52 @@ function displaySongList(songs) {
 function createSongItem(song, songListContainer) {
   const songItem = document.createElement("div");
   songItem.classList.add("songItem");
+  songItem.dataset.url = song.url;
+
   const thumbnail = document.createElement("img");
   thumbnail.src = song.thumbnail;
   thumbnail.classList.add("songThumbnail");
   thumbnail.alt = song.title;
+
   const songDetails = document.createElement("div");
   songDetails.classList.add("songDetails");
+
   const title = document.createElement("div");
   title.classList.add("songTitle");
   title.textContent = song.title;
+
   const description = document.createElement("div");
   description.classList.add("songDescription");
   description.textContent = song.description || "No description available";
+
   songDetails.appendChild(title);
   songDetails.appendChild(description);
   songItem.appendChild(thumbnail);
   songItem.appendChild(songDetails);
+
   songItem.addEventListener("click", () => {
     console.log("Selected song:", song.title);
     videoUrlInput.value = song.url;
     playVideo();
   });
+
   songListContainer.appendChild(songItem);
+}
+
+function scrollToSong(song, songListContainer) {
+  const targetItem = songListContainer.querySelector(
+    `.songItem[data-url="${song.url}"]`
+  );
+
+  if (targetItem) {
+    targetItem.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "nearest",
+    });
+  } else {
+    console.log("Song item not found:", song.url);
+  }
 }
 
 async function getYoutubeData(url) {
