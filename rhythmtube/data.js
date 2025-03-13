@@ -323,6 +323,12 @@ const songData = [
   {
     url: "https://youtu.be/kcOf7skXUwU",
   },
+  {
+    url: "https://youtu.be/cFX0o7Q1DMY",
+  },
+  {
+    url: "https://youtu.be/5EGwiIxXV28",
+  },
 ];
 
 if (typeof dataLoaded === "function") {
