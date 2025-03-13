@@ -9,6 +9,7 @@ const STAGE_COUNT = 40;
 const GRAVITY = 0.8;
 const MERGE_COOLDOWN = 100; // 병합 후 쿨다운 시간 (ms)
 const WALL_THICKNESS = 20; // 벽 두께 추가
+const SPAWN_COOLDOWN = 300; // 공 생성 후 쿨다운 (ms)  // 추가: 공 생성 후 쿨다운 시간
 
 // 단계별 크기 및 색상 설정
 const CIRCLE_SIZES = Array.from(
@@ -166,9 +167,12 @@ Events.on(engine, "collisionStart", collisionHandler);
 let previewCircle = null;
 let isDragging = false;
 let currentX = 0;
+let canSpawnCircle = true; // 추가: 원 생성 가능 여부
 
 // 이벤트 핸들러 함수
 function handleDown(e) {
+  if (!canSpawnCircle) return; // 생성 쿨타임 중이면 무시
+
   const rect = render.canvas.getBoundingClientRect();
   currentX = (e.clientX || e.touches[0].clientX) - rect.left;
   isDragging = true;
@@ -207,8 +211,15 @@ function handleUp(e) {
     const circle = createCircle(constrainedX, 50, CIRCLE_SIZES[0]);
     World.add(engine.world, circle);
     previewCircle = null;
+
+    // 원 생성 쿨타임 적용
+    canSpawnCircle = false;
+    setTimeout(() => {
+      canSpawnCircle = true;
+    }, SPAWN_COOLDOWN);
   }
 }
+
 document.addEventListener("mousedown", handleDown);
 document.addEventListener("mousemove", handleMove);
 document.addEventListener("mouseup", handleUp);
