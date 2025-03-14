@@ -43,7 +43,7 @@ function initGame() {
 }
 
 function createNumpad() {
-  numpad.innerHTML = ""; // 기존 numpad 초기화
+  numpad.innerHTML = "";
   for (let i = 1; i <= 9; i++) {
     createButton(i);
   }
@@ -125,6 +125,14 @@ function updateHistory(strikes, balls) {
 }
 
 restartBtn.onclick = initGame;
+
+document.getElementById("helpButton").addEventListener("click", function () {
+  document.getElementById("helpPopup").style.display = "block";
+});
+
+function closeHelpPopup() {
+  document.getElementById("helpPopup").style.display = "none";
+}
 
 createNumpad();
 initGame();
