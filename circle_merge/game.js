@@ -138,8 +138,18 @@ function updateScaleFactors() {
 
 function getLogicalPosition(clientX, clientY) {
   const canvasRect = canvas.getBoundingClientRect();
-  const logicalX = (clientX - canvasRect.left) / widthScaleFactor;
-  const logicalY = (clientY - canvasRect.top) / heightScaleFactor;
+
+  const clampedClientX = Math.max(
+    canvasRect.left,
+    Math.min(clientX, canvasRect.right)
+  );
+  const clampedClientY = Math.max(
+    canvasRect.top,
+    Math.min(clientY, canvasRect.bottom)
+  );
+
+  const logicalX = (clampedClientX - canvasRect.left) / widthScaleFactor;
+  const logicalY = (clampedClientY - canvasRect.top) / heightScaleFactor;
   return { x: logicalX, y: logicalY };
 }
 
@@ -257,8 +267,18 @@ Events.on(engine, "collisionStart", collisionHandler);
 
 function handleDown(e) {
   if (!canSpawnCircle || isGameOver) return;
-
   const { clientX, clientY } = e.touches ? e.touches[0] : e;
+  const canvasRect = canvas.getBoundingClientRect();
+
+  if (
+    clientX < canvasRect.left ||
+    clientX > canvasRect.right ||
+    clientY < canvasRect.top ||
+    clientY > canvasRect.bottom
+  ) {
+    return;
+  }
+
   const logicalPosition = getLogicalPosition(clientX, clientY);
   currentX = logicalPosition.x;
   isDragging = true;
@@ -270,6 +290,7 @@ function handleDown(e) {
 function handleMove(e) {
   if (isDragging && previewCircle) {
     const { clientX, clientY } = e.touches ? e.touches[0] : e;
+
     const logicalPosition = getLogicalPosition(clientX, clientY);
     currentX = logicalPosition.x;
     const constrainedX = Math.max(
@@ -286,6 +307,17 @@ function handleUp(e) {
     World.remove(engine.world, previewCircle);
 
     const { clientX, clientY } = e.changedTouches ? e.changedTouches[0] : e;
+    const canvasRect = canvas.getBoundingClientRect();
+
+    if (
+      clientX < canvasRect.left ||
+      clientX > canvasRect.right ||
+      clientY < canvasRect.top ||
+      clientY > canvasRect.bottom
+    ) {
+      previewCircle = null;
+      return;
+    }
     const logicalPosition = getLogicalPosition(clientX, clientY);
     currentX = logicalPosition.x;
 
