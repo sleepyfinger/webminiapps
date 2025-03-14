@@ -9,6 +9,7 @@ body {
   color: #333;
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
+  position: relative;
 }
 
 .container {
@@ -17,6 +18,7 @@ body {
   align-items: center;
   width: 100%;
   max-width: 500px;
+  max-height: 100vh;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -25,6 +27,8 @@ body {
 #game-container {
   width: 100%;
   max-width: 400px;
+  height: 600px;
+  position: relative;
 }
 
 canvas {
@@ -33,6 +37,7 @@ canvas {
   border-radius: 10px;
   margin-bottom: 20px;
   width: 100%;
+  position: relative;
 }
 
 .header {
@@ -104,6 +109,7 @@ canvas {
   color: white;
   font-size: 1.8rem;
   font-weight: 700;
+  white-space: nowrap;
   text-align: center;
   z-index: 20;
   display: none;
@@ -134,7 +140,7 @@ canvas {
   font-size: 0.7rem;
   color: #777;
   text-align: center;
-  margin-top: 0rem;
+  margin-top: 1rem;
   font-weight: 400;
 }
 
@@ -186,5 +192,39 @@ canvas {
   }
 }
 
-@media (max-width: 320px) {
+@media screen and (max-height: 700px) {
+  .container {
+    max-height: 700px;
+  }
+  #game-container {
+    height: 500px;
+  }
+}
+
+#circle-height-indicator {
+  color: black;
+  z-index: 20;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+#high-stack-line {
+  position: absolute;
+  left: 20px;
+  width: 360px;
+  height: 2px;
+  background-color: red;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#highest-stack-line {
+  position: absolute;
+  left: 20px;
+  width: 360px;
+  height: 2px;
+  background-color: blue;
+  z-index: 10;
+  pointer-events: none;
 }

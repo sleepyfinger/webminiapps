@@ -29,15 +29,16 @@
         </div>
       </div>
 
-      <div id="game-container"></div>
+      <div id="game-container">
+        <div id="high-stack-line"></div>
+        <div id="highest-stack-line"></div>
+      </div>
 
       <div class="overlay">
         <div>Game Over!</div>
         <div id="finalScore"></div>
-        <button onclick="restartGame()">Restart</button>
+        <button>Restart</button>
       </div>
-
-      <script src="game.js"></script>
 
       <p id="copyright">
         <a
@@ -50,5 +51,7 @@
         </a>
       </p>
     </div>
+
+    <script src="game.js"></script>
   </body>
 </html>

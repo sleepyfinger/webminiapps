@@ -1,13 +1,14 @@
-const { Engine, Render, World, Bodies, Body, Events } = Matter;
+const { Engine, Render, World, Composite, Bodies, Body, Events } = Matter;
 
 const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 600;
 const BASE_SIZE = 20;
 const STEP_SIZE = 30;
-const STAGE_COUNT = 40;
+const STAGE_COUNT = 10;
 const GRAVITY = 0.8;
 const MERGE_COOLDOWN = 100;
 const WALL_THICKNESS = 20;
+const HIGH_STACK_HEIGHT = 400;
 const SPAWN_COOLDOWN = 300;
 const GAME_TIME_LIMIT = 10;
 
@@ -46,7 +47,14 @@ let previewCircle = null;
 let isDragging = false;
 let currentX = 0;
 let canSpawnCircle = true;
+let isTimerRunning = false;
 const mergingBodies = new Set();
+let highestCircleY = CANVAS_HEIGHT;
+
+const highestStackLine = document.getElementById("highest-stack-line");
+const highStackLine = document.getElementById("high-stack-line");
+
+const circleCollisionCounts = new Map();
 
 function updateScore(points) {
   score += points;
@@ -61,10 +69,15 @@ function updateTimeOutBar() {
 
 function startTimeOut() {
   intervalId = setInterval(() => {
-    timeRemaining--;
-    updateTimeOutBar();
-    if (timeRemaining <= 0) {
-      gameOver();
+    if (isTimerRunning) {
+      timeRemaining--;
+      updateTimeOutBar();
+      if (timeRemaining <= 0) {
+        gameOver();
+      }
+    } else if (timeRemaining < GAME_TIME_LIMIT) {
+      timeRemaining += 0.5;
+      updateTimeOutBar();
     }
   }, 1000);
 }
@@ -117,7 +130,7 @@ function createWalls() {
 
 function createCircle(x, y, size) {
   const index = CIRCLE_SIZES.indexOf(size);
-  return Bodies.circle(
+  const circle = Bodies.circle(
     Math.max(
       WALL_THICKNESS + size / 2,
       Math.min(CANVAS_WIDTH - WALL_THICKNESS - size / 2, x)
@@ -133,6 +146,9 @@ function createCircle(x, y, size) {
       isSensor: false,
     }
   );
+  // New: Initialize collision count to 0
+  circleCollisionCounts.set(circle.id, 0);
+  return circle;
 }
 
 function createPreviewCircle(x, y, size) {
@@ -177,6 +193,20 @@ const collisionHandler = (event) => {
   for (const pair of event.pairs) {
     const { bodyA, bodyB } = pair;
 
+    // New: Increment collision counts for both bodies
+    if (bodyA.label && bodyA.label.startsWith("Circle-")) {
+      circleCollisionCounts.set(
+        bodyA.id,
+        (circleCollisionCounts.get(bodyA.id) || 0) + 1
+      );
+    }
+    if (bodyB.label && bodyB.label.startsWith("Circle-")) {
+      circleCollisionCounts.set(
+        bodyB.id,
+        (circleCollisionCounts.get(bodyB.id) || 0) + 1
+      );
+    }
+
     if (mergingBodies.has(bodyA.id) || mergingBodies.has(bodyB.id)) continue;
 
     const indexA = CIRCLE_SIZES.indexOf(bodyA.circleRadius * 2);
@@ -189,6 +219,34 @@ const collisionHandler = (event) => {
     }
   }
 };
+
+function checkCircleHeight() {
+  let lowestCircleBottomY = CANVAS_HEIGHT;
+  let hasStableCircle = false; // New: Flag to check if there is at least one stable circle.
+
+  for (const body of Composite.allBodies(engine.world)) {
+    if (body.label && body.label.startsWith("Circle-")) {
+      // New: Only consider circles with at least one collision.
+      if (circleCollisionCounts.get(body.id) > 0) {
+        lowestCircleBottomY = Math.min(
+          lowestCircleBottomY,
+          body.position.y - body.circleRadius
+        );
+        hasStableCircle = true;
+      }
+    }
+  }
+
+  const highestCircleY = Math.max(0, lowestCircleBottomY);
+  highestStackLine.style.top = `${highestCircleY}px`;
+
+  // New: Only start timer if at least one stable circle exists
+  if (hasStableCircle && highestCircleY <= CANVAS_HEIGHT - HIGH_STACK_HEIGHT) {
+    isTimerRunning = true;
+  } else {
+    isTimerRunning = false;
+  }
+}
 
 Events.on(engine, "collisionStart", collisionHandler);
 
@@ -247,11 +305,15 @@ document
   .querySelector(".overlay button")
   .addEventListener("click", restartGame);
 
+Events.on(engine, "afterUpdate", checkCircleHeight);
+
 function initializeGame() {
   World.add(engine.world, createWalls());
-  Engine.run(engine);
+  Matter.Runner.run(engine);
   Render.run(render);
-  // startTimeOut();
+  startTimeOut();
+
+  highStackLine.style.top = `${CANVAS_HEIGHT - HIGH_STACK_HEIGHT}px`;
 }
 
 initializeGame();
