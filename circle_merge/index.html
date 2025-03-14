@@ -27,11 +27,30 @@
             <div class="timeout-progress"></div>
           </div>
         </div>
+        <div class="sound-volume-container">
+          <label for="soundVolume">SFX</label>
+          <input
+            type="range"
+            id="soundVolume"
+            min="0"
+            max="1"
+            step="0.01"
+            value="0.5"
+          />
+        </div>
       </div>
 
       <div id="game-container">
         <div id="high-stack-line"></div>
         <div id="highest-stack-line" style="display: none"></div>
+      </div>
+
+      <!-- 뮤직 플레이어 추가 -->
+      <div class="music-player">
+        <iframe
+          src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&showinfo=0&rel=0&autoplay=0&loop=1&playlist=jfKfPfyJRdk"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        ></iframe>
       </div>
 
       <div class="overlay">

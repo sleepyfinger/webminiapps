@@ -21,6 +21,32 @@ const MAX_CIRCLE_INDEX = CIRCLE_SIZES.length - 1;
 const { Engine, Render, World, Composite, Bodies, Body, Events } = Matter;
 const BACKGROUND_COLOR = "#f0f4f8";
 
+//오디오 풀 생성
+const MAX_SOUND_CHANNELS = 4; // 최대 동시 재생 효과음 수
+const soundPool = [];
+
+for (let i = 0; i < MAX_SOUND_CHANNELS; i++) {
+  const sound = new Audio("sounds/463388__vilkas_sound__vs-pop_4.mp3");
+  sound.volume = 0.5;
+  soundPool.push(sound);
+}
+
+function playSound() {
+  for (const sound of soundPool) {
+    if (sound.paused || sound.ended) {
+      sound.currentTime = 0;
+      sound.play();
+      return;
+    }
+  }
+}
+
+const bgm = new Audio("./bgm.mp3");
+bgm.loop = true;
+bgm.volume = 0.2;
+
+let isBgmPlaying = true;
+
 const engine = Engine.create({
   enableSleeping: false,
   constraintIterations: 4,
@@ -90,6 +116,7 @@ function gameOver() {
   clearInterval(intervalId);
   document.querySelector(".overlay").style.display = "flex";
   document.getElementById("finalScore").textContent = `Your score: ${score}`;
+  bgm.pause();
 }
 
 function restartGame() {
@@ -208,6 +235,7 @@ function mergeCircles(bodyA, bodyB) {
   updateScore(10 * (indexA + 1));
 
   setTimeout(() => {
+    playSound();
     newCircle.collisionFilter.group = 0;
     mergingBodies.delete(bodyA.id);
     mergingBodies.delete(bodyB.id);
@@ -362,6 +390,11 @@ function initializeGame() {
   Render.run(render);
   startTimeOut();
   updateScaleFactors();
+  //게임 시작시 BGM재생
+  // bgm.play().catch((error) => {
+  //   console.error("BGM 재생 실패:", error);
+  // });
+
   highStackLine.style.top = `${
     (CANVAS_HEIGHT - HIGH_STACK_HEIGHT) * heightScaleFactor
   }px`;
@@ -371,3 +404,13 @@ function initializeGame() {
 }
 
 initializeGame();
+
+const soundVolumeSlider = document.getElementById("soundVolume");
+
+// 효과음 볼륨 조절
+soundVolumeSlider.addEventListener("input", () => {
+  const volume = parseFloat(soundVolumeSlider.value);
+  for (const sound of soundPool) {
+    sound.volume = volume;
+  }
+});
