@@ -39,6 +39,11 @@ const render = Render.create({
   },
 });
 
+// New: 비율 변화율을 저장할 변수 추가
+let widthScaleFactor = 1; // 초기값 1로 설정
+let heightScaleFactor = 1; // 초기값 1로 설정
+const canvas = render.canvas;
+
 let score = 0;
 let timeRemaining = GAME_TIME_LIMIT;
 let intervalId;
@@ -128,6 +133,24 @@ function createWalls() {
   ];
 }
 
+function updateScaleFactors() {
+  const canvasRect = canvas.getBoundingClientRect();
+  const actualCanvasWidth = canvasRect.width;
+  const actualCanvasHeight = canvasRect.height;
+  widthScaleFactor = actualCanvasWidth / CANVAS_WIDTH;
+  heightScaleFactor = actualCanvasHeight / CANVAS_HEIGHT;
+}
+
+function getLogicalPosition(clientX, clientY) {
+  const canvasRect = canvas.getBoundingClientRect();
+  const actualX = clientX - canvasRect.left;
+  const actualY = clientY - canvasRect.top;
+
+  const logicalX = actualX / widthScaleFactor;
+  const logicalY = actualY / heightScaleFactor;
+  return { x: logicalX, y: logicalY };
+}
+
 function createCircle(x, y, size) {
   const index = CIRCLE_SIZES.indexOf(size);
   const circle = Bodies.circle(
@@ -146,7 +169,6 @@ function createCircle(x, y, size) {
       isSensor: false,
     }
   );
-  // New: Initialize collision count to 0
   circleCollisionCounts.set(circle.id, 0);
   return circle;
 }
@@ -222,11 +244,10 @@ const collisionHandler = (event) => {
 
 function checkCircleHeight() {
   let lowestCircleBottomY = CANVAS_HEIGHT;
-  let hasStableCircle = false; // New: Flag to check if there is at least one stable circle.
+  let hasStableCircle = false;
 
   for (const body of Composite.allBodies(engine.world)) {
     if (body.label && body.label.startsWith("Circle-")) {
-      // New: Only consider circles with at least one collision.
       if (circleCollisionCounts.get(body.id) > 0) {
         lowestCircleBottomY = Math.min(
           lowestCircleBottomY,
@@ -238,9 +259,8 @@ function checkCircleHeight() {
   }
 
   const highestCircleY = Math.max(0, lowestCircleBottomY);
-  highestStackLine.style.top = `${highestCircleY}px`;
+  highestStackLine.style.top = `${highestCircleY * heightScaleFactor}px`;
 
-  // New: Only start timer if at least one stable circle exists
   if (hasStableCircle && highestCircleY <= CANVAS_HEIGHT - HIGH_STACK_HEIGHT) {
     isTimerRunning = true;
   } else {
@@ -253,8 +273,18 @@ Events.on(engine, "collisionStart", collisionHandler);
 function handleDown(e) {
   if (!canSpawnCircle || isGameOver) return;
 
-  const rect = render.canvas.getBoundingClientRect();
-  currentX = (e.clientX || e.touches[0].clientX) - rect.left;
+  let clientX, clientY;
+  if (e.touches) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
+
+  const logicalPosition = getLogicalPosition(clientX, clientY);
+  currentX = logicalPosition.x;
+
   isDragging = true;
 
   previewCircle = createPreviewCircle(currentX, 50, CIRCLE_SIZES[0]);
@@ -263,8 +293,16 @@ function handleDown(e) {
 
 function handleMove(e) {
   if (isDragging && previewCircle) {
-    const rect = render.canvas.getBoundingClientRect();
-    currentX = (e.clientX || e.touches[0].clientX) - rect.left;
+    let clientX, clientY;
+    if (e.touches) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    const logicalPosition = getLogicalPosition(clientX, clientY);
+    currentX = logicalPosition.x;
 
     const minX = WALL_THICKNESS + CIRCLE_SIZES[0] / 2;
     const maxX = CANVAS_WIDTH - WALL_THICKNESS - CIRCLE_SIZES[0] / 2;
@@ -278,7 +316,17 @@ function handleUp(e) {
   if (isDragging) {
     isDragging = false;
     World.remove(engine.world, previewCircle);
-    const rect = render.canvas.getBoundingClientRect();
+
+    let clientX, clientY;
+    if (e.changedTouches) {
+      clientX = e.changedTouches[0].clientX;
+      clientY = e.changedTouches[0].clientY;
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+    }
+    const logicalPosition = getLogicalPosition(clientX, clientY);
+    currentX = logicalPosition.x;
 
     const minX = WALL_THICKNESS + CIRCLE_SIZES[0] / 2;
     const maxX = CANVAS_WIDTH - WALL_THICKNESS - CIRCLE_SIZES[0] / 2;
@@ -305,7 +353,10 @@ document
   .querySelector(".overlay button")
   .addEventListener("click", restartGame);
 
-Events.on(engine, "afterUpdate", checkCircleHeight);
+Events.on(engine, "afterUpdate", () => {
+  checkCircleHeight();
+  updateScaleFactors();
+});
 
 function initializeGame() {
   World.add(engine.world, createWalls());
@@ -313,7 +364,10 @@ function initializeGame() {
   Render.run(render);
   startTimeOut();
 
-  highStackLine.style.top = `${CANVAS_HEIGHT - HIGH_STACK_HEIGHT}px`;
+  updateScaleFactors();
+  highStackLine.style.top = `${
+    (CANVAS_HEIGHT - HIGH_STACK_HEIGHT) * heightScaleFactor
+  }px`;
 }
 
 initializeGame();
