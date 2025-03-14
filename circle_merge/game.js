@@ -1,17 +1,16 @@
 const CANVAS_WIDTH = 400;
 const CANVAS_HEIGHT = 600;
-const BASE_SIZE = 20;
-const STEP_SIZE = 30;
+const BASE_SIZE = 30;
+const STEP_SIZE = 35;
 const STAGE_COUNT = 10;
-const GRAVITY = 0.8;
+const GRAVITY = 0.9;
 const MERGE_COOLDOWN = 100;
 const WALL_THICKNESS = 20;
 const HIGH_STACK_HEIGHT = 400;
 const SPAWN_COOLDOWN = 300;
 const GAME_TIME_LIMIT = 10;
-const CIRCLE_SIZES = Array.from(
-  { length: STAGE_COUNT },
-  (_, i) => BASE_SIZE + i * STEP_SIZE
+const CIRCLE_SIZES = Array.from({ length: STAGE_COUNT }, (_, i) =>
+  Math.round(BASE_SIZE + i * STEP_SIZE)
 );
 const CIRCLE_COLORS = Array.from(
   { length: STAGE_COUNT },
@@ -20,6 +19,7 @@ const CIRCLE_COLORS = Array.from(
 const MAX_CIRCLE_INDEX = CIRCLE_SIZES.length - 1;
 
 const { Engine, Render, World, Composite, Bodies, Body, Events } = Matter;
+const BACKGROUND_COLOR = "#f0f4f8";
 
 const engine = Engine.create({
   enableSleeping: false,
@@ -34,7 +34,7 @@ const render = Render.create({
     width: CANVAS_WIDTH,
     height: CANVAS_HEIGHT,
     wireframes: false,
-    background: "transparent",
+    background: BACKGROUND_COLOR,
   },
 });
 
@@ -97,7 +97,11 @@ function restartGame() {
 }
 
 function createWalls() {
-  const wallOptions = { isStatic: true, render: { fillStyle: "#ccc" } };
+  const wallOptions = {
+    isStatic: true,
+    friction: 0,
+    render: { fillStyle: "#e8ebef" },
+  };
   return [
     Bodies.rectangle(
       CANVAS_WIDTH / 2,
@@ -165,7 +169,7 @@ function createCircle(x, y, size) {
   );
   const circle = Bodies.circle(constrainedX, constrainedY, size / 2, {
     restitution: 0.3,
-    friction: 0.001,
+    friction: 0,
     render: { fillStyle: CIRCLE_COLORS[index] },
     collisionFilter: { group: Body.nextGroup(true) },
     label: `Circle-${index + 1}`,
@@ -260,7 +264,7 @@ function checkCircleHeight() {
   highestStackLine.style.top = `${highestCircleY * heightScaleFactor}px`;
 
   isTimerRunning =
-    hasStableCircle && highestCircleY <= CANVAS_HEIGHT - HIGH_STACK_HEIGHT;
+    hasStableCircle && highestCircleY < CANVAS_HEIGHT - HIGH_STACK_HEIGHT;
 }
 
 Events.on(engine, "collisionStart", collisionHandler);
@@ -361,6 +365,9 @@ function initializeGame() {
   highStackLine.style.top = `${
     (CANVAS_HEIGHT - HIGH_STACK_HEIGHT) * heightScaleFactor
   }px`;
+
+  const scoreElement = document.getElementById("score");
+  scoreElement.classList.add("animate");
 }
 
 initializeGame();
