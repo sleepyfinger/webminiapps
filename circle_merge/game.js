@@ -12,14 +12,27 @@ const GAME_TIME_LIMIT = 10;
 const CIRCLE_SIZES = Array.from({ length: STAGE_COUNT }, (_, i) =>
   Math.round(BASE_SIZE + i * STEP_SIZE)
 );
-const CIRCLE_COLORS = Array.from(
-  { length: STAGE_COUNT },
-  (_, i) => `hsl(${((i * 360) / STAGE_COUNT) % 360}, 70%, 60%)`
-);
+//const CIRCLE_COLORS = Array.from(
+//  { length: STAGE_COUNT },
+//  (_, i) => `hsl(${((i * 360) / STAGE_COUNT) % 360}, 70%, 60%)`
+//);
+const CIRCLE_COLORS = [
+  "#FFB6C1", // LightPink
+  "#FF69B4", // HotPink
+  "#FF1493", // DeepPink
+  "#C71585", // MediumVioletRed
+  "#DB7093", // PaleVioletRed
+  "#EE82EE", // Violet
+  "#DA70D6", // Orchid
+  "#9932CC", // DarkOrchid
+  "#BA55D3", // MediumOrchid
+  "#800080", // Purple
+];
 const MAX_CIRCLE_INDEX = CIRCLE_SIZES.length - 1;
 
 const { Engine, Render, World, Composite, Bodies, Body, Events } = Matter;
-const BACKGROUND_COLOR = "#f0f4f8";
+//const BACKGROUND_COLOR = "#f0f4f8";
+const BACKGROUND_COLOR = "#f8e8ee"; // light pink canvas
 
 //오디오 풀 생성
 const MAX_SOUND_CHANNELS = 4; // 최대 동시 재생 효과음 수
@@ -40,12 +53,6 @@ function playSound() {
     }
   }
 }
-
-const bgm = new Audio("./bgm.mp3");
-bgm.loop = true;
-bgm.volume = 0.2;
-
-let isBgmPlaying = true;
 
 const engine = Engine.create({
   enableSleeping: false,
@@ -116,7 +123,6 @@ function gameOver() {
   clearInterval(intervalId);
   document.querySelector(".overlay").style.display = "flex";
   document.getElementById("finalScore").textContent = `Your score: ${score}`;
-  bgm.pause();
 }
 
 function restartGame() {
@@ -127,7 +133,8 @@ function createWalls() {
   const wallOptions = {
     isStatic: true,
     friction: 0,
-    render: { fillStyle: "#e8ebef" },
+    //render: { fillStyle: "#e8ebef" },
+    render: { fillStyle: "#f5d6e0" }, //light pink wall
   };
   return [
     Bodies.rectangle(
@@ -390,10 +397,6 @@ function initializeGame() {
   Render.run(render);
   startTimeOut();
   updateScaleFactors();
-  //게임 시작시 BGM재생
-  // bgm.play().catch((error) => {
-  //   console.error("BGM 재생 실패:", error);
-  // });
 
   highStackLine.style.top = `${
     (CANVAS_HEIGHT - HIGH_STACK_HEIGHT) * heightScaleFactor

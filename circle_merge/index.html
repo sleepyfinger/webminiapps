@@ -10,6 +10,12 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="container">
@@ -27,29 +33,35 @@
             <div class="timeout-progress"></div>
           </div>
         </div>
-        <div class="sound-volume-container">
-          <label for="soundVolume">SFX</label>
-          <input
-            type="range"
-            id="soundVolume"
-            min="0"
-            max="1"
-            step="0.01"
-            value="0.5"
-          />
-        </div>
+        <!-- <div class="options-popup-container">
+          <i class="fas fa-cog options-btn" id="optionsBtn"></i>
+        </div> -->
       </div>
-
       <div id="game-container">
         <div id="high-stack-line"></div>
         <div id="highest-stack-line" style="display: none"></div>
       </div>
 
-      <!-- 뮤직 플레이어 추가 -->
+      <div class="sound-volume-container">
+        <label for="soundVolume">SFX</label>
+        <input
+          type="range"
+          id="soundVolume"
+          min="0"
+          max="1"
+          step="0.01"
+          value="0.5"
+        />
+      </div>
+
       <div class="music-player">
         <iframe
-          src="https://www.youtube.com/embed/jfKfPfyJRdk?controls=1&showinfo=0&rel=0&autoplay=0&loop=1&playlist=jfKfPfyJRdk"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          style="border-radius: 12px"
+          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX7K31D69s4M1?utm_source=generator"
+          frameborder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
         ></iframe>
       </div>
 
@@ -71,7 +83,23 @@
       </p>
     </div>
 
+    <!-- Options Popup -->
+    <div id="optionsPopup">
+      <h3>Options</h3>
+      <div class="slider-container">
+        <label for="soundVolumePopup">SFX</lab+el>
+        <input
+          type="range"
+          id="soundVolumePopup"
+          min="0"
+          max="1"
+          step="0.01"
+          value="0.5"
+        />
+      </div>
+      <button id="closeOptions">Close</button>
+    </div>
+
     <script src="game.js"></script>
-    <!-- <script src="dev.js"></script> -->
   </body>
 </html>
