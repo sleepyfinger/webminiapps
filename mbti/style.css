@@ -1,5 +1,6 @@
 * {
   font-family: "Jua", sans-serif;
+  box-sizing: border-box;
 }
 
 body {
@@ -8,7 +9,9 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
   margin: 0;
+  padding: 20px;
 }
 
 #logo {
@@ -34,7 +37,7 @@ body {
   width: 90%;
   max-width: 600px;
   text-align: center;
-  margin: 10px;
+  margin-bottom: 20px;
   flex-shrink: 0;
 }
 
@@ -60,7 +63,6 @@ h2 {
 }
 
 #start-screen {
-  display: none;
   text-align: center;
 }
 
@@ -74,6 +76,7 @@ h2 {
   border-radius: 10px;
   margin-bottom: 20px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: none;
 }
 
 #question-number {
@@ -116,6 +119,7 @@ h2 {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: none;
 }
 
 #mbti-result {
@@ -135,7 +139,6 @@ h2 {
   font-size: 0.7rem;
   color: #888;
   text-align: center;
-  margin-top: auto;
   margin-bottom: 10px;
   width: 100%;
 }
@@ -149,7 +152,6 @@ h2 {
   .container {
     padding: 15px;
     width: 95%;
-    margin: 5px;
   }
 
   h1 {
