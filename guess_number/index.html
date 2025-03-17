@@ -1,0 +1,114 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숫자 맞추기 게임</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>숫자 맞추기 게임 🎮</h1>
+      <select class="level-selector">
+        <option value="10">레벨 1 (1~10)</option>
+        <option value="100">레벨 2 (1~100)</option>
+        <option value="1000">레벨 3 (1~1000)</option>
+        <option value="10000">레벨 4 (1~10000)</option>
+      </select>
+
+      <div class="input-group">
+        <input type="number" id="guessInput" placeholder="숫자를 입력하세요" />
+        <button onclick="checkGuess()">확인</button>
+      </div>
+
+      <div id="message" class="message"></div>
+      <div id="attempts" class="attempts"></div>
+
+      <div class="history-container">
+        <div class="history-title">최근 추측 기록 (최신순)</div>
+        <ul id="historyList"></ul>
+      </div>
+    </div>
+
+    <script>
+      let targetNumber;
+      let attempts = 0;
+      let currentLevel = 10;
+      let guessHistory = [];
+
+      function initializeGame() {
+        targetNumber = Math.floor(Math.random() * currentLevel) + 1;
+        attempts = 0;
+        guessHistory = [];
+        updateAttempts();
+        document.getElementById("message").textContent = "";
+        document.getElementById("historyList").innerHTML = "";
+      }
+
+      function updateAttempts() {
+        document.getElementById(
+          "attempts"
+        ).textContent = `시도 횟수: ${attempts}`;
+      }
+
+      function updateHistory(userGuess) {
+        const direction = userGuess > targetNumber ? "high" : "low";
+        const historyList = document.getElementById("historyList");
+
+        const historyItem = document.createElement("li");
+        historyItem.className = `history-item ${direction}`;
+        historyItem.innerHTML = `
+                <span class="history-direction">${
+                  direction === "high" ? "⬇️ 작아야 함" : "⬆️ 커야 함"
+                }</span>
+                <span class="history-number">${userGuess}</span>
+            `;
+
+        if (historyList.children.length >= 10) {
+          historyList.removeChild(historyList.lastElementChild);
+        }
+        historyList.insertBefore(historyItem, historyList.firstChild);
+      }
+
+      function checkGuess() {
+        const userGuess = parseInt(document.getElementById("guessInput").value);
+        const messageElement = document.getElementById("message");
+
+        if (isNaN(userGuess) || userGuess < 1 || userGuess > currentLevel) {
+          messageElement.textContent = `1부터 ${currentLevel} 사이의 숫자를 입력하세요!`;
+          messageElement.className = "message hint";
+          return;
+        }
+
+        attempts++;
+        updateAttempts();
+
+        if (userGuess === targetNumber) {
+          messageElement.textContent = `🎉 정답입니다! ${attempts}번 만에 맞췄어요!`;
+          messageElement.className = "message success";
+          setTimeout(initializeGame, 2000);
+        } else {
+          messageElement.textContent =
+            userGuess > targetNumber
+              ? "⬇️ 더 작은 숫자입니다!"
+              : "⬆️ 더 큰 숫자입니다!";
+          messageElement.className = "message hint";
+          updateHistory(userGuess);
+        }
+
+        document.getElementById("guessInput").value = "";
+        document.getElementById("guessInput").focus();
+      }
+
+      document
+        .querySelector(".level-selector")
+        .addEventListener("change", (e) => {
+          currentLevel = parseInt(e.target.value);
+          initializeGame();
+        });
+
+      initializeGame();
+    </script>
+  </body>
+</html>

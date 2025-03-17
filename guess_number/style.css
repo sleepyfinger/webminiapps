@@ -1,0 +1,134 @@
+/* style.css */
+body {
+  font-family: "Arial", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+.game-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.level-selector {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+input {
+  flex: 1;
+  padding: 0.8rem;
+  border: 2px solid #bdc3c7;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.hint {
+  background-color: #f1c40f30;
+  color: #c0392b;
+}
+
+.success {
+  background-color: #27ae6030;
+  color: #27ae60;
+}
+
+.attempts {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.history-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.history-title {
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+#historyList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.history-item {
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  background: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+}
+
+.history-item.high {
+  color: #e74c3c;
+  border-left: 3px solid #e74c3c;
+}
+
+.history-item.low {
+  color: #3498db;
+  border-left: 3px solid #3498db;
+}
+
+.history-number {
+  font-weight: bold;
+}
