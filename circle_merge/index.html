@@ -11,7 +11,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap"
       rel="stylesheet"
@@ -33,9 +32,6 @@
             <div class="timeout-progress"></div>
           </div>
         </div>
-        <!-- <div class="options-popup-container">
-          <i class="fas fa-cog options-btn" id="optionsBtn"></i>
-        </div> -->
       </div>
       <div id="game-container">
         <div id="high-stack-line"></div>
@@ -52,17 +48,6 @@
           step="0.01"
           value="0.5"
         />
-      </div>
-
-      <div class="music-player">
-        <iframe
-          style="border-radius: 12px"
-          src="https://open.spotify.com/embed/playlist/37i9dQZF1DX7K31D69s4M1?utm_source=generator"
-          frameborder="0"
-          allowfullscreen=""
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-        ></iframe>
       </div>
 
       <div class="overlay">
@@ -83,11 +68,10 @@
       </p>
     </div>
 
-    <!-- Options Popup -->
     <div id="optionsPopup">
       <h3>Options</h3>
       <div class="slider-container">
-        <label for="soundVolumePopup">SFX</lab+el>
+        <label for="soundVolume">SFX Volume</label>
         <input
           type="range"
           id="soundVolumePopup"
