@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>환율 계산기</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>환율 계산기</h1>
+      <div class="input-group">
+        <input type="number" id="amount" placeholder="금액 입력" />
+        <select id="from-currency">
+          <option value="USD">USD (달러)</option>
+          <option value="KRW">KRW (원)</option>
+          <option value="EUR">EUR (유로)</option>
+          <option value="JPY">JPY (엔)</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <input type="text" id="result" readonly />
+        <select id="to-currency">
+          <option value="KRW">KRW (원)</option>
+          <option value="USD">USD (달러)</option>
+          <option value="EUR">EUR (유로)</option>
+          <option value="JPY">JPY (엔)</option>
+        </select>
+      </div>
+      <button id="convert-btn">변환</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
