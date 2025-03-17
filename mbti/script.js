@@ -65,6 +65,7 @@ const dom = {
   startButton: document.getElementById("start-button"),
   container: document.querySelector(".container"),
   mbtiImageElement: document.getElementById("mbti-image"),
+  progressBar: document.getElementById("progress-bar"), //추가
 };
 
 const buttonClickSound = new Audio("button_click.mp3");
@@ -78,10 +79,16 @@ function playSound(sound) {
   sound.play();
 }
 
+function updateProgressBar() {
+  const progress = (currentQuestion / QUESTIONS.length) * 100;
+  dom.progressBar.style.width = `${progress}%`;
+}
+
 function showQuestion() {
   if (currentQuestion < QUESTIONS.length) {
     dom.questionNumberElement.textContent = `질문 ${currentQuestion + 1}`;
     dom.questionElement.textContent = QUESTIONS[currentQuestion];
+    updateProgressBar();
   } else {
     showResult();
   }
@@ -157,6 +164,7 @@ function restartTest() {
   dom.container.style.display = "block";
   const imgElement = document.getElementById("mbti-img");
   if (imgElement) imgElement.src = "";
+  updateProgressBar();
 }
 
 function startTest() {
