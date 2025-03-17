@@ -1,4 +1,4 @@
-const questions = [
+const QUESTIONS = [
   "큰 모임에서 새로운 사람들과 대화하는 것이 즐겁나요?",
   "혼자 시간을 보내는 것보다 다른 사람들과 함께 있는 것을 선호하나요?",
   "파티나 사교 모임에 자주 참석하는 편인가요?",
@@ -26,59 +26,72 @@ const questions = [
   "자신의 능력에 대해 확신이 있나요?",
 ];
 
-let currentQuestion = 0;
-let answers = new Array(25).fill(0);
+const BASE_DESCRIPTIONS = {
+  ISTJ: "신중하고 조용하며 집중력과 실용성이 뛰어난 현실주의자",
+  ISFJ: "조용하고 책임감 있으며 온화한 성격의 헌신적인 보호자",
+  INFJ: "인내심이 많고 통찰력이 뛰어나며 창의적인 이상주의자",
+  INTJ: "독창적인 마인드와 뛰어난 통찰력을 가진 전략가",
+  ISTP: "대담하고 현실적인 성격의 만능 재주꾼",
+  ISFP: "따뜻한 감성을 지닌 유연하고 매력적인 예술가",
+  INFP: "이상주의적이고 충실하며 풍부한 상상력을 가진 중재자",
+  INTP: "혁신적인 발명가 타입의 지적 호기심이 넘치는 사색가",
+  ESTP: "친구와 즐기기를 좋아하는 현실주의적인 모험가",
+  ESFP: "즉흥적이고 열정적이며 넘치는 에너지의 연예인 타입",
+  ENFP: "열정적이고 창의적인 성격의 자유로운 영혼",
+  ENTP: "지적 도전을 즐기는 영리하고 호기심 많은 발명가",
+  ESTJ: "체계적이고 헌신적이며 실용적인 관리자 타입",
+  ESFJ: "사교적이고 배려심 많은 마음 따뜻한 주최자",
+  ENFJ: "카리스마 있는 리더십의 정의로운 사회운동가 타입",
+  ENTJ: "대담하고 상상력이 풍부한 강한 의지의 지도자",
+};
 
-const questionElement = document.getElementById("question");
-const yesButton = document.getElementById("yes");
-const noButton = document.getElementById("no");
-const resultElement = document.getElementById("result");
-const mbtiResultElement = document.getElementById("mbti-result");
-const mbtiDescriptionElement = document.getElementById("mbti-description");
-const questionNumberElement = document.getElementById("question-number");
-const restartButton = document.getElementById("restart-button");
-const startScreen = document.getElementById("start-screen");
-const startButton = document.getElementById("start-button");
-const container = document.querySelector(".container");
-const mbtiImageElement = document.getElementById("mbti-image"); // Add image element
+const ASSERTIVE_TURBULENT_DESCRIPTIONS = {
+  "-A": "입니다. 자신감이 있고 스트레스에 강한 편입니다.",
+  "-T": "입니다. 완벽주의 성향이 있고 자기 개선에 열심인 편입니다.",
+};
+
+const DEFAULT_IMAGE_PATH = "images/default.png";
+
+const dom = {
+  questionElement: document.getElementById("question"),
+  yesButton: document.getElementById("yes"),
+  noButton: document.getElementById("no"),
+  resultElement: document.getElementById("result"),
+  mbtiResultElement: document.getElementById("mbti-result"),
+  mbtiDescriptionElement: document.getElementById("mbti-description"),
+  questionNumberElement: document.getElementById("question-number"),
+  restartButton: document.getElementById("restart-button"),
+  startScreen: document.getElementById("start-screen"),
+  startButton: document.getElementById("start-button"),
+  container: document.querySelector(".container"),
+  mbtiImageElement: document.getElementById("mbti-image"),
+};
 
 const buttonClickSound = new Audio("button_click.mp3");
 const resultSound = new Audio("result_sound.mp3");
 
+let currentQuestion = 0;
+let answers = new Array(QUESTIONS.length).fill(0);
+
+function playSound(sound) {
+  sound.currentTime = 0;
+  sound.play();
+}
+
 function showQuestion() {
-  if (currentQuestion < questions.length) {
-    questionNumberElement.textContent = `질문 ${currentQuestion + 1}`;
-    questionElement.textContent = questions[currentQuestion];
+  if (currentQuestion < QUESTIONS.length) {
+    dom.questionNumberElement.textContent = `질문 ${currentQuestion + 1}`;
+    dom.questionElement.textContent = QUESTIONS[currentQuestion];
   } else {
     showResult();
   }
 }
 
-function playButtonSound() {
-  buttonClickSound.currentTime = 0;
-  buttonClickSound.play();
-}
-
 function answerQuestion(answer) {
-  playButtonSound();
-
+  playSound(buttonClickSound);
   answers[currentQuestion] += answer ? 1 : 0;
   currentQuestion++;
   showQuestion();
-}
-
-function showResult() {
-  const questionContainer = document.getElementById("question-container");
-  questionContainer.style.display = "none";
-  resultElement.style.display = "block";
-
-  resultSound.currentTime = 0;
-  resultSound.play();
-
-  const mbti = calculateMBTI();
-  mbtiResultElement.textContent = mbti;
-  mbtiDescriptionElement.textContent = getMBTIDescription(mbti);
-  // setMBTIImage(mbti);
 }
 
 function calculateMBTI() {
@@ -94,95 +107,70 @@ function calculateMBTI() {
 function getMBTIDescription(mbti) {
   const baseType = mbti.slice(0, 4);
   const assertiveTurbulent = mbti.slice(4);
-
-  const baseDescriptions = {
-    ISTJ: "신중하고 조용하며 집중력과 실용성이 뛰어난 현실주의자",
-    ISFJ: "조용하고 책임감 있으며 온화한 성격의 헌신적인 보호자",
-    INFJ: "인내심이 많고 통찰력이 뛰어나며 창의적인 이상주의자",
-    INTJ: "독창적인 마인드와 뛰어난 통찰력을 가진 전략가",
-    ISTP: "대담하고 현실적인 성격의 만능 재주꾼",
-    ISFP: "따뜻한 감성을 지닌 유연하고 매력적인 예술가",
-    INFP: "이상주의적이고 충실하며 풍부한 상상력을 가진 중재자",
-    INTP: "혁신적인 발명가 타입의 지적 호기심이 넘치는 사색가",
-    ESTP: "친구와 즐기기를 좋아하는 현실주의적인 모험가",
-    ESFP: "즉흥적이고 열정적이며 넘치는 에너지의 연예인 타입",
-    ENFP: "열정적이고 창의적인 성격의 자유로운 영혼",
-    ENTP: "지적 도전을 즐기는 영리하고 호기심 많은 발명가",
-    ESTJ: "체계적이고 헌신적이며 실용적인 관리자 타입",
-    ESFJ: "사교적이고 배려심 많은 마음 따뜻한 주최자",
-    ENFJ: "카리스마 있는 리더십의 정의로운 사회운동가 타입",
-    ENTJ: "대담하고 상상력이 풍부한 강한 의지의 지도자",
-  };
-
-  const assertiveTurbulentDescriptions = {
-    "-A": "입니다. 자신감이 있고 스트레스에 강한 편입니다.",
-    "-T": "입니다. 완벽주의 성향이 있고 자기 개선에 열심인 편입니다.",
-  };
-
   return (
-    baseDescriptions[baseType] +
-    assertiveTurbulentDescriptions[assertiveTurbulent]
+    BASE_DESCRIPTIONS[baseType] +
+    ASSERTIVE_TURBULENT_DESCRIPTIONS[assertiveTurbulent]
   );
 }
 
 function setMBTIImage(mbti) {
   const baseType = mbti.slice(0, 4);
-  let imagePath = `images/${baseType}.png`; // Default path
+  const imagePath = `images/${baseType}.png`;
 
-  console.log(baseType);
-
-  // Create the image element if it doesn't exist
-  if (!mbtiImageElement.hasChildNodes()) {
+  if (!dom.mbtiImageElement.hasChildNodes()) {
     const img = document.createElement("img");
     img.id = "mbti-img";
     img.style.width = "150px";
-    mbtiImageElement.appendChild(img);
+    dom.mbtiImageElement.appendChild(img);
   }
 
   const imgElement = document.getElementById("mbti-img");
 
-  // Check if image exists (this is a simplified check)
   fetch(imagePath)
     .then((response) => {
-      if (response.ok) {
-        imgElement.src = imagePath;
-      } else {
-        imgElement.src = "images/default.png";
-      }
+      imgElement.src = response.ok ? imagePath : DEFAULT_IMAGE_PATH;
     })
     .catch(() => {
-      imgElement.src = "images/default.png";
+      imgElement.src = DEFAULT_IMAGE_PATH;
     });
 }
 
-yesButton.addEventListener("click", () => answerQuestion(true));
-noButton.addEventListener("click", () => answerQuestion(false));
-restartButton.addEventListener("click", restartTest);
+function showResult() {
+  document.getElementById("question-container").style.display = "none";
+  dom.resultElement.style.display = "block";
+
+  playSound(resultSound);
+
+  const mbti = calculateMBTI();
+  dom.mbtiResultElement.textContent = mbti;
+  dom.mbtiDescriptionElement.textContent = getMBTIDescription(mbti);
+  setMBTIImage(mbti);
+}
 
 function restartTest() {
-  playButtonSound();
+  playSound(buttonClickSound);
   currentQuestion = 0;
   answers.fill(0);
-  const questionContainer = document.getElementById("question-container");
-  questionContainer.style.display = "none";
-  resultElement.style.display = "none";
-  startScreen.style.display = "block";
-  container.style.display = "block";
-
+  document.getElementById("question-container").style.display = "none";
+  dom.resultElement.style.display = "none";
+  dom.startScreen.style.display = "block";
+  dom.container.style.display = "block";
   const imgElement = document.getElementById("mbti-img");
   if (imgElement) imgElement.src = "";
 }
 
 function startTest() {
-  playButtonSound();
-  startScreen.style.display = "none";
-  const questionContainer = document.getElementById("question-container");
-  questionContainer.style.display = "block";
-  container.style.display = "block";
+  playSound(buttonClickSound);
+  dom.startScreen.style.display = "none";
+  document.getElementById("question-container").style.display = "block";
+  dom.container.style.display = "block";
   showQuestion();
 }
 
-startScreen.style.display = "block";
-const questionContainer = document.getElementById("question-container");
-questionContainer.style.display = "none";
-startButton.addEventListener("click", startTest);
+dom.yesButton.addEventListener("click", () => answerQuestion(true));
+dom.noButton.addEventListener("click", () => answerQuestion(false));
+dom.restartButton.addEventListener("click", restartTest);
+dom.startButton.addEventListener("click", startTest);
+
+dom.startScreen.style.display = "block";
+document.getElementById("question-container").style.display = "none";
