@@ -1,100 +1,95 @@
-const CANVAS_WIDTH = 400;
-const CANVAS_HEIGHT = 600;
-const BASE_SIZE = 30;
-const STEP_SIZE = 35;
-const STAGE_COUNT = 10;
-const GRAVITY = 0.9;
-const MERGE_COOLDOWN = 100;
-const WALL_THICKNESS = 20;
-const HIGH_STACK_HEIGHT = 400;
-const SPAWN_COOLDOWN = 300;
-const CIRCLE_SIZES = Array.from({ length: STAGE_COUNT }, (_, i) =>
-  Math.round(BASE_SIZE + i * STEP_SIZE)
-);
-
-const CIRCLE_COLORS = [
-  "#FFB6C1",
-  "#FF69B4",
-  "#FF1493",
-  "#C71585",
-  "#DB7093",
-  "#EE82EE",
-  "#DA70D6",
-  "#9932CC",
-  "#BA55D3",
-  "#800080",
-];
-const MAX_CIRCLE_INDEX = CIRCLE_SIZES.length - 1;
+const GAME_CONFIG = {
+  CANVAS_WIDTH: 400,
+  CANVAS_HEIGHT: 600,
+  BASE_CIRCLE_SIZE: 30,
+  CIRCLE_STEP: 35,
+  NUM_CIRCLE_STAGES: 10,
+  GRAVITY: 0.9,
+  MERGE_COOLDOWN_MS: 100,
+  WALL_THICKNESS: 20,
+  HIGH_STACK_THRESHOLD: 400,
+  SPAWN_COOLDOWN_MS: 300,
+  MAX_SOUND_CHANNELS: 10,
+  GAME_TIME_LIMIT_SEC: 10,
+  BACKGROUND_COLOR: "#f8e8ee",
+  CIRCLE_COLORS: [
+    "#FFB6C1",
+    "#FF69B4",
+    "#FF1493",
+    "#C71585",
+    "#DB7093",
+    "#EE82EE",
+    "#DA70D6",
+    "#9932CC",
+    "#BA55D3",
+    "#800080",
+  ],
+  SFX_PATH: "sounds/463388__vilkas_sound__vs-pop_4.mp3",
+};
 
 const { Engine, Render, World, Composite, Bodies, Body, Events } = Matter;
 
-const BACKGROUND_COLOR = "#f8e8ee";
+let score = 0;
+let timeRemaining = GAME_CONFIG.GAME_TIME_LIMIT_SEC;
+let highScore = localStorage.getItem("highScore") || 0;
+let isGameOver = false;
+let isTimerRunning = false;
+let canSpawnCircle = true;
+let isMouseDown = false;
+let previewCircle = null;
+let isDragging = false;
+let currentX = 0;
+let widthScaleFactor = 1;
+let heightScaleFactor = 1;
+const mergingBodies = new Set();
+const circleCollisionCounts = new Map();
+let intervalId;
 
-const MAX_SOUND_CHANNELS = 10;
-const soundPool = [];
-
-for (let i = 0; i < MAX_SOUND_CHANNELS; i++) {
-  const sound = new Audio("sounds/463388__vilkas_sound__vs-pop_4.mp3");
-  sound.volume = 0.5;
-  soundPool.push(sound);
-}
-
-function playSound() {
-  for (const sound of soundPool) {
-    if (sound.paused || sound.ended) {
-      sound.currentTime = 0;
-      sound.play();
-      return;
-    }
-  }
-}
+const CIRCLE_SIZES = Array.from(
+  { length: GAME_CONFIG.NUM_CIRCLE_STAGES },
+  (_, i) =>
+    Math.round(GAME_CONFIG.BASE_CIRCLE_SIZE + i * GAME_CONFIG.CIRCLE_STEP)
+);
+const MAX_CIRCLE_INDEX = CIRCLE_SIZES.length - 1;
 
 const engine = Engine.create({
   enableSleeping: false,
   constraintIterations: 4,
 });
-engine.gravity.y = GRAVITY;
+engine.gravity.y = GAME_CONFIG.GRAVITY;
 
 const render = Render.create({
   element: document.querySelector(".game-inner-container"),
-  engine: engine,
+  engine,
   options: {
-    width: CANVAS_WIDTH,
-    height: CANVAS_HEIGHT,
+    width: GAME_CONFIG.CANVAS_WIDTH,
+    height: GAME_CONFIG.CANVAS_HEIGHT,
     wireframes: false,
-    background: BACKGROUND_COLOR,
+    background: GAME_CONFIG.BACKGROUND_COLOR,
   },
 });
 
 const canvas = render.canvas;
 const highestStackLine = document.getElementById("highest-stack-line");
 const highStackLine = document.getElementById("high-stack-line");
-
-// Get the options button and high score container from the HTML
 const gameTimeoutContainer = document.querySelector(".game-timeout-container");
 const optionsBtn = document.querySelector(".options-btn");
-const highscoreContainer = document.getElementById("highScore");
-
 const optionsPopup = document.getElementById("optionsPopup");
+const timeoutContainer = document.querySelector(".timeout-container");
 
-const GAME_TIME_LIMIT = 10;
-let score = 0;
-let timeRemaining = GAME_TIME_LIMIT;
-let intervalId;
-let isGameOver = false;
-let isTimerRunning = false;
-let highScore = localStorage.getItem("highScore") || 0;
-let canSpawnCircle = true;
-let isMouseDown = false;
-const mergingBodies = new Set();
+const soundPool = Array.from({ length: GAME_CONFIG.MAX_SOUND_CHANNELS }, () => {
+  const sound = new Audio(GAME_CONFIG.SFX_PATH);
+  sound.volume = 0.5;
+  return sound;
+});
 
-let widthScaleFactor = 1;
-let heightScaleFactor = 1;
-
-let previewCircle = null;
-let isDragging = false;
-let currentX = 0;
-const circleCollisionCounts = new Map();
+function playSound() {
+  const sound = soundPool.find((s) => s.paused || s.ended);
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play();
+  }
+}
 
 function updateScore(points) {
   score += points;
@@ -114,85 +109,19 @@ function updateHighScore() {
 
 function updateTimeOutBar() {
   const timeoutProgress = document.querySelector(".timeout-progress");
-  const progressWidth = (timeRemaining / GAME_TIME_LIMIT) * 100;
-  timeoutProgress.style.width = `${progressWidth}%`;
-}
-
-function startTimeOut() {
-  intervalId = setInterval(() => {
-    if (isTimerRunning) {
-      timeRemaining--;
-      updateTimeOutBar();
-      if (timeRemaining <= 0) {
-        gameOver();
-      }
-    } else if (timeRemaining < GAME_TIME_LIMIT) {
-      timeRemaining += 0.5;
-      updateTimeOutBar();
-    }
-  }, 1000);
-}
-
-function gameOver() {
-  if (isGameOver) return;
-  isGameOver = true;
-  clearInterval(intervalId);
-  document.querySelector(".overlay").style.display = "flex";
-  document.getElementById("finalScore").textContent = `Your score: ${score}`;
-  updateHighScore();
-}
-
-function restartGame() {
-  location.reload();
-}
-
-function createWalls() {
-  const wallOptions = {
-    isStatic: true,
-    friction: 0,
-    render: { fillStyle: "#f5d6e0" },
-  };
-  return [
-    Bodies.rectangle(
-      CANVAS_WIDTH / 2,
-      0,
-      CANVAS_WIDTH,
-      WALL_THICKNESS,
-      wallOptions
-    ),
-    Bodies.rectangle(
-      CANVAS_WIDTH / 2,
-      CANVAS_HEIGHT,
-      CANVAS_WIDTH,
-      WALL_THICKNESS,
-      wallOptions
-    ),
-    Bodies.rectangle(
-      WALL_THICKNESS / 2,
-      CANVAS_HEIGHT / 2,
-      WALL_THICKNESS,
-      CANVAS_HEIGHT,
-      wallOptions
-    ),
-    Bodies.rectangle(
-      CANVAS_WIDTH - WALL_THICKNESS / 2,
-      CANVAS_HEIGHT / 2,
-      WALL_THICKNESS,
-      CANVAS_HEIGHT,
-      wallOptions
-    ),
-  ];
+  timeoutProgress.style.width = `${
+    (timeRemaining / GAME_CONFIG.GAME_TIME_LIMIT_SEC) * 100
+  }%`;
 }
 
 function updateScaleFactors() {
   const canvasRect = canvas.getBoundingClientRect();
-  widthScaleFactor = canvasRect.width / CANVAS_WIDTH;
-  heightScaleFactor = canvasRect.height / CANVAS_HEIGHT;
+  widthScaleFactor = canvasRect.width / GAME_CONFIG.CANVAS_WIDTH;
+  heightScaleFactor = canvasRect.height / GAME_CONFIG.CANVAS_HEIGHT;
 }
 
 function getLogicalPosition(clientX, clientY) {
   const canvasRect = canvas.getBoundingClientRect();
-
   const clampedClientX = Math.max(
     canvasRect.left,
     Math.min(clientX, canvasRect.right)
@@ -201,7 +130,6 @@ function getLogicalPosition(clientX, clientY) {
     canvasRect.top,
     Math.min(clientY, canvasRect.bottom)
   );
-
   const logicalX = (clampedClientX - canvasRect.left) / widthScaleFactor;
   const logicalY = (clampedClientY - canvasRect.top) / heightScaleFactor;
   return { x: logicalX, y: logicalY };
@@ -209,18 +137,19 @@ function getLogicalPosition(clientX, clientY) {
 
 function createCircle(x, y, size) {
   const index = CIRCLE_SIZES.indexOf(size);
+  const radius = size / 2;
   const constrainedX = Math.max(
-    WALL_THICKNESS + size / 2,
-    Math.min(CANVAS_WIDTH - WALL_THICKNESS - size / 2, x)
+    GAME_CONFIG.WALL_THICKNESS + radius,
+    Math.min(GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.WALL_THICKNESS - radius, x)
   );
   const constrainedY = Math.max(
-    size / 2,
-    Math.min(CANVAS_HEIGHT - size / 2, y)
+    radius,
+    Math.min(GAME_CONFIG.CANVAS_HEIGHT - radius, y)
   );
-  const circle = Bodies.circle(constrainedX, constrainedY, size / 2, {
+  const circle = Bodies.circle(constrainedX, constrainedY, radius, {
     restitution: 0.3,
     friction: 0,
-    render: { fillStyle: CIRCLE_COLORS[index] },
+    render: { fillStyle: GAME_CONFIG.CIRCLE_COLORS[index] },
     collisionFilter: { group: Body.nextGroup(true) },
     label: `Circle-${index + 1}`,
     isSensor: false,
@@ -234,7 +163,7 @@ function createPreviewCircle(x, y, size) {
   return Bodies.circle(x, y, size / 2, {
     isStatic: true,
     isSensor: true,
-    render: { fillStyle: CIRCLE_COLORS[index], opacity: 0.5 },
+    render: { fillStyle: GAME_CONFIG.CIRCLE_COLORS[index], opacity: 0.5 },
   });
 }
 
@@ -246,15 +175,12 @@ function mergeCircles(bodyA, bodyB) {
     (bodyA.position.y + bodyB.position.y) / 2,
     newSize
   );
-
   Body.setVelocity(newCircle, {
     x: (bodyA.velocity.x + bodyB.velocity.x) * 0.5,
     y: (bodyA.velocity.y + bodyB.velocity.y) * 0.5,
   });
-
   World.remove(engine.world, [bodyA, bodyB]);
   World.add(engine.world, newCircle);
-
   updateScore(10 * (indexA + 1));
 
   setTimeout(() => {
@@ -262,41 +188,49 @@ function mergeCircles(bodyA, bodyB) {
     newCircle.collisionFilter.group = 0;
     mergingBodies.delete(bodyA.id);
     mergingBodies.delete(bodyB.id);
-  }, MERGE_COOLDOWN);
+  }, GAME_CONFIG.MERGE_COOLDOWN_MS);
 }
 
-const collisionHandler = (event) => {
-  for (const pair of event.pairs) {
-    const { bodyA, bodyB } = pair;
-
-    if (bodyA.label && bodyA.label.startsWith("Circle-")) {
-      circleCollisionCounts.set(
-        bodyA.id,
-        (circleCollisionCounts.get(bodyA.id) || 0) + 1
-      );
-    }
-    if (bodyB.label && bodyB.label.startsWith("Circle-")) {
-      circleCollisionCounts.set(
-        bodyB.id,
-        (circleCollisionCounts.get(bodyB.id) || 0) + 1
-      );
-    }
-
-    if (mergingBodies.has(bodyA.id) || mergingBodies.has(bodyB.id)) continue;
-
-    const indexA = CIRCLE_SIZES.indexOf(bodyA.circleRadius * 2);
-    const indexB = CIRCLE_SIZES.indexOf(bodyB.circleRadius * 2);
-
-    if (indexA === indexB && indexA < MAX_CIRCLE_INDEX) {
-      mergingBodies.add(bodyA.id);
-      mergingBodies.add(bodyB.id);
-      mergeCircles(bodyA, bodyB);
-    }
-  }
-};
+function createWalls() {
+  const wallOptions = {
+    isStatic: true,
+    friction: 0,
+    render: { fillStyle: "#f5d6e0" },
+  };
+  return [
+    Bodies.rectangle(
+      GAME_CONFIG.CANVAS_WIDTH / 2,
+      0,
+      GAME_CONFIG.CANVAS_WIDTH,
+      GAME_CONFIG.WALL_THICKNESS,
+      wallOptions
+    ),
+    Bodies.rectangle(
+      GAME_CONFIG.CANVAS_WIDTH / 2,
+      GAME_CONFIG.CANVAS_HEIGHT,
+      GAME_CONFIG.CANVAS_WIDTH,
+      GAME_CONFIG.WALL_THICKNESS,
+      wallOptions
+    ),
+    Bodies.rectangle(
+      GAME_CONFIG.WALL_THICKNESS / 2,
+      GAME_CONFIG.CANVAS_HEIGHT / 2,
+      GAME_CONFIG.WALL_THICKNESS,
+      GAME_CONFIG.CANVAS_HEIGHT,
+      wallOptions
+    ),
+    Bodies.rectangle(
+      GAME_CONFIG.CANVAS_WIDTH - GAME_CONFIG.WALL_THICKNESS / 2,
+      GAME_CONFIG.CANVAS_HEIGHT / 2,
+      GAME_CONFIG.WALL_THICKNESS,
+      GAME_CONFIG.CANVAS_HEIGHT,
+      wallOptions
+    ),
+  ];
+}
 
 function checkCircleHeight() {
-  let lowestCircleBottomY = CANVAS_HEIGHT;
+  let lowestCircleBottomY = GAME_CONFIG.CANVAS_HEIGHT;
   let hasStableCircle = false;
 
   for (const body of Composite.allBodies(engine.world)) {
@@ -313,50 +247,76 @@ function checkCircleHeight() {
 
   const highestCircleY = Math.max(0, lowestCircleBottomY);
   highestStackLine.style.top = `${highestCircleY * heightScaleFactor}px`;
-
   isTimerRunning =
-    hasStableCircle && highestCircleY < CANVAS_HEIGHT - HIGH_STACK_HEIGHT;
+    hasStableCircle &&
+    highestCircleY <
+      GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD;
 }
 
-Events.on(engine, "collisionStart", collisionHandler);
+function handleCollision(event) {
+  for (const pair of event.pairs) {
+    const { bodyA, bodyB } = pair;
+
+    if (bodyA.label && bodyA.label.startsWith("Circle-")) {
+      circleCollisionCounts.set(
+        bodyA.id,
+        (circleCollisionCounts.get(bodyA.id) || 0) + 1
+      );
+    }
+    if (bodyB.label && bodyB.label.startsWith("Circle-")) {
+      circleCollisionCounts.set(
+        bodyB.id,
+        (circleCollisionCounts.get(bodyB.id) || 0) + 1
+      );
+    }
+    if (mergingBodies.has(bodyA.id) || mergingBodies.has(bodyB.id)) continue;
+
+    const indexA = CIRCLE_SIZES.indexOf(bodyA.circleRadius * 2);
+    const indexB = CIRCLE_SIZES.indexOf(bodyB.circleRadius * 2);
+    if (indexA === indexB && indexA < MAX_CIRCLE_INDEX) {
+      mergingBodies.add(bodyA.id);
+      mergingBodies.add(bodyB.id);
+      mergeCircles(bodyA, bodyB);
+    }
+  }
+}
 
 function handleDown(e) {
-  if (!canSpawnCircle || isGameOver || optionsPopup.style.display === "flex")
+  if (
+    !canSpawnCircle ||
+    isGameOver ||
+    optionsPopup.style.display === "flex" ||
+    isMouseDown
+  )
     return;
-  if (isMouseDown) return;
   isMouseDown = true;
   const { clientX, clientY } = e.touches ? e.touches[0] : e;
-  const canvasRect = canvas.getBoundingClientRect();
-
-  if (
-    clientX < canvasRect.left ||
-    clientX > canvasRect.right ||
-    clientY < canvasRect.top ||
-    clientY > canvasRect.bottom
-  ) {
-    return;
-  }
-
   const logicalPosition = getLogicalPosition(clientX, clientY);
-  currentX = logicalPosition.x;
-  isDragging = true;
 
+  isDragging = true;
+  currentX = logicalPosition.x;
   previewCircle = createPreviewCircle(currentX, 50, CIRCLE_SIZES[0]);
   World.add(engine.world, previewCircle);
 }
 
 function handleMove(e) {
-  if (isDragging && previewCircle && optionsPopup.style.display !== "flex") {
-    if (!isMouseDown) {
-      return;
-    }
+  if (
+    isDragging &&
+    previewCircle &&
+    optionsPopup.style.display !== "flex" &&
+    isMouseDown
+  ) {
     const { clientX, clientY } = e.touches ? e.touches[0] : e;
-
     const logicalPosition = getLogicalPosition(clientX, clientY);
     currentX = logicalPosition.x;
     const constrainedX = Math.max(
-      WALL_THICKNESS + CIRCLE_SIZES[0] / 2,
-      Math.min(CANVAS_WIDTH - WALL_THICKNESS - CIRCLE_SIZES[0] / 2, currentX)
+      GAME_CONFIG.WALL_THICKNESS + CIRCLE_SIZES[0] / 2,
+      Math.min(
+        GAME_CONFIG.CANVAS_WIDTH -
+          GAME_CONFIG.WALL_THICKNESS -
+          CIRCLE_SIZES[0] / 2,
+        currentX
+      )
     );
     Body.setPosition(previewCircle, { x: constrainedX, y: 50 });
   }
@@ -367,52 +327,69 @@ function handleUp(e) {
     isMouseDown = false;
     isDragging = false;
     World.remove(engine.world, previewCircle);
-
     const { clientX, clientY } = e.changedTouches ? e.changedTouches[0] : e;
-    const canvasRect = canvas.getBoundingClientRect();
 
-    if (
-      clientX < canvasRect.left ||
-      clientX > canvasRect.right ||
-      clientY < canvasRect.top ||
-      clientY > canvasRect.bottom
-    ) {
+    if (!checkMouseInCanvas(clientX, clientY)) {
       previewCircle = null;
       return;
     }
+
     const logicalPosition = getLogicalPosition(clientX, clientY);
     currentX = logicalPosition.x;
 
     const constrainedX = Math.max(
-      WALL_THICKNESS + CIRCLE_SIZES[0] / 2,
-      Math.min(CANVAS_WIDTH - WALL_THICKNESS - CIRCLE_SIZES[0] / 2, currentX)
+      GAME_CONFIG.WALL_THICKNESS + CIRCLE_SIZES[0] / 2,
+      Math.min(
+        GAME_CONFIG.CANVAS_WIDTH -
+          GAME_CONFIG.WALL_THICKNESS -
+          CIRCLE_SIZES[0] / 2,
+        currentX
+      )
     );
-
     const circle = createCircle(constrainedX, 50, CIRCLE_SIZES[0]);
     World.add(engine.world, circle);
     previewCircle = null;
-
     canSpawnCircle = false;
+
     setTimeout(() => {
       canSpawnCircle = true;
-    }, SPAWN_COOLDOWN);
+    }, GAME_CONFIG.SPAWN_COOLDOWN_MS);
   }
 }
 
-document.addEventListener("mousedown", handleDown);
-document.addEventListener("mousemove", handleMove);
-document.addEventListener("mouseup", handleUp);
-document.addEventListener("touchstart", handleDown);
-document.addEventListener("touchmove", handleMove);
-document.addEventListener("touchend", handleUp);
-document
-  .querySelector(".overlay button")
-  .addEventListener("click", restartGame);
+function checkMouseInCanvas(clientX, clientY) {
+  const canvasRect = canvas.getBoundingClientRect();
+  return (
+    clientX > canvasRect.left &&
+    clientX < canvasRect.right &&
+    clientY > canvasRect.top &&
+    clientY < canvasRect.bottom
+  );
+}
 
-Events.on(engine, "afterUpdate", () => {
-  checkCircleHeight();
-  updateScaleFactors();
-});
+function gameOver() {
+  if (isGameOver) return;
+  isGameOver = true;
+  clearInterval(intervalId);
+  document.querySelector(".overlay").style.display = "flex";
+  document.getElementById("finalScore").textContent = `Your score: ${score}`;
+  updateHighScore();
+}
+
+function startTimeOut() {
+  intervalId = setInterval(() => {
+    if (isTimerRunning) {
+      timeRemaining--;
+      updateTimeOutBar();
+      if (timeRemaining <= 0) {
+        gameOver();
+      }
+    } else if (timeRemaining < GAME_CONFIG.GAME_TIME_LIMIT_SEC) {
+      timeRemaining += 0.5;
+      updateTimeOutBar();
+    }
+  }, 1000);
+}
 
 function initializeGame() {
   World.add(engine.world, createWalls());
@@ -420,33 +397,40 @@ function initializeGame() {
   Render.run(render);
   startTimeOut();
   updateScaleFactors();
-
   highStackLine.style.top = `${
-    (CANVAS_HEIGHT - HIGH_STACK_HEIGHT) * heightScaleFactor
+    (GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD) *
+    heightScaleFactor
   }px`;
-
-  const scoreElement = document.getElementById("score");
-  scoreElement.classList.add("animate");
+  document.getElementById("score").classList.add("animate");
+  gameTimeoutContainer.appendChild(timeoutContainer);
+  const closeOptions = document.getElementById("closeOptions");
+  const soundVolumeSlider = document.getElementById("soundVolume");
+  optionsBtn.addEventListener("click", () => {
+    optionsPopup.style.display = "flex";
+  });
+  closeOptions.addEventListener("click", () => {
+    optionsPopup.style.display = "none";
+  });
+  soundVolumeSlider.addEventListener("input", () => {
+    const volume = parseFloat(soundVolumeSlider.value);
+    soundPool.forEach((sound) => (sound.volume = volume));
+  });
+  updateHighScore();
 }
-const timeoutContainer = document.querySelector(".timeout-container");
-gameTimeoutContainer.appendChild(timeoutContainer);
-const closeOptions = document.getElementById("closeOptions");
-optionsBtn.addEventListener("click", () => {
-  optionsPopup.style.display = "flex";
-});
-closeOptions.addEventListener("click", () => {
-  optionsPopup.style.display = "none";
+
+Events.on(engine, "collisionStart", handleCollision);
+Events.on(engine, "afterUpdate", () => {
+  checkCircleHeight();
+  updateScaleFactors();
 });
 
-const soundVolumeSlider = document.getElementById("soundVolume");
-
-soundVolumeSlider.addEventListener("input", () => {
-  const volume = parseFloat(soundVolumeSlider.value);
-  for (const sound of soundPool) {
-    sound.volume = volume;
-  }
+document.addEventListener("mousedown", handleDown);
+document.addEventListener("mousemove", handleMove);
+document.addEventListener("mouseup", handleUp);
+document.addEventListener("touchstart", handleDown);
+document.addEventListener("touchmove", handleMove);
+document.addEventListener("touchend", handleUp);
+document.querySelector(".overlay button").addEventListener("click", () => {
+  location.reload();
 });
-
-document.getElementById("highScore").textContent = `High Score : ${highScore}`;
-
 initializeGame();
