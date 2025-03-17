@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>가위바위보 게임</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+
+      .container {
+        text-align: center;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      .choices {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .choice {
+        font-size: 2rem;
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+
+      .choice:hover {
+        transform: scale(1.1);
+      }
+
+      .result,
+      .score {
+        margin-top: 1rem;
+      }
+
+      #outcome {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>✊✋✌️ 가위바위보 게임 ✌️✋✊</h1>
+      <div class="game-area">
+        <div class="choices">
+          <button class="choice" data-choice="rock">✊</button>
+          <button class="choice" data-choice="paper">✋</button>
+          <button class="choice" data-choice="scissors">✌️</button>
+        </div>
+        <div class="result">
+          <p>당신의 선택: <span id="player-choice"></span></p>
+          <p>컴퓨터의 선택: <span id="computer-choice"></span></p>
+          <p id="outcome"></p>
+        </div>
+        <div class="score">
+          <p>
+            승: <span id="wins">0</span> 패: <span id="losses">0</span> 무:
+            <span id="ties">0</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <script>
+      const choices = ["rock", "paper", "scissors"];
+      const emojis = { rock: "✊", paper: "✋", scissors: "✌️" };
+      let wins = 0,
+        losses = 0,
+        ties = 0;
+
+      function computerPlay() {
+        return choices[Math.floor(Math.random() * choices.length)];
+      }
+
+      function playRound(playerSelection, computerSelection) {
+        if (playerSelection === computerSelection) {
+          return "무승부!";
+        }
+        if (
+          (playerSelection === "rock" && computerSelection === "scissors") ||
+          (playerSelection === "paper" && computerSelection === "rock") ||
+          (playerSelection === "scissors" && computerSelection === "paper")
+        ) {
+          wins++;
+          return "승리!";
+        }
+        losses++;
+        return "패배!";
+      }
+
+      function updateScore() {
+        document.getElementById("wins").textContent = wins;
+        document.getElementById("losses").textContent = losses;
+        document.getElementById("ties").textContent = ties;
+      }
+
+      document.querySelectorAll(".choice").forEach((button) => {
+        button.addEventListener("click", function () {
+          const playerChoice = this.getAttribute("data-choice");
+          const computerChoice = computerPlay();
+
+          document.getElementById("player-choice").textContent =
+            emojis[playerChoice];
+          document.getElementById("computer-choice").textContent =
+            emojis[computerChoice];
+
+          const result = playRound(playerChoice, computerChoice);
+          document.getElementById("outcome").textContent = result;
+
+          if (result === "무승부!") ties++;
+          updateScore();
+        });
+      });
+    </script>
+  </body>
+</html>
