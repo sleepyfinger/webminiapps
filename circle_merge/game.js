@@ -8,7 +8,6 @@ const MERGE_COOLDOWN = 100;
 const WALL_THICKNESS = 20;
 const HIGH_STACK_HEIGHT = 400;
 const SPAWN_COOLDOWN = 300;
-const GAME_TIME_LIMIT = 10;
 const CIRCLE_SIZES = Array.from({ length: STAGE_COUNT }, (_, i) =>
   Math.round(BASE_SIZE + i * STEP_SIZE)
 );
@@ -57,7 +56,7 @@ const engine = Engine.create({
 engine.gravity.y = GRAVITY;
 
 const render = Render.create({
-  element: document.getElementById("game-container"),
+  element: document.querySelector(".game-inner-container"),
   engine: engine,
   options: {
     width: CANVAS_WIDTH,
@@ -71,12 +70,22 @@ const canvas = render.canvas;
 const highestStackLine = document.getElementById("highest-stack-line");
 const highStackLine = document.getElementById("high-stack-line");
 
+// Get the options button and high score container from the HTML
+const gameTimeoutContainer = document.querySelector(".game-timeout-container");
+const optionsBtn = document.querySelector(".options-btn");
+const highscoreContainer = document.getElementById("highScore");
+
+const optionsPopup = document.getElementById("optionsPopup");
+
+const GAME_TIME_LIMIT = 10;
 let score = 0;
 let timeRemaining = GAME_TIME_LIMIT;
 let intervalId;
 let isGameOver = false;
 let isTimerRunning = false;
+let highScore = localStorage.getItem("highScore") || 0;
 let canSpawnCircle = true;
+let isMouseDown = false;
 const mergingBodies = new Set();
 
 let widthScaleFactor = 1;
@@ -90,6 +99,17 @@ const circleCollisionCounts = new Map();
 function updateScore(points) {
   score += points;
   document.getElementById("score").textContent = score;
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("highScore", highScore);
+    updateHighScore();
+  }
+}
+
+function updateHighScore() {
+  document.getElementById(
+    "highScore"
+  ).textContent = `High Score : ${highScore}`;
 }
 
 function updateTimeOutBar() {
@@ -119,6 +139,7 @@ function gameOver() {
   clearInterval(intervalId);
   document.querySelector(".overlay").style.display = "flex";
   document.getElementById("finalScore").textContent = `Your score: ${score}`;
+  updateHighScore();
 }
 
 function restartGame() {
@@ -300,7 +321,10 @@ function checkCircleHeight() {
 Events.on(engine, "collisionStart", collisionHandler);
 
 function handleDown(e) {
-  if (!canSpawnCircle || isGameOver) return;
+  if (!canSpawnCircle || isGameOver || optionsPopup.style.display === "flex")
+    return;
+  if (isMouseDown) return;
+  isMouseDown = true;
   const { clientX, clientY } = e.touches ? e.touches[0] : e;
   const canvasRect = canvas.getBoundingClientRect();
 
@@ -322,7 +346,10 @@ function handleDown(e) {
 }
 
 function handleMove(e) {
-  if (isDragging && previewCircle) {
+  if (isDragging && previewCircle && optionsPopup.style.display !== "flex") {
+    if (!isMouseDown) {
+      return;
+    }
     const { clientX, clientY } = e.touches ? e.touches[0] : e;
 
     const logicalPosition = getLogicalPosition(clientX, clientY);
@@ -336,7 +363,8 @@ function handleMove(e) {
 }
 
 function handleUp(e) {
-  if (isDragging) {
+  if (isDragging && optionsPopup.style.display !== "flex") {
+    isMouseDown = false;
     isDragging = false;
     World.remove(engine.world, previewCircle);
 
@@ -400,8 +428,15 @@ function initializeGame() {
   const scoreElement = document.getElementById("score");
   scoreElement.classList.add("animate");
 }
-
-initializeGame();
+const timeoutContainer = document.querySelector(".timeout-container");
+gameTimeoutContainer.appendChild(timeoutContainer);
+const closeOptions = document.getElementById("closeOptions");
+optionsBtn.addEventListener("click", () => {
+  optionsPopup.style.display = "flex";
+});
+closeOptions.addEventListener("click", () => {
+  optionsPopup.style.display = "none";
+});
 
 const soundVolumeSlider = document.getElementById("soundVolume");
 
@@ -411,3 +446,7 @@ soundVolumeSlider.addEventListener("input", () => {
     sound.volume = volume;
   }
 });
+
+document.getElementById("highScore").textContent = `High Score : ${highScore}`;
+
+initializeGame();
