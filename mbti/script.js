@@ -1,33 +1,24 @@
 const questions = [
-  // E vs I
   "큰 모임에서 새로운 사람들과 대화하는 것이 즐겁나요?",
   "혼자 시간을 보내는 것보다 다른 사람들과 함께 있는 것을 선호하나요?",
   "파티나 사교 모임에 자주 참석하는 편인가요?",
   "새로운 사람을 만나면 대화를 먼저 시작하는 편인가요?",
   "여러 사람과 함께 일하는 것을 좋아하나요?",
-
-  // S vs N
   "세부 사항에 주의를 기울이는 편인가요?",
   "현재에 집중하기보다 미래의 가능성을 상상하는 것을 좋아하나요?",
   "실제 경험을 중요하게 여기나요?",
   "직관이나 영감을 따르는 편인가요?",
   "새로운 아이디어를 생각해내는 것을 즐기나요?",
-
-  // T vs F
   "결정을 내릴 때 논리와 사실에 근거하나요?",
   "다른 사람의 감정을 고려하여 결정을 내리는 편인가요?",
   "객관적인 분석을 중요하게 여기나요?",
   "상황을 판단할 때 개인적인 가치관을 중요하게 생각하나요?",
   "감정보다는 이성을 따르는 편인가요?",
-
-  // J vs P
   "일정이나 계획을 세우는 것을 좋아하나요?",
   "즉흥적으로 행동하는 것을 즐기나요?",
   "마감 기한을 정해 놓고 일하는 것을 선호하나요?",
   "새로운 정보나 변화에 유연하게 대처하는 편인가요?",
   "결정을 내리기 전에 모든 선택지를 열어두는 것을 좋아하나요?",
-
-  // A vs T 질문들
   "스트레스 상황에서도 차분함을 유지할 수 있나요?",
   "자신감이 넘치는 편인가요?",
   "실수를 하더라도 크게 신경 쓰지 않는 편인가요?",
@@ -44,16 +35,32 @@ const noButton = document.getElementById("no");
 const resultElement = document.getElementById("result");
 const mbtiResultElement = document.getElementById("mbti-result");
 const mbtiDescriptionElement = document.getElementById("mbti-description");
+const questionNumberElement = document.getElementById("question-number");
+const restartButton = document.getElementById("restart-button");
+const startScreen = document.getElementById("start-screen");
+const startButton = document.getElementById("start-button");
+const container = document.querySelector(".container");
+
+const buttonClickSound = new Audio("button_click.mp3");
+const resultSound = new Audio("result_sound.mp3");
 
 function showQuestion() {
   if (currentQuestion < questions.length) {
+    questionNumberElement.textContent = `질문 ${currentQuestion + 1}`;
     questionElement.textContent = questions[currentQuestion];
   } else {
     showResult();
   }
 }
 
+function playButtonSound() {
+  buttonClickSound.currentTime = 0;
+  buttonClickSound.play();
+}
+
 function answerQuestion(answer) {
+  playButtonSound();
+
   answers[currentQuestion] += answer ? 1 : 0;
   currentQuestion++;
   showQuestion();
@@ -63,6 +70,9 @@ function showResult() {
   const questionContainer = document.getElementById("question-container");
   questionContainer.style.display = "none";
   resultElement.style.display = "block";
+
+  resultSound.currentTime = 0;
+  resultSound.play();
 
   const mbti = calculateMBTI();
   mbtiResultElement.textContent = mbti;
@@ -115,5 +125,29 @@ function getMBTIDescription(mbti) {
 
 yesButton.addEventListener("click", () => answerQuestion(true));
 noButton.addEventListener("click", () => answerQuestion(false));
+restartButton.addEventListener("click", restartTest);
 
-showQuestion();
+function restartTest() {
+  playButtonSound();
+  currentQuestion = 0;
+  answers.fill(0);
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.style.display = "none";
+  resultElement.style.display = "none";
+  startScreen.style.display = "block";
+  container.style.display = "block";
+}
+
+function startTest() {
+  playButtonSound();
+  startScreen.style.display = "none";
+  const questionContainer = document.getElementById("question-container");
+  questionContainer.style.display = "block";
+  container.style.display = "block";
+  showQuestion();
+}
+
+startScreen.style.display = "block";
+const questionContainer = document.getElementById("question-container");
+questionContainer.style.display = "none";
+startButton.addEventListener("click", startTest);
