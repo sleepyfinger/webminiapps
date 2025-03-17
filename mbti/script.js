@@ -40,6 +40,7 @@ const restartButton = document.getElementById("restart-button");
 const startScreen = document.getElementById("start-screen");
 const startButton = document.getElementById("start-button");
 const container = document.querySelector(".container");
+const mbtiImageElement = document.getElementById("mbti-image"); // Add image element
 
 const buttonClickSound = new Audio("button_click.mp3");
 const resultSound = new Audio("result_sound.mp3");
@@ -77,6 +78,7 @@ function showResult() {
   const mbti = calculateMBTI();
   mbtiResultElement.textContent = mbti;
   mbtiDescriptionElement.textContent = getMBTIDescription(mbti);
+  // setMBTIImage(mbti);
 }
 
 function calculateMBTI() {
@@ -123,6 +125,36 @@ function getMBTIDescription(mbti) {
   );
 }
 
+function setMBTIImage(mbti) {
+  const baseType = mbti.slice(0, 4);
+  let imagePath = `images/${baseType}.png`; // Default path
+
+  console.log(baseType);
+
+  // Create the image element if it doesn't exist
+  if (!mbtiImageElement.hasChildNodes()) {
+    const img = document.createElement("img");
+    img.id = "mbti-img";
+    img.style.width = "150px";
+    mbtiImageElement.appendChild(img);
+  }
+
+  const imgElement = document.getElementById("mbti-img");
+
+  // Check if image exists (this is a simplified check)
+  fetch(imagePath)
+    .then((response) => {
+      if (response.ok) {
+        imgElement.src = imagePath;
+      } else {
+        imgElement.src = "images/default.png";
+      }
+    })
+    .catch(() => {
+      imgElement.src = "images/default.png";
+    });
+}
+
 yesButton.addEventListener("click", () => answerQuestion(true));
 noButton.addEventListener("click", () => answerQuestion(false));
 restartButton.addEventListener("click", restartTest);
@@ -136,6 +168,9 @@ function restartTest() {
   resultElement.style.display = "none";
   startScreen.style.display = "block";
   container.style.display = "block";
+
+  const imgElement = document.getElementById("mbti-img");
+  if (imgElement) imgElement.src = "";
 }
 
 function startTest() {
