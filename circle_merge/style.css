@@ -83,12 +83,8 @@ canvas {
   color: #8e8cd8;
 }
 
-.score-container,
-.timeout-container {
-  font-size: 1.1rem;
-}
-
 .score-container {
+  font-size: 1.1rem;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -100,6 +96,7 @@ canvas {
 .score-inner-container {
   display: flex;
   align-items: center;
+  gap: 5px;
 }
 
 .options-popup-container {
@@ -136,12 +133,16 @@ canvas {
 }
 
 .timeout-bar {
-  width: 300px;
   height: 1rem;
   background-color: #ffe5ec;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.timeout-container {
+  width: 80%;
+  max-width: 300px;
 }
 
 .timeout-progress {
@@ -342,7 +343,6 @@ canvas {
 }
 
 .highscore-container {
-  margin-top: 0.5rem;
   font-size: 0.9rem;
 }
 
@@ -356,6 +356,7 @@ canvas {
   top: 0;
   left: 0;
   width: 100%;
+  top: 1rem;
   display: flex;
   padding: 0.5rem;
   box-sizing: border-box;
@@ -363,7 +364,4 @@ canvas {
   justify-content: center;
 }
 
-.score-inner-container {
-  display: flex;
-  align-items: center;
-}
+
