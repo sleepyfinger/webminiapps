@@ -12,17 +12,17 @@ const GAME_CONFIG = {
   MAX_SOUND_CHANNELS: 10,
   GAME_TIME_LIMIT_SEC: 10,
   BACKGROUND_COLOR: "#f8e8ee",
-  CIRCLE_COLORS: [
-    "#FFB6C1",
-    "#FF69B4",
-    "#FF1493",
-    "#C71585",
-    "#DB7093",
-    "#EE82EE",
-    "#DA70D6",
-    "#9932CC",
-    "#BA55D3",
-    "#800080",
+  CIRCLE_IMAGES: [
+    "images/circle1.png",
+    "images/circle2.png",
+    "images/circle3.png",
+    "images/circle4.png",
+    "images/circle5.png",
+    "images/circle6.png",
+    "images/circle7.png",
+    "images/circle8.png",
+    "images/circle9.png",
+    "images/circle10.png",
   ],
   SFX_PATH: "sounds/463388__vilkas_sound__vs-pop_4.mp3",
 };
@@ -44,6 +44,7 @@ let heightScaleFactor = 1;
 const mergingBodies = new Set();
 const circleCollisionCounts = new Map();
 let intervalId;
+const imageSizes = {};
 
 const CIRCLE_SIZES = Array.from(
   { length: GAME_CONFIG.NUM_CIRCLE_STAGES },
@@ -149,7 +150,13 @@ function createCircle(x, y, size) {
   const circle = Bodies.circle(constrainedX, constrainedY, radius, {
     restitution: 0.3,
     friction: 0,
-    render: { fillStyle: GAME_CONFIG.CIRCLE_COLORS[index] },
+    render: {
+      sprite: {
+        texture: GAME_CONFIG.CIRCLE_IMAGES[index],
+        xScale: size / imageSizes[GAME_CONFIG.CIRCLE_IMAGES[index]].width,
+        yScale: size / imageSizes[GAME_CONFIG.CIRCLE_IMAGES[index]].height,
+      },
+    },
     collisionFilter: { group: Body.nextGroup(true) },
     label: `Circle-${index + 1}`,
     isSensor: false,
@@ -163,8 +170,32 @@ function createPreviewCircle(x, y, size) {
   return Bodies.circle(x, y, size / 2, {
     isStatic: true,
     isSensor: true,
-    render: { fillStyle: GAME_CONFIG.CIRCLE_COLORS[index], opacity: 0.5 },
+    render: {
+      opacity: 0.5,
+      sprite: {
+        texture: GAME_CONFIG.CIRCLE_IMAGES[index],
+        xScale: size / imageSizes[GAME_CONFIG.CIRCLE_IMAGES[index]].width,
+        yScale: size / imageSizes[GAME_CONFIG.CIRCLE_IMAGES[index]].height,
+      },
+    },
   });
+}
+
+function getDefaultImageSize(imagePath) {
+  const image = new Image();
+  image.src = imagePath;
+  let width = 0;
+  let height = 0;
+  image.onload = () => {
+    width = image.width;
+    height = image.height;
+  };
+  if (image.complete) {
+    width = image.width;
+    height = image.height;
+  }
+
+  return { width, height };
 }
 
 function mergeCircles(bodyA, bodyB) {
@@ -392,30 +423,51 @@ function startTimeOut() {
 }
 
 function initializeGame() {
-  World.add(engine.world, createWalls());
-  Matter.Runner.run(engine);
-  Render.run(render);
-  startTimeOut();
-  updateScaleFactors();
-  highStackLine.style.top = `${
-    (GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD) *
-    heightScaleFactor
-  }px`;
-  document.getElementById("score").classList.add("animate");
-  gameTimeoutContainer.appendChild(timeoutContainer);
-  const closeOptions = document.getElementById("closeOptions");
-  const soundVolumeSlider = document.getElementById("soundVolume");
-  optionsBtn.addEventListener("click", () => {
-    optionsPopup.style.display = "flex";
+  const imagePromises = GAME_CONFIG.CIRCLE_IMAGES.map((imagePath) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = imagePath;
+      img.onload = () => {
+        imageSizes[imagePath] = { width: img.width, height: img.height };
+        resolve();
+      };
+      img.onerror = () => {
+        console.error(`Failed to load image: ${imagePath}`);
+        reject(new Error(`Failed to load image: ${imagePath}`));
+      };
+    });
   });
-  closeOptions.addEventListener("click", () => {
-    optionsPopup.style.display = "none";
-  });
-  soundVolumeSlider.addEventListener("input", () => {
-    const volume = parseFloat(soundVolumeSlider.value);
-    soundPool.forEach((sound) => (sound.volume = volume));
-  });
-  updateHighScore();
+
+  Promise.all(imagePromises)
+    .then(() => {
+      World.add(engine.world, createWalls());
+      Matter.Runner.run(engine);
+      Render.run(render);
+      startTimeOut();
+      updateScaleFactors();
+      highStackLine.style.top = `${
+        (GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD) *
+        heightScaleFactor
+      }px`;
+      document.getElementById("score").classList.add("animate");
+      gameTimeoutContainer.appendChild(timeoutContainer);
+      const closeOptions = document.getElementById("closeOptions");
+      const soundVolumeSlider = document.getElementById("soundVolume");
+      optionsBtn.addEventListener("click", () => {
+        optionsPopup.style.display = "flex";
+      });
+      closeOptions.addEventListener("click", () => {
+        optionsPopup.style.display = "none";
+      });
+      soundVolumeSlider.addEventListener("input", () => {
+        const volume = parseFloat(soundVolumeSlider.value);
+        soundPool.forEach((sound) => (sound.volume = volume));
+      });
+      updateHighScore();
+    })
+    .catch((error) => {
+      console.error("Error loading images:", error);
+    });
 }
 
 Events.on(engine, "collisionStart", handleCollision);
