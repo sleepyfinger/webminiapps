@@ -264,10 +264,10 @@ canvas {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 3px;
+  height: 2px;
   z-index: 10;
   pointer-events: none;
-  background: linear-gradient(to right, #ff6f00, #f06292);
+  /* background: linear-gradient(to right, #ff6f00, #f06292); */
   box-shadow: 0 0 5px rgba(240, 98, 146, 0.5);
 }
 

@@ -278,10 +278,18 @@ function checkCircleHeight() {
 
   const highestCircleY = Math.max(0, lowestCircleBottomY);
   highestStackLine.style.top = `${highestCircleY * heightScaleFactor}px`;
-  isTimerRunning =
+
+  if (
     hasStableCircle &&
     highestCircleY <
-      GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD;
+      GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD
+  ) {
+    highStackLine.style.backgroundColor = "rgb(255, 105, 180,0.7)";
+    isTimerRunning = true;
+  } else {
+    highStackLine.style.backgroundColor = "rgb(245, 200, 224,0.7)";
+    isTimerRunning = false;
+  }
 }
 
 function handleCollision(event) {
@@ -445,14 +453,18 @@ function initializeGame() {
       Render.run(render);
       startTimeOut();
       updateScaleFactors();
+
       highStackLine.style.top = `${
         (GAME_CONFIG.CANVAS_HEIGHT - GAME_CONFIG.HIGH_STACK_THRESHOLD) *
         heightScaleFactor
       }px`;
+      highStackLine.style.backgroundColor = "rgb(245, 200, 224,0.7)";
+
       document.getElementById("score").classList.add("animate");
       gameTimeoutContainer.appendChild(timeoutContainer);
       const closeOptions = document.getElementById("closeOptions");
       const soundVolumeSlider = document.getElementById("soundVolume");
+
       optionsBtn.addEventListener("click", () => {
         optionsPopup.style.display = "flex";
       });
