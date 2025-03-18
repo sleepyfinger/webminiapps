@@ -86,7 +86,7 @@ const soundPool = Array.from({ length: GAME_CONFIG.MAX_SOUND_CHANNELS }, () => {
 
 function playSound() {
   const sound = soundPool.find((s) => s.paused || s.ended);
-  if (sound) {
+  if (sound && sound.volume > 0) {
     sound.currentTime = 0;
     sound.play();
   }
