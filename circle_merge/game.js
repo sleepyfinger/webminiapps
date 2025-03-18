@@ -11,7 +11,7 @@ const GAME_CONFIG = {
   SPAWN_COOLDOWN_MS: 300,
   MAX_SOUND_CHANNELS: 10,
   GAME_TIME_LIMIT_SEC: 10,
-  BACKGROUND_COLOR: "#f8e8ee",
+  BACKGROUND_COLOR: "#f3e5f5",
   CIRCLE_IMAGES: [
     "images/circle1.png",
     "images/circle2.png",
