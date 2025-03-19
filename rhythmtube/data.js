@@ -332,8 +332,9 @@ const songData = [
   {
     url: "https://youtu.be/Lv3A_gPPmNE",
   },
+  {
+    url: "https://youtu.be/tOGXQcitiMg",
+  },
 ];
 
-if (typeof dataLoaded === "function") {
-  dataLoaded(songData);
-}
+export { songData };

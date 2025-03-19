@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>RhythmTube</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -9,74 +11,84 @@
     />
   </head>
   <body>
-    <h1>
-      <img id="logo" src="icon-192x192.png" alt="RhythmTube Logo" />
-      리듬튜브
-      <p id="version">v0.3</p>
-    </h1>
+    <header>
+      <h1>
+        <img id="logo" src="icon-192x192.png" alt="RhythmTube Logo" />
+        리듬튜브
+        <p id="version">v0.3</p>
+      </h1>
+    </header>
 
-    <div id="inputArea">
-      <button id="repeatButton" class="repeatButton">
-        <i class="fas fa-redo"></i>
-      </button>
-      <input type="text" id="videoUrl" placeholder="YouTube video URL" />
-      <button id="playButton">Play</button>
-      <button id="randButton">랜덤</button>
-    </div>
-    <div id="songListContainer"></div>
+    <main>
+      <section id="inputArea">
+        <button id="repeatButton" class="repeatButton">
+          <i class="fas fa-redo"></i>
+        </button>
+        <input type="text" id="videoUrl" placeholder="YouTube video URL" />
+        <button id="playButton">Play</button>
+        <button id="randButton">랜덤</button>
+      </section>
 
-    <div id="gameContainer">
-      <div id="player"></div>
+      <section id="songListSection">
+        <div id="songListContainer"></div>
+      </section>
 
-      <div id="ui">
-        <div id="volumeControls">
-          <div class="volumeControlContainer">
-            <label for="bgmVolumeControl" class="volumeControlLabel">
-              MUSIC
-            </label>
-            <input
-              type="range"
-              id="bgmVolumeControl"
-              class="volumeSlider"
-              min="0"
-              max="1"
-              step="0.01"
-              value="1"
-            />
-          </div>
-          <div class="volumeControlContainer">
-            <label for="sfxVolumeControl" class="volumeControlLabel">SFX</label>
-            <input
-              type="range"
-              id="sfxVolumeControl"
-              class="volumeSlider"
-              min="0"
-              max="1"
-              step="0.01"
-              value="0"
-            />
+      <section id="gameContainer">
+        <div id="player"></div>
+
+        <div id="ui">
+          <div id="volumeControls">
+            <div class="volumeControlContainer">
+              <label for="bgmVolumeControl" class="volumeControlLabel">
+                MUSIC
+              </label>
+              <input
+                type="range"
+                id="bgmVolumeControl"
+                class="volumeSlider"
+                min="0"
+                max="1"
+                step="0.01"
+                value="1"
+              />
+            </div>
+            <div class="volumeControlContainer">
+              <label for="sfxVolumeControl" class="volumeControlLabel"
+                >SFX</label
+              >
+              <input
+                type="range"
+                id="sfxVolumeControl"
+                class="volumeSlider"
+                min="0"
+                max="1"
+                step="0.01"
+                value="0"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="ui">
-        <div class="scoreBoard" id="score">Score : 0</div>
-        <div class="scoreBoard" id="combo">Combo : 0</div>
-      </div>
-      <div id="gameArea"></div>
-    </div>
+        <div id="ui">
+          <div class="scoreBoard" id="score">Score : 0</div>
+          <div class="scoreBoard" id="combo">Combo : 0</div>
+        </div>
+        <div id="gameArea"></div>
+      </section>
+    </main>
 
-    <p id="copyright">
-      <a
-        href="https://blog.naver.com/sleepyfinger/223793578793"
-        target="_blank"
-        title="개발자 블로그 방문"
-      >
-        <i class="fas fa-comment-alt"></i>
-        Created by SleepyFinger.
-      </a>
-    </p>
-    <script src="script.js"></script>
-    <script src="data.js"></script>
+    <footer>
+      <p id="copyright">
+        <a
+          href="https://blog.naver.com/sleepyfinger/223793578793"
+          target="_blank"
+          title="개발자 블로그 방문"
+        >
+          <i class="fas fa-comment-alt"></i>
+          Created by SleepyFinger.
+        </a>
+      </p>
+    </footer>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
