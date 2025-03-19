@@ -1,4 +1,4 @@
-const isDebugMode = true;
+const isDebugMode = false;
 if (!isDebugMode) {
   window.console = {
     log: function () {},
