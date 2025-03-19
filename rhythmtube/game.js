@@ -122,8 +122,27 @@ class Game {
     ) {
       this.lastNoteGenerateTime = now;
       if (generateTime < this.player.getDuration()) {
-        const lane = this.getRandomLane();
-        this.notes.push(new Note(lane, generateTime, this.noteSpeed));
+        const randomValue = Math.random();
+        let noteCount = 1;
+        if (randomValue < 0.7) {
+          noteCount = 1;
+        } else if (randomValue < 0.9) {
+          noteCount = 2;
+        } else if (randomValue < 0.98) {
+          noteCount = 3;
+        } else {
+          noteCount = 4;
+        }
+
+        const usedLanes = new Set();
+        for (let i = 0; i < noteCount; i++) {
+          let lane;
+          do {
+            lane = this.getRandomLane();
+          } while (usedLanes.has(lane));
+          usedLanes.add(lane);
+          this.notes.push(new Note(lane, generateTime, this.noteSpeed));
+        }
       }
     }
     this.isGenerating = false;
