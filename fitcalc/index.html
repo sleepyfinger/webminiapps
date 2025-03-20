@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitCalc - 건강 계산기</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #a29bfe;
+        --text-color: #2d3436;
+        --background-color: #f9f9f9;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+      .container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+      }
+      h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 600;
+        font-size: 2rem;
+      }
+      .input-group {
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 400;
+        font-size: 1rem;
+      }
+      input[type="number"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 2px solid var(--secondary-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: transparent;
+      }
+      input[type="number"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+      }
+      select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--secondary-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: transparent;
+      }
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+      }
+      .result {
+        background-color: var(--secondary-color);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+        transition: all 0.3s ease;
+      }
+      .result h2 {
+        color: white;
+        margin-top: 0;
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .result p {
+        font-size: 1rem;
+        color: white;
+        margin: 0.5rem 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .result-value {
+        font-weight: 600;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>FitCalc</h1>
+      <div class="input-group">
+        <label for="weight">체중 (kg)</label>
+        <input type="number" id="weight" min="0" step="0.1" />
+      </div>
+      <div class="input-group">
+        <label for="height">키 (cm)</label>
+        <input type="number" id="height" min="0" step="0.1" />
+      </div>
+      <div class="input-group">
+        <label for="age">나이</label>
+        <input type="number" id="age" min="0" />
+      </div>
+      <div class="input-group">
+        <label for="gender">성별</label>
+        <select id="gender">
+          <option value="남성">남성</option>
+          <option value="여성">여성</option>
+        </select>
+      </div>
+      <div class="result" id="result">
+        <h2>계산 결과</h2>
+        <p>
+          기초대사량 (BMR) :
+          <span id="bmr-result" class="result-value">0</span> 칼로리
+        </p>
+        <p>
+          체질량지수 (BMI) : <span id="bmi-result" class="result-value">0</span>
+        </p>
+        <p>비만도 : <span id="bmi-category" class="result-value">-</span></p>
+        <p>
+          BMR 비교 : <span id="bmr-comparison" class="result-value">-</span>
+        </p>
+        <p>
+          BMI 비교 : <span id="bmi-comparison" class="result-value">-</span>
+        </p>
+      </div>
+    </div>
+    <script>
+      class FitCalc {
+        constructor() {
+          this.weight = 0;
+          this.height = 0;
+          this.age = 0;
+          this.gender = "남성";
+          this.bmr = 0;
+          this.bmi = 0;
+        }
+
+        calculateBMR() {
+          const { weight, height, age, gender } = this;
+          this.bmr =
+            gender === "남성"
+              ? 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age
+              : 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age;
+          return Math.round(this.bmr);
+        }
+
+        calculateBMI() {
+          const heightInMeters = this.height / 100;
+          this.bmi = this.weight / (heightInMeters * heightInMeters);
+          return this.bmi.toFixed(1);
+        }
+
+        getBMICategory() {
+          if (this.bmi < 18.5) return "저체중 (Underweight)";
+          if (this.bmi < 23) return "정상 (Normal)";
+          if (this.bmi < 25) return "과체중 (Overweight)";
+          if (this.bmi < 30) return "비만 (Obese)";
+          return "고도비만 (Severely Obese)";
+        }
+
+        compareBMR() {
+          const averageBMR = this.gender === "남성" ? 1600 : 1400;
+          const difference = this.bmr - averageBMR;
+          if (Math.abs(difference) < 100) return "평균과 비슷함 (Average)";
+          return difference > 0
+            ? "평균보다 높음 (Above Average)"
+            : "평균보다 낮음 (Below Average)";
+        }
+
+        compareBMI() {
+          const averageBMI = 22.5;
+          const difference = this.bmi - averageBMI;
+          if (Math.abs(difference) < 1) return "평균과 비슷함 (Average)";
+          return difference > 0
+            ? "평균보다 높음 (Above Average)"
+            : "평균보다 낮음 (Below Average)";
+        }
+
+        updateUI() {
+          document.getElementById("bmr-result").textContent =
+            this.calculateBMR();
+          document.getElementById("bmi-result").textContent =
+            this.calculateBMI();
+          document.getElementById("bmi-category").textContent =
+            this.getBMICategory();
+          document.getElementById("bmr-comparison").textContent =
+            this.compareBMR();
+          document.getElementById("bmi-comparison").textContent =
+            this.compareBMI();
+
+          const resultDiv = document.getElementById("result");
+          resultDiv.classList.remove("fade-in");
+          void resultDiv.offsetWidth;
+          resultDiv.classList.add("fade-in");
+        }
+      }
+
+      const fitCalc = new FitCalc();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const inputs = document.querySelectorAll("input, select");
+        inputs.forEach((input) => {
+          input.addEventListener("input", (e) => {
+            if (e.target.id === "gender") {
+              fitCalc[e.target.id] = e.target.value;
+            } else {
+              fitCalc[e.target.id] = parseFloat(e.target.value);
+            }
+            fitCalc.updateUI();
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
