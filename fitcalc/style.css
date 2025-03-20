@@ -1,0 +1,227 @@
+:root {
+  --primary-color: #6c5ce7;
+  --secondary-color: #a29bfe;
+  --text-color: #2d3436;
+  --background-color: #f9f9f9;
+  --accent-color: #ff7675;
+  --shadow-color: rgba(0, 0, 0, 0.15);
+  --underweight-color: #a2d2ff;
+  --normal-color: #b8e994;
+  --overweight-color: #ffeaa7;
+  --obese-color: #ffbe76;
+  --severely-obese-color: #ff7979;
+  --bmr-below-average-color: #ff7979;
+  --bmr-average-color: #b8e994;
+  --bmr-above-average-color: #a2d2ff;
+  --bmi-below-average-color: #ff7979;
+  --bmi-average-color: #b8e994;
+  --bmi-above-average-color: #a2d2ff;
+}
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  flex-direction: column;
+}
+.container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 25px;
+  box-shadow: 0 15px 40px var(--shadow-color);
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-icon {
+  color: var(--primary-color);
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+.version-info {
+  text-align: center;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+}
+h1 {
+  color: var(--primary-color);
+  text-align: center;
+  font-weight: 600;
+  font-size: 2rem;
+}
+.input-group {
+  margin-bottom: 1rem;
+}
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 1rem;
+}
+input[type="number"],
+select {
+  width: calc(100% - 24px);
+  padding: 10px 12px;
+  border: 2px solid var(--secondary-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fefefe;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+}
+.result {
+  background-color: var(--primary-color);
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-top: 2rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.result h2 {
+  color: white;
+  margin-top: 0;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.result p {
+  font-size: 0.9rem;
+  color: white;
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+.result-value {
+  font-weight: 600;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+.creator-info {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+.creator-info a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+.underweight {
+  color: var(--underweight-color);
+}
+.normal {
+  color: var(--normal-color);
+}
+.overweight {
+  color: var(--overweight-color);
+}
+.obese {
+  color: var(--obese-color);
+}
+.severely-obese {
+  color: var(--severely-obese-color);
+}
+.bmr-below-average {
+  color: var(--bmr-below-average-color);
+}
+.bmr-average {
+  color: var(--bmr-average-color);
+}
+.bmr-above-average {
+  color: var(--bmr-above-average-color);
+}
+.bmi-below-average {
+  color: var(--bmi-below-average-color);
+}
+.bmi-average {
+  color: var(--bmi-average-color);
+}
+.bmi-above-average {
+  color: var(--bmi-above-average-color);
+}
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 0.8rem;
+  z-index: 10;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  white-space: nowrap;
+}
+
+.result p:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  .container {
+    padding: 1.5rem;
+    border-radius: 15px;
+  }
+  .logo-icon {
+    font-size: 1.8rem;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  .result {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+  .result h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+  .result p {
+    font-size: 0.8rem;
+  }
+  .tooltip {
+    font-size: 0.7rem;
+  }
+}
