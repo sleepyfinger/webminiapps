@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FitCalc - 건강 계산기</title>
     <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -33,7 +33,7 @@
         --bmi-above-average-color: #a2d2ff;
       }
       body {
-        font-family: "Montserrat", sans-serif;
+        font-family: "Noto Sans KR", sans-serif;
         background-color: var(--background-color);
         color: var(--text-color);
         display: flex;
@@ -63,7 +63,7 @@
       .logo-icon {
         color: var(--primary-color);
         font-size: 2rem;
-        margin-right: 0.5rem;
+        margin-right: 1rem;
       }
       h1 {
         color: var(--primary-color);
@@ -145,7 +145,6 @@
         text-align: center;
         font-size: 0.8rem;
         color: var(--text-color);
-        margin-top: 1rem;
       }
       .creator-info a {
         color: var(--primary-color);
@@ -243,7 +242,7 @@
     <div class="container">
       <div class="logo-container">
         <i class="fas fa-heartbeat logo-icon"></i>
-        <h1>FitCalc</h1>
+        <h1>건강 계산기</h1>
       </div>
       <div class="input-group">
         <label for="weight">체중 (kg)</label>
@@ -269,7 +268,9 @@
         <p id="bmr-tooltip-target">
           기초대사량 (BMR) :
           <span id="bmr-result" class="result-value">0</span> 칼로리
-          <span class="tooltip">생명 유지를 위해 필요한 최소한의 에너지량입니다.</span>
+          <span class="tooltip">
+            생명 유지를 위해 필요한 최소한의 에너지량입니다.
+          </span>
         </p>
         <p id="bmi-tooltip-target">
           체질량지수 (BMI) : <span id="bmi-result" class="result-value">0</span>
@@ -287,9 +288,7 @@
         </p>
         <p id="bmi-comparison-tooltip-target">
           BMI 비교 : <span id="bmi-comparison" class="result-value">-</span>
-          <span class="tooltip">
-            평균적인 BMI 수치와 비교한 결과입니다.
-          </span>
+          <span class="tooltip"> 평균적인 BMI 수치와 비교한 결과입니다. </span>
         </p>
       </div>
     </div>
@@ -309,7 +308,7 @@
           this.bmr = 0;
           this.bmi = 0;
         }
-    
+
         calculateBMR() {
           const { weight, height, age, gender } = this;
           this.bmr =
@@ -318,13 +317,13 @@
               : 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age;
           return Math.round(this.bmr);
         }
-    
+
         calculateBMI() {
           const heightInMeters = this.height / 100;
           this.bmi = this.weight / (heightInMeters * heightInMeters);
           return this.bmi.toFixed(1);
         }
-    
+
         getBMICategory() {
           if (this.bmi < 18.5) return "저체중 (Underweight)";
           if (this.bmi < 23) return "정상 (Normal)";
@@ -332,7 +331,7 @@
           if (this.bmi < 30) return "비만 (Obese)";
           return "고도비만 (Severely Obese)";
         }
-    
+
         compareBMR() {
           const averageBMR = this.gender === "남성" ? 1600 : 1400;
           const difference = this.bmr - averageBMR;
@@ -341,7 +340,7 @@
             ? "평균보다 높음 (Above Average)"
             : "평균보다 낮음 (Below Average)";
         }
-    
+
         compareBMI() {
           const averageBMI = 22.5;
           const difference = this.bmi - averageBMI;
@@ -350,13 +349,13 @@
             ? "평균보다 높음 (Above Average)"
             : "평균보다 낮음 (Below Average)";
         }
-    
+
         updateUI() {
           document.getElementById("bmr-result").textContent =
             this.calculateBMR();
           document.getElementById("bmi-result").textContent =
             this.calculateBMI();
-    
+
           const bmiCategoryElement = document.getElementById("bmi-category");
           const bmiCategory = this.getBMICategory();
           bmiCategoryElement.textContent = bmiCategory;
@@ -372,7 +371,7 @@
           } else if (bmiCategory.includes("고도비만")) {
             bmiCategoryElement.classList.add("severely-obese");
           }
-    
+
           const bmrComparisonElement =
             document.getElementById("bmr-comparison");
           const bmrComparison = this.compareBMR();
@@ -385,7 +384,7 @@
           } else if (bmrComparison.includes("높음")) {
             bmrComparisonElement.classList.add("bmr-above-average");
           }
-    
+
           const bmiComparisonElement =
             document.getElementById("bmi-comparison");
           const bmiComparison = this.compareBMI();
@@ -398,16 +397,16 @@
           } else if (bmiComparison.includes("높음")) {
             bmiComparisonElement.classList.add("bmi-above-average");
           }
-    
+
           const resultDiv = document.getElementById("result");
           resultDiv.classList.remove("fade-in");
           void resultDiv.offsetWidth;
           resultDiv.classList.add("fade-in");
         }
       }
-    
+
       const fitCalc = new FitCalc();
-    
+
       document.addEventListener("DOMContentLoaded", () => {
         const inputs = document.querySelectorAll("input, select");
         inputs.forEach((input) => {
@@ -424,4 +423,3 @@
     </script>
   </body>
 </html>
-    
