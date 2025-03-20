@@ -55,14 +55,14 @@
         <h2>계산 결과</h2>
         <p id="bmr-tooltip-target">
           기초대사량 (BMR) :
-          <span id="bmr-result" class="result-value">0</span> 칼로리
+          <span id="bmr-result" class="result-value">0</span> Kal
           <span class="tooltip">
             생명 유지를 위해 필요한 최소한의 에너지량입니다.
           </span>
         </p>
         <p id="tdee-tooltip-target">
           일일 권장 섭취량 (TDEE) :
-          <span id="tdee-result" class="result-value">0</span> 칼로리
+          <span id="tdee-result" class="result-value">0</span> Kal
           <span class="tooltip"> 하루에 필요한 총 에너지 소비량입니다. </span>
         </p>
         <p id="bmi-tooltip-target">
@@ -87,9 +87,12 @@
     </div>
     <div class="creator-info">
       Made with ❤️ by
-      <a href="https://blog.naver.com/sleepyfinger/223803291262" target="_blank"
-        >SleepyFinger</a
+      <a
+        href="https://blog.naver.com/sleepyfinger/223803291262"
+        target="_blank"
       >
+        SleepyFinger
+      </a>
     </div>
     <script>
       class FitCalc {
@@ -110,49 +113,45 @@
             gender === "남성"
               ? 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age
               : 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age;
-          return Math.round(this.bmr);
+          return this.bmr.toFixed(2);
         }
 
         calculateTDEE() {
           this.tdee = this.bmr * this.activity;
-          return Math.round(this.tdee);
+          return this.tdee.toFixed(2);
         }
 
         calculateBMI() {
           const heightInMeters = this.height / 100;
           this.bmi = this.weight / (heightInMeters * heightInMeters);
-          return this.bmi.toFixed(1);
+          return this.bmi.toFixed(2);
         }
 
         getBMICategory() {
-          if (this.bmi < 18.5) return "저체중 (Underweight)";
-          if (this.bmi < 23) return "정상 (Normal)";
-          if (this.bmi < 25) return "과체중 (Overweight)";
-          if (this.bmi < 30) return "비만 (Obese)";
-          return "고도비만 (Severely Obese)";
+          if (this.bmi < 18.5) return "저체중";
+          if (this.bmi < 23) return "정상";
+          if (this.bmi < 25) return "과체중";
+          if (this.bmi < 30) return "비만";
+          return "고도비만";
         }
 
         compareBMR() {
           const averageBMR = this.gender === "남성" ? 1600 : 1400;
           const difference = this.bmr - averageBMR;
-          if (Math.abs(difference) < 100) return "평균과 비슷함 (Average)";
-          return difference > 0
-            ? "평균보다 높음 (Above Average)"
-            : "평균보다 낮음 (Below Average)";
+          if (Math.abs(difference) < 100) return "평균과 비슷함";
+          return difference > 0 ? "평균보다 높음" : "평균보다 낮음";
         }
 
         compareBMI() {
           const averageBMI = 22.5;
           const difference = this.bmi - averageBMI;
-          if (Math.abs(difference) < 1) return "평균과 비슷함 (Average)";
-          return difference > 0
-            ? "평균보다 높음 (Above Average)"
-            : "평균보다 낮음 (Below Average)";
+          if (Math.abs(difference) < 1) return "평균과 비슷함";
+          return difference > 0 ? "평균보다 높음" : "평균보다 낮음";
         }
 
         updateUI() {
-          this.calculateBMR(); // BMR을 먼저 계산
-          document.getElementById("bmr-result").textContent = this.bmr;
+          document.getElementById("bmr-result").textContent =
+            this.calculateBMR();
           document.getElementById("tdee-result").textContent =
             this.calculateTDEE();
           document.getElementById("bmi-result").textContent =
