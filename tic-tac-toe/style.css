@@ -1,37 +1,60 @@
 body {
   font-family: "Arial", sans-serif;
+  background-color: #f4f4f4;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #f0f0f0;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  color: #333;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 2.5rem;
 }
 
 .board {
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  width: 300px;
-  margin: 50px auto;
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .cell {
   width: 100px;
   height: 100px;
-  border: 1px solid black;
+  background-color: #ecf0f1;
+  border-radius: 5px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 60px;
+  justify-content: center;
+  font-size: 3rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.x {
-  color: red;
-  font-weight: bold;
+.cell:hover {
+  background-color: #d5dbdb;
 }
 
-.o {
-  color: blue;
-  font-weight: bold;
+.cell.x::before {
+  font-size: 3rem;
+  content: "X";
+  color: #3498db;
+}
+
+.cell.o::before {
+  font-size: 3rem;
+  content: "O";
+  color: #e74c3c;
 }
 
 .winning-message {
@@ -39,30 +62,43 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.9);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
   justify-content: center;
   align-items: center;
-  color: white;
-  font-size: 5rem;
   flex-direction: column;
-}
-
-.winning-message button {
-  font-size: 3rem;
-  background-color: white;
-  border: 1px solid black;
-  padding: 0.25em 0.5em;
-  cursor: pointer;
-}
-
-.winning-message button:hover {
-  background-color: black;
-  color: white;
-  border-color: white;
+  color: #fff;
+  z-index: 10;
 }
 
 .winning-message.show {
   display: flex;
+}
+
+.winning-message div {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+#restartButton {
+  background-color: #27ae60;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#restartButton:hover {
+  background-color: #219653;
+}
+
+.cell,
+#restartButton {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

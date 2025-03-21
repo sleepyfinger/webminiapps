@@ -69,7 +69,6 @@ function isDraw() {
 
 function placeMark(cell, currentClass) {
   cell.classList.add(currentClass);
-  cell.textContent = currentClass === CLASS_X ? 'X' : 'O'
 }
 
 function swapTurns() {
