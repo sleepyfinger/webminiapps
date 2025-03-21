@@ -16,4 +16,4 @@
 [<img src="dad_jokes/icon-192x192.png" width="128">](dad_jokes "아재개그")
 [<img src="rhythmtube/icon-192x192.png" width="128">](rhythmtube "리듬튜브")
 [<img src="mbti/icon-192x192.png" width="128">](mbti "나의 성격 유형은?")
-[<img src="anipop/icon-192x192.png" width="128">](anipop "ANIPOP")
+[<img src="anipop/icon-192x192.png" width="128">](anipop "Cute Animals")

@@ -374,6 +374,7 @@ canvas {
   max-height: 100%;
   max-width: 100%;
   object-fit: contain;
+  margin-right: 10px;
 }
 .title-container {
   display: flex;
