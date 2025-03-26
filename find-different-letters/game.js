@@ -26,7 +26,7 @@ let difficultyLevel = 0;
 let timer;
 let timeLeft;
 let maxTime;
-let highestLevel = localStorage.getItem("highestLevel") || 1;
+let highestLevel = localStorage.getItem("fdl.highestLevel") || 1;
 
 // 정답 셀 정보 저장 변수 (전역 변수로 선언)
 let targetIndex; // 정답 셀의 인덱스
@@ -253,7 +253,7 @@ function endGame(isSuccess) {
 
   if (level > highestLevel) {
     highestLevel = level;
-    localStorage.setItem("highestLevel", level);
+    localStorage.setItem("fdl.highestLevel", level);
     updateHighestLevelDisplay();
   }
 }

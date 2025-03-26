@@ -209,14 +209,14 @@
 
       function saveHighScore(value) {
         if (localStorage) {
-          localStorage.setItem("highScore", highScore);
+          localStorage.setItem("typing.highScore", highScore);
         }
       }
 
       function loadHighScore() {
         let loadScore = 0;
         if (localStorage) {
-          loadScore = localStorage.getItem("highScore");
+          loadScore = localStorage.getItem("typing.highScore");
           if (loadScore == null) {
             loadScore = 0;
           }

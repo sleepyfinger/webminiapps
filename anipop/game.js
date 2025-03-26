@@ -31,7 +31,7 @@ const { Engine, Render, World, Composite, Bodies, Body, Events } = Matter;
 
 let score = 0;
 let timeRemaining = GAME_CONFIG.GAME_TIME_LIMIT_SEC;
-let highScore = localStorage.getItem("highScore") || 0;
+let highScore = localStorage.getItem("anipop.highScore") || 0;
 let isGameOver = false;
 let isTimerRunning = false;
 let canSpawnCircle = true;
@@ -97,7 +97,7 @@ function updateScore(points) {
   document.getElementById("score").textContent = score;
   if (score > highScore) {
     highScore = score;
-    localStorage.setItem("highScore", highScore);
+    localStorage.setItem("anipop.highScore", highScore);
     updateHighScore();
   }
 }

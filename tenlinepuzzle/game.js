@@ -95,7 +95,7 @@ function init() {
   cellFont = `20px ${bodyFont}`;
   gameoverFont = `20px ${bodyFont}`;
 
-  highScore = localStorage.getItem("highScore") || 0;
+  highScore = localStorage.getItem("tenline.highScore") || 0;
 
   setupEventListeners();
 
@@ -471,7 +471,7 @@ function drawGameOver() {
 
   if (score > highScore) {
     highScore = score;
-    localStorage.setItem("highScore", highScore);
+    localStorage.setItem("tenline.highScore", highScore);
   }
 }
 
