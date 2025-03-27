@@ -93,3 +93,13 @@ body {
 #pauseResumeButton {
   font-size: 1.2em;
 }
+
+#progressBar {
+  width: 0%;
+  height: 10px;
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}

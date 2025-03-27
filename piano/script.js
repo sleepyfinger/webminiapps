@@ -1,20 +1,15 @@
 class PianoStudy {
   constructor() {
     this.notes = [];
-    this.score = 0;
-    this.combo = 0;
     this.keyMap = new Map();
     this.audioContext = new (window.AudioContext ||
       window.webkitAudioContext)();
     this.initPiano();
-    this.loadMidiFile("river_flows_in_you.mid");
     this.setupEventListeners();
     this.isPaused = false;
     this.gameLoopRequestId = null;
     this.isSoundOn = false;
-    this.startGameLoop();
     this.setupControlPanel();
-    this.noteSpeed = 2000;
     this.keyHeight = 200;
     this.animationStartOffset = 50;
     this.startDelay = 3000;
@@ -26,17 +21,17 @@ class PianoStudy {
     this.updateSoundTypeSelect();
     this.pianoWave = null;
     this.createPianoWave();
+    this.totalNotes = 0;
+    this.processedNotes = 0;
+    this.noteSpeed = 2000;
+    this.loadMidiFile("river_flows_in_you.mid");
   }
 
   async loadMidiFile(url) {
     const response = await fetch(url);
     const midiData = await response.arrayBuffer();
     const midi = new Midi(midiData);
-    let totalTime = 0;
-    midi.tracks[0].notes.forEach((note) => {
-      totalTime = Math.max(totalTime, note.time + note.duration);
-    });
-    this.totalTime = totalTime * 1000;
+    this.totalNotes = midi.tracks[0].notes.length;
     midi.tracks[0].notes.forEach((note) => {
       this.scheduleNote(
         note.midi,
@@ -44,6 +39,8 @@ class PianoStudy {
         note.duration * 1000
       );
     });
+    this.updateProgressBar();
+    this.startGameLoop();
   }
 
   initPiano() {
@@ -205,7 +202,7 @@ class PianoStudy {
     const animation = noteElement.animate(
       [
         { top: `-${this.animationStartOffset}px`, opacity: 0 },
-        { top: `-${this.animationStartOffset + 50}px`, opacity: 0 },
+        { top: `-${this.animationStartOffset + 50}px`, opacity: 1 },
         { top: `${totalDistance}px`, opacity: 1 },
       ],
       {
@@ -221,6 +218,8 @@ class PianoStudy {
         this.handleKeyPress(midi);
         setTimeout(() => this.handleKeyRelease(midi), duration);
         noteElement.dataset.processed = "true";
+        this.processedNotes++;
+        this.updateProgressBar();
       }
       noteElement.remove();
     };
@@ -231,6 +230,7 @@ class PianoStudy {
   startGameLoop() {
     const gameLoop = () => {
       if (this.isPaused) return;
+
       const notes = document.querySelectorAll(".note");
       notes.forEach((note) => {
         const rect = note.getBoundingClientRect();
@@ -242,12 +242,12 @@ class PianoStudy {
           note.dataset.processed === "false"
         ) {
           const midi = parseInt(note.dataset.midi);
+          note.dataset.processed = "true";
           this.playSound(midi);
           this.handleKeyPress(midi);
           setTimeout(() => this.handleKeyRelease(midi), 300);
-          this.score += 100 + Math.min(this.combo * 10, 500);
-          this.combo++;
-          note.dataset.processed = "true";
+          this.processedNotes++;
+          this.updateProgressBar();
           note.remove();
         }
       });
@@ -347,6 +347,12 @@ class PianoStudy {
     ]);
     const imag = new Float32Array(real.length);
     this.pianoWave = this.audioContext.createPeriodicWave(real, imag);
+  }
+
+  updateProgressBar() {
+    const progressBar = document.getElementById("progressBar");
+    const progress = (this.processedNotes / this.totalNotes) * 100;
+    progressBar.style.width = `${Math.min(progress, 100)}%`;
   }
 }
 
