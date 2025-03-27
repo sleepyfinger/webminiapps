@@ -11,7 +11,6 @@ class PianoStudy {
     this.setupEventListeners();
     this.isPaused = false;
     this.gameLoopRequestId = null;
-    this.isRotated = false;
     this.isSoundOn = false;
     this.startGameLoop();
     this.setupControlPanel();
@@ -28,6 +27,7 @@ class PianoStudy {
     this.pianoWave = null;
     this.createPianoWave();
   }
+
   async loadMidiFile(url) {
     const response = await fetch(url);
     const midiData = await response.arrayBuffer();
@@ -45,6 +45,7 @@ class PianoStudy {
       );
     });
   }
+
   initPiano() {
     const gameArea = document.getElementById("gameArea");
     let whiteKeyIndex = 0;
@@ -77,6 +78,7 @@ class PianoStudy {
       key.style.left = `${blackKeyLeft}%`;
     });
   }
+
   getWhiteKeyIndex(midi) {
     let whiteKeyIndex = 0;
     for (let i = 21; i < midi; i++) {
@@ -86,6 +88,7 @@ class PianoStudy {
     }
     return whiteKeyIndex;
   }
+
   setupEventListeners() {
     document.querySelectorAll(".key").forEach((key) => {
       key.addEventListener("mousedown", (e) => {
@@ -118,6 +121,7 @@ class PianoStudy {
         this.handleKeyRelease(keyMap[e.key.toLowerCase()]);
     });
   }
+
   getKeyboardMapping() {
     return {
       a: 60,
@@ -140,6 +144,7 @@ class PianoStudy {
       "'": 77,
     };
   }
+
   handleKeyPress(midi) {
     const keyElement = this.keyMap.get(midi);
     if (!keyElement.classList.contains("active")) {
@@ -147,11 +152,13 @@ class PianoStudy {
       keyElement.classList.add("active");
     }
   }
+
   handleKeyRelease(midi) {
     const keyElement = this.keyMap.get(midi);
     keyElement.classList.remove("active");
     this.stopSound(midi);
   }
+
   playSound(midi) {
     if (!this.isSoundOn) return;
     const freq = 440 * Math.pow(2, (midi - 69) / 12);
@@ -173,14 +180,14 @@ class PianoStudy {
     oscillator.start();
     oscillator.stop(this.audioContext.currentTime + 1.5);
   }
+
   stopSound(midi) {}
+
   scheduleNote(midi, startTime, duration) {
     const noteElement = document.createElement("div");
     noteElement.className = "note";
     const isBlack = [1, 3, 6, 8, 10].includes(midi % 12);
-    if (isBlack) {
-      noteElement.classList.add("black-note");
-    }
+    if (isBlack) noteElement.classList.add("black-note");
     const keyElement = this.keyMap.get(midi);
     const keyRect = keyElement.getBoundingClientRect();
     const gameAreaRect = document
@@ -191,7 +198,6 @@ class PianoStudy {
     noteElement.style.width = `${keyRect.width}px`;
     noteElement.dataset.midi = midi;
     noteElement.dataset.processed = "false";
-
     noteElement.style.opacity = "0";
 
     const totalDistance =
@@ -221,11 +227,10 @@ class PianoStudy {
     noteElement.animation = animation;
     document.getElementById("gameArea").appendChild(noteElement);
   }
+
   startGameLoop() {
     const gameLoop = () => {
-      if (this.isPaused) {
-        return;
-      }
+      if (this.isPaused) return;
       const notes = document.querySelectorAll(".note");
       notes.forEach((note) => {
         const rect = note.getBoundingClientRect();
@@ -252,48 +257,34 @@ class PianoStudy {
       this.gameLoopRequestId = requestAnimationFrame(gameLoop);
     }, (this.noteSpeed + this.startDelay) / this.playbackSpeed);
   }
+
   pauseGame() {
     this.isPaused = true;
     cancelAnimationFrame(this.gameLoopRequestId);
-    document.querySelectorAll(".note").forEach((note) => {
-      note.animation.pause();
-    });
+    document
+      .querySelectorAll(".note")
+      .forEach((note) => note.animation.pause());
   }
+
   resumeGame() {
     this.isPaused = false;
     this.startGameLoop();
-    document.querySelectorAll(".note").forEach((note) => {
-      note.animation.play();
-    });
+    document.querySelectorAll(".note").forEach((note) => note.animation.play());
   }
-  rotateScreen() {
-    this.isRotated = !this.isRotated;
-    const body = document.body;
-    const gameArea = document.getElementById("gameArea");
-    const gameAreaRect = gameArea.getBoundingClientRect();
-    if (this.isRotated) {
-      body.classList.add("rotated");
-      body.style.transform = `rotate(90deg)`;
-      this.noteSpeed =
-        (gameAreaRect.width - this.keyHeight) /
-        ((gameAreaRect.height - this.keyHeight) / this.noteSpeed);
-    } else {
-      body.classList.remove("rotated");
-      body.style.transform = "rotate(0deg)";
-      this.noteSpeed = 2000;
-    }
-  }
+
   toggleSound() {
     this.isSoundOn = !this.isSoundOn;
     const soundButton = document.getElementById("soundButton");
     soundButton.textContent = this.isSoundOn ? "🔊" : "🔇";
   }
+
   changePlaybackSpeed(speed) {
     this.playbackSpeed = parseFloat(speed);
     localStorage.setItem("playbackSpeed", this.playbackSpeed);
     this.updateSpeedSelect();
     this.adjustNoteSpeed();
   }
+
   adjustNoteSpeed() {
     document.querySelectorAll(".note").forEach((note) => {
       const animation = note.animation;
@@ -302,56 +293,54 @@ class PianoStudy {
       const newDelay =
         animation.effect.getTiming().delay -
         (animation.effect.getTiming().duration - newDuration);
-      animation.effect.updateTiming({
-        duration: newDuration,
-        delay: newDelay,
-      });
+      animation.effect.updateTiming({ duration: newDuration, delay: newDelay });
       animation.currentTime = currentTime;
     });
   }
+
   updateSpeedSelect() {
     const speedSelect = document.getElementById("speedSelect");
     speedSelect.value = this.playbackSpeed;
   }
+
   changeSoundType(type) {
     this.soundType = type;
     localStorage.setItem("soundType", type);
     this.updateSoundTypeSelect();
   }
+
   updateSoundTypeSelect() {
     const soundTypeSelect = document.getElementById("soundTypeSelect");
     soundTypeSelect.value = this.soundType;
   }
+
   setupControlPanel() {
-    const startButton = document.getElementById("startButton");
-    const pauseButton = document.getElementById("pauseButton");
-    const resumeButton = document.getElementById("resumeButton");
-    const rotateButton = document.getElementById("rotateButton");
+    const pauseResumeButton = document.getElementById("pauseResumeButton");
     const soundButton = document.getElementById("soundButton");
     const speedSelect = document.getElementById("speedSelect");
     const soundTypeSelect = document.getElementById("soundTypeSelect");
-    soundTypeSelect.addEventListener("change", (event) => {
-      this.changeSoundType(event.target.value);
-    });
-    soundButton.addEventListener("click", () => {
-      this.toggleSound();
-    });
-    speedSelect.addEventListener("change", (event) => {
-      this.changePlaybackSpeed(event.target.value);
-    });
-    startButton.addEventListener("click", () => {
-      this.startGameLoop();
-    });
-    pauseButton.addEventListener("click", () => {
-      this.pauseGame();
-    });
-    resumeButton.addEventListener("click", () => {
-      this.resumeGame();
-    });
-    rotateButton.addEventListener("click", () => {
-      this.rotateScreen();
+
+    soundTypeSelect.addEventListener("change", (event) =>
+      this.changeSoundType(event.target.value)
+    );
+    soundButton.addEventListener("click", () => this.toggleSound());
+    speedSelect.addEventListener("change", (event) =>
+      this.changePlaybackSpeed(event.target.value)
+    );
+
+    pauseResumeButton.addEventListener("click", () => {
+      if (this.isPaused) {
+        this.resumeGame();
+      } else {
+        this.pauseGame();
+      }
+
+      pauseResumeButton.textContent = this.isPaused ? "⏯️" : "⏸️";
+
+      console.log(isPaused ? "Paused" : "Resumed");
     });
   }
+
   createPianoWave() {
     const real = new Float32Array([
       0, 0.8, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001,
@@ -360,4 +349,5 @@ class PianoStudy {
     this.pianoWave = this.audioContext.createPeriodicWave(real, imag);
   }
 }
+
 const game = new PianoStudy();

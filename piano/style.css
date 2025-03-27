@@ -62,16 +62,7 @@ body {
   color: white;
   margin-right: 10px;
 }
-@media (orientation: landscape) {
-  body.rotated {
-    width: 100vh;
-    height: 100vw;
-  }
-  body.rotated #controlPanel {
-    top: 20px;
-    left: calc(100vw - 180px);
-  }
-}
+
 @media (orientation: portrait) {
   body #controlPanel {
     top: 20px;
@@ -97,4 +88,8 @@ body {
   padding: 5px;
   border-radius: 5px;
   margin-right: 10px;
+}
+
+#pauseResumeButton {
+  font-size: 1.2em;
 }
