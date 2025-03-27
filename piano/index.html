@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Piano Study</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        transition: transform 0.5s ease;
+        transform-origin: center;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #gameArea {
+        width: 100%;
+        height: 100%;
+        background: #2a2a2a;
+        position: relative;
+        overflow: hidden;
+        user-select: none;
+        touch-action: none;
+      }
+      .key {
+        position: absolute;
+        bottom: 0;
+        height: 200px;
+        border: 1px solid #555;
+        background: white;
+        cursor: pointer;
+        transition: background 0.1s;
+        box-sizing: border-box;
+      }
+      .key.active {
+        background: #ff9999 !important;
+      }
+      .black {
+        position: absolute;
+        bottom: 80px;
+        height: 120px;
+        background: #000;
+        z-index: 2;
+      }
+      .note {
+        position: absolute;
+        height: 20px;
+        background: #00ff88;
+        border-radius: 5px;
+        z-index: 1;
+        left: 0;
+        width: calc(100% / 52);
+      }
+      .note.black-note {
+        background: #800080; /* Purple color for black key notes */
+      }
+      #controlPanel {
+        position: fixed;
+        z-index: 10;
+      }
+      #controlPanel button {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+        color: white;
+        margin-right: 10px;
+      }
+      @media (orientation: landscape) {
+        body.rotated {
+          width: 100vh;
+          height: 100vw;
+        }
+        body.rotated #controlPanel {
+          top: 20px;
+          left: calc(100vw - 180px);
+        }
+      }
+      @media (orientation: portrait) {
+        body #controlPanel {
+          top: 20px;
+          left: 20px;
+        }
+      }
+      #speedControl {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+      }
+      #speedControl label {
+        color: white;
+        margin-right: 10px;
+      }
+      #speedControl select {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gameArea"></div>
+    <div id="controlPanel">
+      <button id="startButton">▶️</button>
+      <button id="pauseButton">⏸️</button>
+      <button id="resumeButton">⏯️</button>
+      <button id="rotateButton">🔄</button>
+      <button id="soundButton">🔇</button>
+      <div id="speedControl">
+        <label for="speedSelect">Speed:</label>
+        <select id="speedSelect">
+          <option value="0.1">0.1x</option>
+          <option value="0.25">0.25x</option>
+          <option value="0.5" selected>0.5x</option>
+          <option value="0.75">0.75x</option>
+          <option value="1">1x</option>
+          <option value="1.25">1.25x</option>
+          <option value="1.5">1.5x</option>
+          <option value="1.75">1.75x</option>
+          <option value="2">2x</option>
+        </select>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tonejs/midi"></script>
+    <script>
+      class PianoStudy {
+        constructor() {
+          this.notes = [];
+          this.score = 0;
+          this.combo = 0;
+          this.keyMap = new Map();
+          this.audioContext = new (window.AudioContext ||
+            window.webkitAudioContext)();
+          this.initPiano();
+          this.loadMidiFile("river_flows_in_you.mid");
+          this.setupEventListeners();
+          this.isPaused = false;
+          this.gameLoopRequestId = null;
+          this.isRotated = false;
+          this.isSoundOn = false;
+          this.startGameLoop();
+          this.setupControlPanel();
+          this.noteSpeed = 2000;
+          this.keyHeight = 200;
+          this.animationStartOffset = 50;
+          this.startDelay = 3000;
+          this.playbackSpeed = 0.5;
+        }
+        async loadMidiFile(url) {
+          const response = await fetch(url);
+          const midiData = await response.arrayBuffer();
+          const midi = new Midi(midiData);
+          let totalTime = 0;
+          midi.tracks[0].notes.forEach((note) => {
+            totalTime = Math.max(totalTime, note.time + note.duration);
+          });
+          this.totalTime = totalTime * 1000;
+          midi.tracks[0].notes.forEach((note) => {
+            this.scheduleNote(
+              note.midi,
+              (note.time * 1000 + this.startDelay) / this.playbackSpeed,
+              (note.duration * 1000) / this.playbackSpeed
+            );
+          });
+        }
+        initPiano() {
+          const gameArea = document.getElementById("gameArea");
+          let whiteKeyIndex = 0;
+          const whiteKeys = [];
+          for (let midi = 21; midi <= 108; midi++) {
+            const isBlack = [1, 3, 6, 8, 10].includes(midi % 12);
+            const key = document.createElement("div");
+            key.className = `key ${isBlack ? "black" : ""}`;
+            if (!isBlack) {
+              whiteKeys.push(key);
+              whiteKeyIndex++;
+            }
+            key.dataset.midi = midi;
+            gameArea.appendChild(key);
+            this.keyMap.set(midi, key);
+          }
+          const whiteKeyWidth = 100 / whiteKeys.length;
+          whiteKeys.forEach((key, index) => {
+            key.style.width = `${whiteKeyWidth}%`;
+            key.style.left = `${index * whiteKeyWidth}%`;
+          });
+          const blackKeys = document.querySelectorAll(".black");
+          blackKeys.forEach((key) => {
+            const midi = parseInt(key.dataset.midi);
+            const whiteKeyIndex = this.getWhiteKeyIndex(midi);
+            const blackKeyWidth = whiteKeyWidth * 0.6;
+            const blackKeyLeft =
+              whiteKeyIndex * whiteKeyWidth -
+              1 +
+              (whiteKeyWidth - blackKeyWidth) / 2;
+            key.style.width = `${blackKeyWidth}%`;
+            key.style.left = `${blackKeyLeft}%`;
+          });
+        }
+        getWhiteKeyIndex(midi) {
+          let whiteKeyIndex = 0;
+          for (let i = 21; i < midi; i++) {
+            if (![1, 3, 6, 8, 10].includes(i % 12)) {
+              whiteKeyIndex++;
+            }
+          }
+          return whiteKeyIndex;
+        }
+        setupEventListeners() {
+          document.querySelectorAll(".key").forEach((key) => {
+            key.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              this.handleKeyPress(parseInt(key.dataset.midi));
+            });
+            key.addEventListener("mouseup", () =>
+              this.handleKeyRelease(parseInt(key.dataset.midi))
+            );
+            key.addEventListener("mouseleave", () =>
+              this.handleKeyRelease(parseInt(key.dataset.midi))
+            );
+            key.addEventListener("touchstart", (e) => {
+              e.preventDefault();
+              this.handleKeyPress(parseInt(key.dataset.midi));
+            });
+            key.addEventListener("touchend", (e) => {
+              e.preventDefault();
+              this.handleKeyRelease(parseInt(key.dataset.midi));
+            });
+          });
+          document.addEventListener("keydown", (e) => {
+            const keyMap = this.getKeyboardMapping();
+            if (keyMap[e.key.toLowerCase()])
+              this.handleKeyPress(keyMap[e.key.toLowerCase()]);
+          });
+          document.addEventListener("keyup", (e) => {
+            const keyMap = this.getKeyboardMapping();
+            if (keyMap[e.key.toLowerCase()])
+              this.handleKeyRelease(keyMap[e.key.toLowerCase()]);
+          });
+        }
+        getKeyboardMapping() {
+          return {
+            a: 60,
+            w: 61,
+            s: 62,
+            e: 63,
+            d: 64,
+            f: 65,
+            t: 66,
+            g: 67,
+            y: 68,
+            h: 69,
+            u: 70,
+            j: 71,
+            k: 72,
+            o: 73,
+            l: 74,
+            p: 75,
+            ";": 76,
+            "'": 77,
+          };
+        }
+        handleKeyPress(midi) {
+          const keyElement = this.keyMap.get(midi);
+          if (!keyElement.classList.contains("active")) {
+            this.playSound(midi);
+            keyElement.classList.add("active");
+          }
+        }
+        handleKeyRelease(midi) {
+          const keyElement = this.keyMap.get(midi);
+          keyElement.classList.remove("active");
+          this.stopSound(midi);
+        }
+        playSound(midi) {
+          if (!this.isSoundOn) return;
+          const freq = 440 * Math.pow(2, (midi - 69) / 12);
+          const oscillator = this.audioContext.createOscillator();
+          const gainNode = this.audioContext.createGain();
+          oscillator.type = "triangle";
+          oscillator.frequency.setValueAtTime(
+            freq,
+            this.audioContext.currentTime
+          );
+          gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(
+            0.01,
+            this.audioContext.currentTime + 1.5 / this.playbackSpeed
+          );
+          oscillator.connect(gainNode);
+          gainNode.connect(this.audioContext.destination);
+          oscillator.start();
+          oscillator.stop(
+            this.audioContext.currentTime + 1.5 / this.playbackSpeed
+          );
+        }
+        stopSound(midi) {}
+        scheduleNote(midi, startTime, duration) {
+          const noteElement = document.createElement("div");
+          noteElement.className = "note";
+          const isBlack = [1, 3, 6, 8, 10].includes(midi % 12);
+          if (isBlack) {
+            noteElement.classList.add("black-note");
+          }
+          const keyElement = this.keyMap.get(midi);
+          const keyRect = keyElement.getBoundingClientRect();
+          const gameAreaRect = document
+            .getElementById("gameArea")
+            .getBoundingClientRect();
+          const relativeLeft = keyRect.left - gameAreaRect.left;
+          noteElement.style.left = `${relativeLeft}px`;
+          noteElement.style.width = `${keyRect.width}px`;
+          noteElement.dataset.midi = midi;
+          const totalDistance =
+            gameAreaRect.height - this.keyHeight + this.animationStartOffset;
+          const animation = noteElement.animate(
+            [
+              { top: `-${this.animationStartOffset}px`, opacity: 1 },
+              { top: `${totalDistance}px`, opacity: 1 },
+            ],
+            {
+              duration: this.noteSpeed / this.playbackSpeed,
+              delay: startTime - this.noteSpeed / this.playbackSpeed,
+              easing: "linear",
+            }
+          );
+          animation.onfinish = () => {
+            this.playSound(midi);
+            this.handleKeyPress(midi);
+            setTimeout(() => this.handleKeyRelease(midi), duration);
+            noteElement.remove();
+          };
+          document.getElementById("gameArea").appendChild(noteElement);
+        }
+        startGameLoop() {
+          const gameLoop = () => {
+            if (this.isPaused) {
+              return;
+            }
+            const notes = document.querySelectorAll(".note");
+            notes.forEach((note) => {
+              const rect = note.getBoundingClientRect();
+              const gameAreaRect = document
+                .getElementById("gameArea")
+                .getBoundingClientRect();
+              if (rect.top > gameAreaRect.height - this.keyHeight - 20) {
+                const midi = parseInt(note.dataset.midi);
+                this.playSound(midi);
+                this.handleKeyPress(midi);
+                setTimeout(
+                  () => this.handleKeyRelease(midi),
+                  300 / this.playbackSpeed
+                );
+                this.score += 100 + Math.min(this.combo * 10, 500);
+                this.combo++;
+                note.remove();
+              }
+            });
+            this.gameLoopRequestId = requestAnimationFrame(gameLoop);
+          };
+          setTimeout(() => {
+            this.gameLoopRequestId = requestAnimationFrame(gameLoop);
+          }, (this.noteSpeed + this.startDelay) / this.playbackSpeed);
+        }
+        pauseGame() {
+          this.isPaused = true;
+          cancelAnimationFrame(this.gameLoopRequestId);
+        }
+        resumeGame() {
+          this.isPaused = false;
+          this.startGameLoop();
+        }
+        rotateScreen() {
+          this.isRotated = !this.isRotated;
+          const body = document.body;
+          const gameArea = document.getElementById("gameArea");
+          const gameAreaRect = gameArea.getBoundingClientRect();
+          if (this.isRotated) {
+            body.classList.add("rotated");
+            body.style.transform = `rotate(90deg)`;
+            this.noteSpeed =
+              (gameAreaRect.width - this.keyHeight) /
+              ((gameAreaRect.height - this.keyHeight) / this.noteSpeed);
+          } else {
+            body.classList.remove("rotated");
+            body.style.transform = "rotate(0deg)";
+            this.noteSpeed = 2000;
+          }
+        }
+        toggleSound() {
+          this.isSoundOn = !this.isSoundOn;
+          const soundButton = document.getElementById("soundButton");
+          soundButton.textContent = this.isSoundOn ? "🔊" : "🔇";
+        }
+        changePlaybackSpeed(speed) {
+          this.playbackSpeed = parseFloat(speed);
+          this.notes.forEach((note) => note.remove());
+          this.notes = [];
+          this.loadMidiFile("river_flows_in_you.mid");
+        }
+        setupControlPanel() {
+          const startButton = document.getElementById("startButton");
+          const pauseButton = document.getElementById("pauseButton");
+          const resumeButton = document.getElementById("resumeButton");
+          const rotateButton = document.getElementById("rotateButton");
+          const soundButton = document.getElementById("soundButton");
+          const speedSelect = document.getElementById("speedSelect");
+          soundButton.addEventListener("click", () => {
+            this.toggleSound();
+          });
+          speedSelect.addEventListener("change", (event) => {
+            this.changePlaybackSpeed(event.target.value);
+          });
+          startButton.addEventListener("click", () => {
+            this.startGameLoop();
+          });
+          pauseButton.addEventListener("click", () => {
+            this.pauseGame();
+          });
+          resumeButton.addEventListener("click", () => {
+            this.resumeGame();
+          });
+          rotateButton.addEventListener("click", () => {
+            this.rotateScreen();
+          });
+        }
+      }
+      const game = new PianoStudy();
+    </script>
+  </body>
+</html>
