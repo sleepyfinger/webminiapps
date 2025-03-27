@@ -23,6 +23,10 @@ class PianoStudy {
       localStorage.getItem("playbackSpeed") || "0.5"
     );
     this.updateSpeedSelect();
+    this.soundType = localStorage.getItem("soundType") || "triangle";
+    this.updateSoundTypeSelect();
+    this.pianoWave = null;
+    this.createPianoWave();
   }
   async loadMidiFile(url) {
     const response = await fetch(url);
@@ -153,7 +157,11 @@ class PianoStudy {
     const freq = 440 * Math.pow(2, (midi - 69) / 12);
     const oscillator = this.audioContext.createOscillator();
     const gainNode = this.audioContext.createGain();
-    oscillator.type = "triangle";
+    if (this.soundType === "piano") {
+      oscillator.setPeriodicWave(this.pianoWave);
+    } else {
+      oscillator.type = this.soundType;
+    }
     oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime);
     gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(
@@ -183,11 +191,15 @@ class PianoStudy {
     noteElement.style.width = `${keyRect.width}px`;
     noteElement.dataset.midi = midi;
     noteElement.dataset.processed = "false";
+
+    noteElement.style.opacity = "0";
+
     const totalDistance =
       gameAreaRect.height - this.keyHeight + this.animationStartOffset;
     const animation = noteElement.animate(
       [
-        { top: `-${this.animationStartOffset}px`, opacity: 1 },
+        { top: `-${this.animationStartOffset}px`, opacity: 0 },
+        { top: `-${this.animationStartOffset + 50}px`, opacity: 0 },
         { top: `${totalDistance}px`, opacity: 1 },
       ],
       {
@@ -301,6 +313,15 @@ class PianoStudy {
     const speedSelect = document.getElementById("speedSelect");
     speedSelect.value = this.playbackSpeed;
   }
+  changeSoundType(type) {
+    this.soundType = type;
+    localStorage.setItem("soundType", type);
+    this.updateSoundTypeSelect();
+  }
+  updateSoundTypeSelect() {
+    const soundTypeSelect = document.getElementById("soundTypeSelect");
+    soundTypeSelect.value = this.soundType;
+  }
   setupControlPanel() {
     const startButton = document.getElementById("startButton");
     const pauseButton = document.getElementById("pauseButton");
@@ -308,6 +329,10 @@ class PianoStudy {
     const rotateButton = document.getElementById("rotateButton");
     const soundButton = document.getElementById("soundButton");
     const speedSelect = document.getElementById("speedSelect");
+    const soundTypeSelect = document.getElementById("soundTypeSelect");
+    soundTypeSelect.addEventListener("change", (event) => {
+      this.changeSoundType(event.target.value);
+    });
     soundButton.addEventListener("click", () => {
       this.toggleSound();
     });
@@ -326,6 +351,13 @@ class PianoStudy {
     rotateButton.addEventListener("click", () => {
       this.rotateScreen();
     });
+  }
+  createPianoWave() {
+    const real = new Float32Array([
+      0, 0.8, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001,
+    ]);
+    const imag = new Float32Array(real.length);
+    this.pianoWave = this.audioContext.createPeriodicWave(real, imag);
   }
 }
 const game = new PianoStudy();

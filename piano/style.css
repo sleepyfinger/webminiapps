@@ -78,19 +78,23 @@ body {
     left: 20px;
   }
 }
+#soundTypeControl,
 #speedControl {
   display: flex;
   align-items: center;
   margin-top: 10px;
 }
+#soundTypeControl label,
 #speedControl label {
   color: white;
   margin-right: 10px;
 }
-#speedControl select {
+#speedControl select,
+#soundTypeSelect {
   background-color: #333;
   color: white;
   border: none;
   padding: 5px;
   border-radius: 5px;
+  margin-right: 10px;
 }
