@@ -5,134 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>전역일 계산기</title>
     <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-      }
-      input,
-      select,
-      button {
-        margin: 10px 0;
-        padding: 5px;
-      }
-      h2 {
+        font-family: "Noto Sans KR", sans-serif;
+        background-color: #f8f8fa;
         color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 600px;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+      }
+
+      h1 {
+        color: #2e86de;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+
+      h3 {
+        color: #555;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+
+      label {
+        display: block;
+        margin-top: 20px;
+        font-weight: 500;
+        text-align: left;
+      }
+
+      input[type="date"],
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      input[type="date"]:focus,
+      input[type="number"]:focus,
+      select:focus {
+        outline: none;
+        border-color: #2e86de;
+      }
+
+      button {
+        background-color: #2e86de;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #2471a3;
+      }
+
+      #customMonthsInput,
+      #customDischargeDateInput {
+        display: none;
+      }
+
+      #result {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #e8f0fe;
+        border-left: 5px solid #2e86de;
+        border-radius: 8px;
+        text-align: left;
+        font-size: 1.1rem;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
       }
     </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1>전역일 계산기</h1>
+    <div class="container">
+      <h1>전역일 계산기</h1>
 
-    <!-- 입대일과 복무 기간 입력 -->
-    <h3>입대일과 복무 기간으로 계산</h3>
-    <label for="enlistDate">입대일:</label>
-    <input type="date" id="enlistDate" required />
+      <label for="enlistDate">입대일:</label>
+      <input type="date" id="enlistDate" required />
 
-    <label for="serviceType">복무 기간:</label>
-    <select id="serviceType" onchange="toggleCustomMonths()">
-      <option value="18">육군/해병대/의경/해경 (18개월)</option>
-      <option value="20">해군/소방원 (20개월)</option>
-      <option value="22">공군 (22개월)</option>
-      <option value="21">사회복무요원 (21개월)</option>
-      <option value="custom">직접 입력</option>
-    </select>
+      <label for="serviceType">복무 기간:</label>
+      <select id="serviceType" onchange="toggleCustomInputs()">
+        <option value="18">육군/해병대/의경/해경 (18개월)</option>
+        <option value="20">해군/소방원 (20개월)</option>
+        <option value="22">공군 (22개월)</option>
+        <option value="21">사회복무요원 (21개월)</option>
+        <option value="customMonths">직접 입력(개월)</option>
+        <option value="customDischargeDate">직접 입력(전역일)</option>
+      </select>
 
-    <!-- 커스텀 복무 기간 입력 -->
-    <div id="customMonthsInput" style="display: none">
-      <label for="serviceMonths">복무 기간(개월):</label>
-      <input type="number" id="serviceMonths" placeholder="예: 18" min="1" />
+      <div id="customMonthsInput">
+        <label for="serviceMonths">복무 기간(개월):</label>
+        <input type="number" id="serviceMonths" placeholder="예: 18" min="1" />
+      </div>
+
+      <div id="customDischargeDateInput">
+        <label for="dischargeDate">전역일:</label>
+        <input type="date" id="dischargeDate" />
+      </div>
+
+      <button onclick="calculateByServicePeriod()">전역일 계산</button>
+
+      <div id="result"></div>
     </div>
 
-    <button onclick="calculateByServicePeriod()">전역일 계산</button>
-
-    <!-- 전역일로 D-Day 계산 -->
-    <h3>전역일로 D-Day 계산</h3>
-    <label for="dischargeDate">전역일:</label>
-    <input type="date" id="dischargeDate" required />
-
-    <button onclick="calculateByDischargeDate()">D-Day 계산</button>
-
-    <!-- 결과 출력 -->
-    <h2 id="result"></h2>
-
     <script>
-      const TODAY_IN_MILISECONDS = 1000 * 60 * 60 * 24;
+      let intervalId;
 
-      // 군 종류 선택에서 "직접 입력"을 선택하면 커스텀 입력 필드 표시
-      function toggleCustomMonths() {
+      function toggleCustomInputs() {
         const serviceType = document.getElementById("serviceType").value;
         const customMonthsInput = document.getElementById("customMonthsInput");
-        if (serviceType === "custom") {
+        const customDischargeDateInput = document.getElementById(
+          "customDischargeDateInput"
+        );
+
+        if (serviceType === "customMonths") {
           customMonthsInput.style.display = "block";
+          customDischargeDateInput.style.display = "none";
+          document.getElementById("serviceMonths").value = "";
+          document.getElementById("dischargeDate").value = "";
+        } else if (serviceType === "customDischargeDate") {
+          customMonthsInput.style.display = "none";
+          customDischargeDateInput.style.display = "block";
+          document.getElementById("serviceMonths").value = "";
+          document.getElementById("dischargeDate").value = "";
         } else {
           customMonthsInput.style.display = "none";
+          customDischargeDateInput.style.display = "none";
+          document.getElementById("serviceMonths").value = "";
+          document.getElementById("dischargeDate").value = "";
         }
       }
 
-      // 입대일과 복무 기간으로 전역일 계산
       function calculateByServicePeriod() {
         const enlistDateInput = document.getElementById("enlistDate").value;
         const serviceType = document.getElementById("serviceType").value;
-
-        let serviceMonths;
-
-        // 군 종류가 "직접 입력"인 경우 사용자 입력값 사용
-        if (serviceType === "custom") {
-          serviceMonths = document.getElementById("serviceMonths").value;
-          if (!serviceMonths) {
-            alert("복무 기간을 입력해주세요.");
-            return;
-          }
-        } else {
-          serviceMonths = parseInt(serviceType); // 선택된 군 종류의 복무 기간
-        }
 
         if (!enlistDateInput) {
           alert("입대일을 입력해주세요.");
           return;
         }
 
-        // 입대일을 Date 객체로 변환
         const enlistDate = new Date(enlistDateInput);
 
-        // 복무 기간(개월)을 추가
-        enlistDate.setMonth(enlistDate.getMonth() + parseInt(serviceMonths));
+        let targetDate;
 
-        // 오늘 날짜와 비교하여 D-Day 계산
-        const today = new Date();
-        const dDay = Math.ceil((enlistDate - today) / TODAY_IN_MILISECONDS);
+        if (serviceType === "customMonths") {
+          let serviceMonths = document.getElementById("serviceMonths").value;
 
-        // 결과 출력
-        const resultElement = document.getElementById("result");
-        resultElement.innerHTML = `
-                전역일: ${enlistDate.toLocaleDateString("ko-KR")}<br>
-                D-Day: ${dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`}
-            `;
-      }
+          if (!serviceMonths) {
+            alert("복무 기간을 입력해주세요.");
+            return;
+          }
+          serviceMonths = parseInt(serviceMonths);
 
-      // 전역일로 D-Day 계산
-      function calculateByDischargeDate() {
-        const dischargeDateInput =
-          document.getElementById("dischargeDate").value;
-
-        if (!dischargeDateInput) {
-          alert("전역일을 입력해주세요.");
-          return;
+          if (serviceMonths <= 0) {
+            alert("복무 기간은 양수여야 합니다.");
+            return;
+          }
+          enlistDate.setMonth(enlistDate.getMonth() + serviceMonths);
+          targetDate = enlistDate;
+        } else if (serviceType === "customDischargeDate") {
+          const dischargeDateInput =
+            document.getElementById("dischargeDate").value;
+          if (!dischargeDateInput) {
+            alert("전역일을 입력해주세요.");
+            return;
+          }
+          targetDate = new Date(dischargeDateInput);
+        } else {
+          const serviceMonths = parseInt(serviceType);
+          enlistDate.setMonth(enlistDate.getMonth() + serviceMonths);
+          targetDate = enlistDate;
         }
 
-        // 전역일을 Date 객체로 변환
-        const dischargeDate = new Date(dischargeDateInput);
+        startCountdown(targetDate);
+      }
 
-        // 오늘 날짜와 비교하여 D-Day 계산
-        const today = new Date();
-        const dDay = Math.ceil((dischargeDate - today) / TODAY_IN_MILISECONDS);
+      function startCountdown(targetDate) {
+        clearInterval(intervalId);
 
-        // 결과 출력
-        const resultElement = document.getElementById("result");
-        resultElement.innerHTML = `
-                전역일: ${dischargeDate.toLocaleDateString("ko-KR")}<br>
-                D-Day: ${dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`}
-            `;
+        intervalId = setInterval(() => {
+          const today = new Date();
+          const diffInMilliseconds = targetDate - today;
+
+          const diffInDays = Math.floor(
+            diffInMilliseconds / (1000 * 60 * 60 * 24)
+          );
+          const diffInHours = Math.floor(
+            (diffInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const diffInMinutes = Math.floor(
+            (diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const diffInSeconds = Math.floor(
+            (diffInMilliseconds % (1000 * 60)) / 1000
+          );
+
+          const resultElement = document.getElementById("result");
+          resultElement.innerHTML = `
+                      전역일 : ${targetDate.toLocaleDateString("ko-KR")}<br/>
+                      남은 시간 : ${diffInDays}일 ${diffInHours}시간 ${diffInMinutes}분 ${diffInSeconds}초
+                  `;
+        }, 1000);
       }
     </script>
   </body>
