@@ -221,39 +221,48 @@
         clearInterval(intervalId);
 
         intervalId = setInterval(() => {
-          const now = new Date();
-          const nowKorea = new Date(
-            now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000
-          );
-          const targetDateKorea = new Date(
-            targetDate.getTime() +
-              targetDate.getTimezoneOffset() * 60000 +
-              9 * 3600000
-          );
-
-          // 전역일의 시간 정보를 00:00:00으로 초기화
-          targetDateKorea.setHours(0, 0, 0, 0);
-
-          const diffInMilliseconds = targetDateKorea - nowKorea;
-
-          const diffInDays = Math.floor(
-            diffInMilliseconds / (1000 * 60 * 60 * 24)
-          );
-          const diffInHours = Math.floor(
-            (diffInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-          );
-          const diffInMinutes = Math.floor(
-            (diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
-          );
-          const diffInSeconds = Math.floor(
-            (diffInMilliseconds % (1000 * 60)) / 1000
-          );
+          const today = new Date();
+          targetDate.setHours(0, 0, 0, 0);
+          const diffInMilliseconds = targetDate - today;
 
           const resultElement = document.getElementById("result");
-          resultElement.innerHTML = `
-                      전역일 : ${targetDate.toLocaleDateString("ko-KR")}<br/>
-                      남은 시간 : ${diffInDays}일 ${diffInHours}시간 ${diffInMinutes}분 ${diffInSeconds}초
-                  `;
+          if (diffInMilliseconds > 0) {
+            const diffInDays = Math.floor(
+              diffInMilliseconds / (1000 * 60 * 60 * 24)
+            );
+            const diffInHours = Math.floor(
+              (diffInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const diffInMinutes = Math.floor(
+              (diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            const diffInSeconds = Math.floor(
+              (diffInMilliseconds % (1000 * 60)) / 1000
+            );
+            resultElement.innerHTML = `
+              전역일 : ${targetDate.toLocaleDateString("ko-KR")}<br/>
+              남은 시간 : ${diffInDays}일 ${diffInHours}시간 ${diffInMinutes}분 ${diffInSeconds}초
+            `;
+          } else {
+            const diffInMillisecondsPast = Math.abs(diffInMilliseconds);
+            const passedDays = Math.floor(
+              diffInMillisecondsPast / (1000 * 60 * 60 * 24)
+            );
+            const passedHours = Math.floor(
+              (diffInMillisecondsPast % (1000 * 60 * 60 * 24)) /
+                (1000 * 60 * 60)
+            );
+            const passedMinutes = Math.floor(
+              (diffInMillisecondsPast % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            const passedSeconds = Math.floor(
+              (diffInMillisecondsPast % (1000 * 60)) / 1000
+            );
+            resultElement.innerHTML = `
+              전역일 : ${targetDate.toLocaleDateString("ko-KR")}<br/>
+              전역한 지 ${passedDays}일 ${passedHours}시간 ${passedMinutes}분 ${passedSeconds}초 지났습니다.
+            `;
+          }
         }, 1000);
       }
     </script>
