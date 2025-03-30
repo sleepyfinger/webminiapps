@@ -39,13 +39,6 @@
         font-weight: 700;
       }
 
-      h3 {
-        color: #555;
-        margin-top: 25px;
-        margin-bottom: 15px;
-        font-weight: 600;
-      }
-
       label {
         display: block;
         margin-top: 20px;
@@ -228,8 +221,20 @@
         clearInterval(intervalId);
 
         intervalId = setInterval(() => {
-          const today = new Date();
-          const diffInMilliseconds = targetDate - today;
+          const now = new Date();
+          const nowKorea = new Date(
+            now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000
+          );
+          const targetDateKorea = new Date(
+            targetDate.getTime() +
+              targetDate.getTimezoneOffset() * 60000 +
+              9 * 3600000
+          );
+
+          // 전역일의 시간 정보를 00:00:00으로 초기화
+          targetDateKorea.setHours(0, 0, 0, 0);
+
+          const diffInMilliseconds = targetDateKorea - nowKorea;
 
           const diffInDays = Math.floor(
             diffInMilliseconds / (1000 * 60 * 60 * 24)
