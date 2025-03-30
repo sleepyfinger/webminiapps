@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>전역일 계산기</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      input,
+      select,
+      button {
+        margin: 10px 0;
+        padding: 5px;
+      }
+      h2 {
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>전역일 계산기</h1>
+
+    <!-- 입대일과 복무 기간 입력 -->
+    <h3>입대일과 복무 기간으로 계산</h3>
+    <label for="enlistDate">입대일:</label>
+    <input type="date" id="enlistDate" required />
+
+    <label for="serviceType">복무 기간:</label>
+    <select id="serviceType" onchange="toggleCustomMonths()">
+      <option value="18">육군/해병대/의경/해경 (18개월)</option>
+      <option value="20">해군/소방원 (20개월)</option>
+      <option value="22">공군 (22개월)</option>
+      <option value="21">사회복무요원 (21개월)</option>
+      <option value="custom">직접 입력</option>
+    </select>
+
+    <!-- 커스텀 복무 기간 입력 -->
+    <div id="customMonthsInput" style="display: none">
+      <label for="serviceMonths">복무 기간(개월):</label>
+      <input type="number" id="serviceMonths" placeholder="예: 18" min="1" />
+    </div>
+
+    <button onclick="calculateByServicePeriod()">전역일 계산</button>
+
+    <!-- 전역일로 D-Day 계산 -->
+    <h3>전역일로 D-Day 계산</h3>
+    <label for="dischargeDate">전역일:</label>
+    <input type="date" id="dischargeDate" required />
+
+    <button onclick="calculateByDischargeDate()">D-Day 계산</button>
+
+    <!-- 결과 출력 -->
+    <h2 id="result"></h2>
+
+    <script>
+      const TODAY_IN_MILISECONDS = 1000 * 60 * 60 * 24;
+
+      // 군 종류 선택에서 "직접 입력"을 선택하면 커스텀 입력 필드 표시
+      function toggleCustomMonths() {
+        const serviceType = document.getElementById("serviceType").value;
+        const customMonthsInput = document.getElementById("customMonthsInput");
+        if (serviceType === "custom") {
+          customMonthsInput.style.display = "block";
+        } else {
+          customMonthsInput.style.display = "none";
+        }
+      }
+
+      // 입대일과 복무 기간으로 전역일 계산
+      function calculateByServicePeriod() {
+        const enlistDateInput = document.getElementById("enlistDate").value;
+        const serviceType = document.getElementById("serviceType").value;
+
+        let serviceMonths;
+
+        // 군 종류가 "직접 입력"인 경우 사용자 입력값 사용
+        if (serviceType === "custom") {
+          serviceMonths = document.getElementById("serviceMonths").value;
+          if (!serviceMonths) {
+            alert("복무 기간을 입력해주세요.");
+            return;
+          }
+        } else {
+          serviceMonths = parseInt(serviceType); // 선택된 군 종류의 복무 기간
+        }
+
+        if (!enlistDateInput) {
+          alert("입대일을 입력해주세요.");
+          return;
+        }
+
+        // 입대일을 Date 객체로 변환
+        const enlistDate = new Date(enlistDateInput);
+
+        // 복무 기간(개월)을 추가
+        enlistDate.setMonth(enlistDate.getMonth() + parseInt(serviceMonths));
+
+        // 오늘 날짜와 비교하여 D-Day 계산
+        const today = new Date();
+        const dDay = Math.ceil((enlistDate - today) / TODAY_IN_MILISECONDS);
+
+        // 결과 출력
+        const resultElement = document.getElementById("result");
+        resultElement.innerHTML = `
+                전역일: ${enlistDate.toLocaleDateString("ko-KR")}<br>
+                D-Day: ${dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`}
+            `;
+      }
+
+      // 전역일로 D-Day 계산
+      function calculateByDischargeDate() {
+        const dischargeDateInput =
+          document.getElementById("dischargeDate").value;
+
+        if (!dischargeDateInput) {
+          alert("전역일을 입력해주세요.");
+          return;
+        }
+
+        // 전역일을 Date 객체로 변환
+        const dischargeDate = new Date(dischargeDateInput);
+
+        // 오늘 날짜와 비교하여 D-Day 계산
+        const today = new Date();
+        const dDay = Math.ceil((dischargeDate - today) / TODAY_IN_MILISECONDS);
+
+        // 결과 출력
+        const resultElement = document.getElementById("result");
+        resultElement.innerHTML = `
+                전역일: ${dischargeDate.toLocaleDateString("ko-KR")}<br>
+                D-Day: ${dDay >= 0 ? `D-${dDay}` : `D+${Math.abs(dDay)}`}
+            `;
+      }
+    </script>
+  </body>
+</html>
