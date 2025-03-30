@@ -15,7 +15,21 @@
       <div id="start-screen">
         <img id="logo" src="icon-192x192.png" />
         <h2>나의 성격 유형은?</h2>
-        <p id="version">ver 0.2</p>
+        <p id="version">ver 0.3</p>
+
+        <div class="version-select">
+          <input
+            type="radio"
+            id="super-simple"
+            name="version"
+            value="super-simple"
+            checked
+          />
+          <label for="super-simple">초간단 버전</label>
+          <input type="radio" id="simple" name="version" value="simple" />
+          <label for="simple">간단 버전</label>
+        </div>
+
         <button id="start-button" class="button">검사 시작하기</button>
         <p class="disclaimer">
           * 이 테스트는 간단한 버전이며, 전문적인 MBTI 검사 결과와는 차이가

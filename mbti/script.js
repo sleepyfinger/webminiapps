@@ -1,30 +1,39 @@
-const QUESTIONS = [
-  "친구들과 함께 노는 게 재밌나요?", // E/I (1)
-  "혼자 조용히 책 읽는 게 더 좋아요?", // E/I (2)
-  "새로운 친구를 사귀는 게 쉬운 편인가요?", // E/I (3)
-  "여럿이 모여서 하는 게임이 재밌나요?", // E/I (4)
-  "친구들 앞에서 발표하는 게 떨리지 않나요?", // E/I (5)
-  "눈으로 보이는 것들을 자세히 관찰하는 걸 좋아하나요?", // S/N (6)
-  "상상 속에서 새로운 세상을 만드는 걸 좋아하나요?", // S/N (7)
-  "실제로 만져보고 경험하는 게 중요하다고 생각하나요?", // S/N (8)
-  "갑자기 떠오르는 생각이 많나요?", // S/N (9)
-  "이야기 속 주인공이 되어 상상하는 걸 좋아하나요?", // S/N (10)
-  "무언가를 결정할 때 이유가 분명해야 하나요?", // T/F (11)
-  "다른 사람의 기분이 어떤지 잘 알아차리나요?", // T/F (12)
-  "정해진 규칙을 지키는 게 중요하다고 생각하나요?", // T/F (13)
-  "친구들이 슬퍼하면 같이 마음이 아픈가요?", // T/F (14)
-  "누군가에게 도움을 주는 게 기쁜가요?", // T/F (15)
-  "미리 계획을 세우고 움직이는 게 편한가요?", // J/P (16)
-  "갑자기 하고 싶은 일이 생기면 바로 하는 편인가요?", // J/P (17)
-  "숙제나 해야 할 일을 미루지 않고 바로 하는 편인가요?", // J/P (18)
-  "새로운 상황에 빨리 적응하는 편인가요?", // J/P (19)
-  "무언가를 결정할 때 여러 가지 가능성을 생각해보는 편인가요?", // J/P (20)
-  "힘든 일이 있어도 금방 잊어버리는 편인가요?", // -A/-T (21)
-  "자신이 잘하는 게 많다고 생각하나요?", // -A/-T (22)
-  "실수를 해도 괜찮다고 생각하나요?", // -A/-T (23)
-  "다른 친구들의 말에 쉽게 흔들리지 않나요?", // -A/-T (24)
-  "자신이 할 수 있다고 믿는 편인가요?", // -A/-T (25)
-];
+const QUESTIONS = {
+  simple: [
+    "친구들과 어울려 노는 것을 좋아하나요?", // E/I (1)
+    "혼자 조용히 책 읽는 시간을 선호하나요?", // E/I (2)
+    "새로운 친구를 사귀는 것이 어렵지 않나요?", // E/I (3)
+    "여럿이 함께 하는 게임을 즐기나요?", // E/I (4)
+    "친구들 앞에서 발표하는 것이 편안한가요?", // E/I (5)
+    "눈에 보이는 것을 자세히 관찰하는 편인가요?", // S/N (6)
+    "상상 속에서 새로운 세상을 만드는 것을 좋아하나요?", // S/N (7)
+    "직접 만지고 경험하는 것이 중요하다고 생각하나요?", // S/N (8)
+    "갑자기 떠오르는 생각이 많은 편인가요?", // S/N (9)
+    "이야기 속 주인공이 되어 상상하는 것을 즐기나요?", // S/N (10)
+    "결정할 때 명확한 이유가 있어야 하나요?", // T/F (11)
+    "다른 사람의 기분을 잘 알아차리는 편인가요?", // T/F (12)
+    "정해진 규칙을 지키는 것이 중요하다고 생각하나요?", // T/F (13)
+    "친구가 슬퍼하면 함께 마음이 아픈가요?", // T/F (14)
+    "누군가를 돕는 일에 기쁨을 느끼나요?", // T/F (15)
+    "미리 계획을 세우고 움직이는 것이 편한가요?", // J/P (16)
+    "하고 싶은 일이 생기면 바로 하는 편인가요?", // J/P (17)
+    "해야 할 일을 미루지 않고 바로 처리하나요?", // J/P (18)
+    "새로운 환경에 빠르게 적응하는 편인가요?", // J/P (19)
+    "결정할 때 여러 가능성을 고려하는 편인가요?", // J/P (20)
+    "힘든 일이 있어도 금방 잊는 편인가요?", // -A/-T (21)
+    "자신이 잘하는 것이 많다고 생각하나요?", // -A/-T (22)
+    "실수해도 괜찮다고 생각하나요?", // -A/-T (23)
+    "다른 사람의 말에 쉽게 흔들리지 않나요?", // -A/-T (24)
+    "자신이 할 수 있다고 믿는 편인가요?", // -A/-T (25)
+  ],
+  "super-simple": [
+    "친구들과 어울리는 것을 선호하나요?", // E/I
+    "상상하는 것을 좋아하나요?", // S/N
+    "결정할 때 논리적인 편인가요?", // T/F
+    "계획을 세우는 것을 선호하나요?", // J/P
+    "자신감이 넘치는 편인가요?", // -A/-T
+  ],
+};
 
 const BASE_DESCRIPTIONS = {
   ISTJ: "꼼꼼하고 차분한 **현실주의자**예요. 약속을 잘 지키고, 맡은 일은 끝까지 해내는 책임감이 강해요. 조용히 혼자서 집중하는 걸 좋아하고, 규칙을 잘 지키는 모범생 스타일이에요. 주변을 잘 살피고, 정리정돈을 잘하는 깔끔한 친구랍니다.",
@@ -72,7 +81,9 @@ const buttonClickSound = new Audio("button_click.mp3");
 const resultSound = new Audio("result_sound.mp3");
 
 let currentQuestion = 0;
-let answers = new Array(QUESTIONS.length).fill(0);
+let answers = [];
+let selectedVersion = "simple";
+let currentQuestions = [];
 
 function playSound(sound) {
   sound.currentTime = 0;
@@ -80,14 +91,14 @@ function playSound(sound) {
 }
 
 function updateProgressBar() {
-  const progress = (currentQuestion / QUESTIONS.length) * 100;
+  const progress = (currentQuestion / currentQuestions.length) * 100;
   dom.progressBar.style.width = `${progress}%`;
 }
 
 function showQuestion() {
-  if (currentQuestion < QUESTIONS.length) {
+  if (currentQuestion < currentQuestions.length) {
     dom.questionNumberElement.textContent = `질문 ${currentQuestion + 1}`;
-    dom.questionElement.textContent = QUESTIONS[currentQuestion];
+    dom.questionElement.textContent = currentQuestions[currentQuestion];
     updateProgressBar();
   } else {
     showResult();
@@ -96,18 +107,26 @@ function showQuestion() {
 
 function answerQuestion(answer) {
   playSound(buttonClickSound);
-  answers[currentQuestion] += answer ? 1 : 0;
+  answers[currentQuestion] = answer ? 1 : 0;
   currentQuestion++;
   showQuestion();
 }
 
 function calculateMBTI() {
   let result = "";
-  result += answers.slice(0, 5).reduce((a, b) => a + b) > 2 ? "E" : "I";
-  result += answers.slice(5, 10).reduce((a, b) => a + b) > 2 ? "S" : "N";
-  result += answers.slice(10, 15).reduce((a, b) => a + b) > 2 ? "T" : "F";
-  result += answers.slice(15, 20).reduce((a, b) => a + b) > 2 ? "J" : "P";
-  result += answers.slice(20, 25).reduce((a, b) => a + b) > 2 ? "-A" : "-T";
+  if (selectedVersion === "simple") {
+    result += answers.slice(0, 5).reduce((a, b) => a + b) > 2 ? "E" : "I";
+    result += answers.slice(5, 10).reduce((a, b) => a + b) > 2 ? "S" : "N";
+    result += answers.slice(10, 15).reduce((a, b) => a + b) > 2 ? "T" : "F";
+    result += answers.slice(15, 20).reduce((a, b) => a + b) > 2 ? "J" : "P";
+    result += answers.slice(20, 25).reduce((a, b) => a + b) > 2 ? "-A" : "-T";
+  } else {
+    result += answers[0] ? "E" : "I";
+    result += answers[1] ? "S" : "N";
+    result += answers[2] ? "T" : "F";
+    result += answers[3] ? "J" : "P";
+    result += answers[4] ? "-A" : "-T";
+  }
   return result;
 }
 
@@ -162,7 +181,7 @@ function showResult() {
 function restartTest() {
   playSound(buttonClickSound);
   currentQuestion = 0;
-  answers.fill(0);
+  answers = [];
   document.getElementById("question-container").style.display = "none";
   dom.resultElement.style.display = "none";
   dom.startScreen.style.display = "block";
@@ -177,6 +196,12 @@ function startTest() {
   dom.startScreen.style.display = "none";
   document.getElementById("question-container").style.display = "block";
   dom.container.style.display = "block";
+
+  selectedVersion = document.querySelector(
+    'input[name="version"]:checked'
+  ).value;
+  currentQuestions = QUESTIONS[selectedVersion];
+  answers = new Array(currentQuestions.length).fill(0);
   showQuestion();
 }
 

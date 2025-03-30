@@ -186,3 +186,17 @@ h2 {
     font-size: 1.1rem;
   }
 }
+
+.version-select {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.version-select input[type="radio"] {
+  margin-right: 5px;
+}
+
+.version-select label {
+  margin-right: 15px;
+  cursor: pointer;
+}
