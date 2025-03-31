@@ -41,7 +41,7 @@ function startAutoChange() {
     newQuoteButton.classList.remove("loading");
     void newQuoteButton.offsetWidth;
     startAutoChange();
-  }, 5000);
+  }, 10000);
 }
 
 newQuoteButton.addEventListener("click", () => {

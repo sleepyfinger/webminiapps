@@ -1,6 +1,6 @@
 body {
   font-family: "Noto Sans KR", sans-serif;
-  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  background: linear-gradient(135deg, #d8e2dc, #e9ecef);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,15 +8,15 @@ body {
   margin: 0;
   padding: 20px;
   box-sizing: border-box;
-  color: #333;
+  color: #343a40;
 }
 
 .container {
   width: 100%;
   max-width: 700px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(250, 250, 250, 0.85);
   border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   padding: 40px;
   text-align: center;
   backdrop-filter: blur(10px);
@@ -35,13 +35,14 @@ body {
   position: relative;
   padding: 15px;
   transition: color 0.3s ease;
+  color: #495057;
 }
 
 .quote-text::before,
 .quote-text::after {
   content: '"';
   font-size: 4rem;
-  color: #ddd;
+  color: #ced4da;
   position: absolute;
   opacity: 0.7;
 }
@@ -60,12 +61,12 @@ body {
   font-size: 1.2rem;
   text-align: right;
   font-weight: 700;
-  color: #555;
+  color: #495057;
   transition: color 0.3s ease;
 }
 
 .new-quote-button {
-  background-color: #5c6bc0;
+  background-color: #5c8a8a;
   color: white;
   padding: 15px 30px;
   border: none;
@@ -74,7 +75,7 @@ body {
   font-size: 1.1rem;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(to right, #5c6bc0 50%, #ff9800 50%);
+  background: linear-gradient(to right, #5c8a8a 50%, #8ac6d1 50%);
   background-size: 200% 100%;
   background-position: right;
   transition: background-position 0s ease;
@@ -82,7 +83,7 @@ body {
 
 .new-quote-button.loading {
   background-position: left;
-  transition: background-position 5s ease-in-out;
+  transition: background-position 10s ease-in-out;
 }
 
 @media (max-width: 600px) {
