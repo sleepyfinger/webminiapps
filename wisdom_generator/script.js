@@ -28,24 +28,26 @@ function displayQuote() {
   authorElement.textContent = `- ${author}`;
 }
 
-function resetButtonAnimation() {
-  newQuoteButton.classList.add("loading");
-  requestAnimationFrame(() => {
-    newQuoteButton.classList.remove("loading");
-  });
-}
-
 function changeQuote() {
   displayQuote();
-  resetButtonAnimation();
 }
 
 function startAutoChange() {
-  clearInterval(intervalId);
+  newQuoteButton.classList.add("loading");
   changeQuote();
-  intervalId = setInterval(changeQuote, 5000);
+
+  clearTimeout(intervalId);
+  intervalId = setTimeout(() => {
+    newQuoteButton.classList.remove("loading");
+    void newQuoteButton.offsetWidth;
+    startAutoChange();
+  }, 5000);
 }
 
-newQuoteButton.addEventListener("click", startAutoChange);
+newQuoteButton.addEventListener("click", () => {
+  newQuoteButton.classList.remove("loading");
+  void newQuoteButton.offsetWidth;
+  startAutoChange();
+});
 
 window.addEventListener("load", startAutoChange);
