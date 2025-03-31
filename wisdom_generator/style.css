@@ -1,0 +1,117 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #333;
+  transition: background 0.5s ease;
+}
+
+.container {
+  width: 100%;
+  max-width: 700px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 40px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.quote-box {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.quote-text {
+  font-size: 1.8rem;
+  line-height: 1.6;
+  font-style: italic;
+  position: relative;
+  padding: 15px;
+  transition: color 0.3s ease;
+}
+
+.quote-text::before,
+.quote-text::after {
+  content: '"';
+  font-size: 4rem;
+  color: #ddd;
+  position: absolute;
+  opacity: 0.7;
+}
+
+.quote-text::before {
+  top: -15px;
+  left: 0;
+}
+
+.quote-text::after {
+  bottom: -25px;
+  right: 0;
+}
+
+.author-text {
+  font-size: 1.2rem;
+  text-align: right;
+  font-weight: 700;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.new-quote-button {
+  background-color: #5c6bc0;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.new-quote-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+    to right,
+    #ff9800,
+    #ffcc00
+  );
+  z-index: -1;
+  transition: left 5s linear;
+}
+
+.new-quote-button.loading::before {
+  left: 0;
+}
+
+.new-quote-button:hover {
+  background-color: #4a59a3;
+}
+
+@media (max-width: 600px) {
+  .quote-text {
+    font-size: 1.5rem;
+  }
+
+  .author-text {
+    font-size: 1.1rem;
+  }
+
+  .container {
+    padding: 20px;
+  }
+}
