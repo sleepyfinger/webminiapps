@@ -20,7 +20,10 @@ class SortingVisualizer {
   }
 
   async toggleSort() {
-    if (this.isSorting) return;
+    if (this.isSorting) {
+      this.reset();
+      return;
+    }
     this.isSorting = true;
 
     const algorithm = document.getElementById("algorithm-select").value;
@@ -55,6 +58,7 @@ class SortingVisualizer {
   }
 
   async pause() {
+    if (!this.isSorting) return;
     await new Promise((resolve) => setTimeout(resolve, this.speed));
   }
 
@@ -80,9 +84,12 @@ class SortingVisualizer {
 
   async bubbleSort() {
     for (let i = 0; i < this.array.length; i++) {
+      if (!this.isSorting) return;
       for (let j = 0; j < this.array.length - i - 1; j++) {
+        if (!this.isSorting) return;
         this.highlightBars([j, j + 1], "comparing");
         await this.pause();
+        if (!this.isSorting) return;
 
         if (this.array[j] > this.array[j + 1]) {
           [this.array[j], this.array[j + 1]] = [
@@ -92,6 +99,7 @@ class SortingVisualizer {
           this.highlightBars([j, j + 1], "swapping");
           this.renderArray();
           await this.pause();
+          if (!this.isSorting) return;
         }
 
         this.resetBarColors();
@@ -103,10 +111,13 @@ class SortingVisualizer {
 
   async selectionSort() {
     for (let i = 0; i < this.array.length - 1; i++) {
+      if (!this.isSorting) return;
       let minIndex = i;
       for (let j = i + 1; j < this.array.length; j++) {
+        if (!this.isSorting) return;
         this.highlightBars([j, minIndex], "comparing");
         await this.pause();
+        if (!this.isSorting) return;
         if (this.array[j] < this.array[minIndex]) {
           minIndex = j;
         }
@@ -120,6 +131,7 @@ class SortingVisualizer {
         this.highlightBars([i, minIndex], "swapping");
         this.renderArray();
         await this.pause();
+        if (!this.isSorting) return;
       }
       this.markSorted(i);
     }
@@ -128,16 +140,20 @@ class SortingVisualizer {
 
   async insertionSort() {
     for (let i = 1; i < this.array.length; i++) {
+      if (!this.isSorting) return;
       let key = this.array[i];
       let j = i - 1;
       this.highlightBars([i], "comparing");
       await this.pause();
+      if (!this.isSorting) return;
 
       while (j >= 0 && this.array[j] > key) {
+        if (!this.isSorting) return;
         this.highlightBars([j, j + 1], "swapping");
         this.array[j + 1] = this.array[j];
         this.renderArray();
         await this.pause();
+        if (!this.isSorting) return;
         j--;
       }
       this.array[j + 1] = key;
@@ -154,15 +170,19 @@ class SortingVisualizer {
   }
 
   async mergeSortHelper(low, high) {
+    if (!this.isSorting) return;
     if (low < high) {
       const mid = Math.floor((low + high) / 2);
       await this.mergeSortHelper(low, mid);
+      if (!this.isSorting) return;
       await this.mergeSortHelper(mid + 1, high);
+      if (!this.isSorting) return;
       await this.merge(low, mid, high);
     }
   }
 
   async merge(low, mid, high) {
+    if (!this.isSorting) return;
     const left = this.array.slice(low, mid + 1);
     const right = this.array.slice(mid + 1, high + 1);
     let i = 0,
@@ -170,8 +190,10 @@ class SortingVisualizer {
       k = low;
 
     while (i < left.length && j < right.length) {
+      if (!this.isSorting) return;
       this.highlightBars([low + i, mid + 1 + j], "comparing");
       await this.pause();
+      if (!this.isSorting) return;
       if (left[i] <= right[j]) {
         this.array[k] = left[i];
         i++;
@@ -182,25 +204,30 @@ class SortingVisualizer {
       this.highlightBars([k], "swapping");
       this.renderArray();
       await this.pause();
+      if (!this.isSorting) return;
       k++;
       this.resetBarColors();
     }
 
     while (i < left.length) {
+      if (!this.isSorting) return;
       this.array[k] = left[i];
       this.highlightBars([k], "swapping");
       this.renderArray();
       await this.pause();
+      if (!this.isSorting) return;
       i++;
       k++;
       this.resetBarColors();
     }
 
     while (j < right.length) {
+      if (!this.isSorting) return;
       this.array[k] = right[j];
       this.highlightBars([k], "swapping");
       this.renderArray();
       await this.pause();
+      if (!this.isSorting) return;
       j++;
       k++;
       this.resetBarColors();
@@ -214,10 +241,12 @@ class SortingVisualizer {
     const stack = [{ low: 0, high: this.array.length - 1 }];
 
     while (stack.length) {
+      if (!this.isSorting) return;
       const { low, high } = stack.pop();
       if (low >= high) continue;
 
       const pivot = await this.partition(low, high);
+      if (!this.isSorting) return;
       stack.push({ low, high: pivot - 1 });
       stack.push({ low: pivot + 1, high });
     }
@@ -225,12 +254,15 @@ class SortingVisualizer {
   }
 
   async partition(low, high) {
+    if (!this.isSorting) return 0;
     const pivot = this.array[high];
     let i = low - 1;
 
     for (let j = low; j < high; j++) {
+      if (!this.isSorting) return 0;
       this.highlightBars([j], "comparing");
       await this.pause();
+      if (!this.isSorting) return 0;
 
       if (this.array[j] < pivot) {
         i++;
@@ -238,6 +270,7 @@ class SortingVisualizer {
         this.highlightBars([i, j], "swapping");
         this.renderArray();
         await this.pause();
+        if (!this.isSorting) return 0;
       }
       this.resetBarColors();
     }
@@ -256,29 +289,36 @@ class SortingVisualizer {
     const n = this.array.length;
 
     for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+      if (!this.isSorting) return;
       await this.heapify(n, i);
     }
 
     for (let i = n - 1; i > 0; i--) {
+      if (!this.isSorting) return;
       [this.array[0], this.array[i]] = [this.array[i], this.array[0]];
       this.highlightBars([0, i], "swapping");
       this.renderArray();
       await this.pause();
+      if (!this.isSorting) return;
       this.resetBarColors();
       await this.heapify(i, 0);
+      if (!this.isSorting) return;
       this.markSorted(i);
     }
     this.markAllSorted();
   }
 
   async heapify(n, i) {
+    if (!this.isSorting) return;
     let largest = i;
     const left = 2 * i + 1;
     const right = 2 * i + 2;
 
     if (left < n) {
+      if (!this.isSorting) return;
       this.highlightBars([largest, left], "comparing");
       await this.pause();
+      if (!this.isSorting) return;
       if (this.array[left] > this.array[largest]) {
         largest = left;
       }
@@ -286,8 +326,10 @@ class SortingVisualizer {
     }
 
     if (right < n) {
+      if (!this.isSorting) return;
       this.highlightBars([largest, right], "comparing");
       await this.pause();
+      if (!this.isSorting) return;
       if (this.array[right] > this.array[largest]) {
         largest = right;
       }
@@ -295,6 +337,7 @@ class SortingVisualizer {
     }
 
     if (largest !== i) {
+      if (!this.isSorting) return;
       [this.array[i], this.array[largest]] = [
         this.array[largest],
         this.array[i],
@@ -302,6 +345,7 @@ class SortingVisualizer {
       this.highlightBars([i, largest], "swapping");
       this.renderArray();
       await this.pause();
+      if (!this.isSorting) return;
       this.resetBarColors();
       await this.heapify(n, largest);
     }
@@ -310,36 +354,43 @@ class SortingVisualizer {
   async radixSort() {
     const max = Math.max(...this.array);
     for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10) {
+      if (!this.isSorting) return;
       await this.countingSort(exp);
     }
     this.markAllSorted();
   }
 
   async countingSort(exp) {
+    if (!this.isSorting) return;
     const n = this.array.length;
     const output = new Array(n).fill(0);
     const count = new Array(10).fill(0);
 
     for (let i = 0; i < n; i++) {
+      if (!this.isSorting) return;
       const index = Math.floor(this.array[i] / exp) % 10;
       count[index]++;
     }
 
     for (let i = 1; i < 10; i++) {
+      if (!this.isSorting) return;
       count[i] += count[i - 1];
     }
 
     for (let i = n - 1; i >= 0; i--) {
+      if (!this.isSorting) return;
       const index = Math.floor(this.array[i] / exp) % 10;
       output[count[index] - 1] = this.array[i];
       count[index]--;
     }
 
     for (let i = 0; i < n; i++) {
+      if (!this.isSorting) return;
       this.array[i] = output[i];
       this.highlightBars([i], "swapping");
       this.renderArray();
       await this.pause();
+      if (!this.isSorting) return;
       this.resetBarColors();
     }
   }
@@ -347,14 +398,18 @@ class SortingVisualizer {
   async shellSort() {
     const n = this.array.length;
     for (let gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+      if (!this.isSorting) return;
       for (let i = gap; i < n; i++) {
+        if (!this.isSorting) return;
         const temp = this.array[i];
         let j;
         for (j = i; j >= gap && this.array[j - gap] > temp; j -= gap) {
+          if (!this.isSorting) return;
           this.highlightBars([j, j - gap], "swapping");
           this.array[j] = this.array[j - gap];
           this.renderArray();
           await this.pause();
+          if (!this.isSorting) return;
           this.resetBarColors();
         }
         this.array[j] = temp;
