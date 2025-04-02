@@ -49,7 +49,7 @@ function displayWord() {
   wordElement.textContent = display;
 
   if (!display.includes("_")) {
-    messageElement.textContent = "축하합니다! 단어를 맞추셨습니다!";
+    messageElement.textContent = "축하합니다! 단어를 맞추셨습니다! 🎉";
     messageElement.classList.add("correct");
     messageElement.classList.remove("incorrect");
     disableKeyboard();
@@ -57,14 +57,11 @@ function displayWord() {
   }
 }
 
-function handleGuess(letter) {
+function handleGuess(letter, button) {
   if (guessedLetters.includes(letter)) return;
 
   guessedLetters.push(letter);
 
-  const button = document.querySelector(
-    `#keyboard button[data-letter="${letter}"]`
-  );
   if (button) {
     button.disabled = true;
     button.classList.add("used");
@@ -73,11 +70,14 @@ function handleGuess(letter) {
   if (!selectedWord.includes(letter)) {
     attemptsLeft--;
     hangmanStatusElement.textContent = `남은 기회: ${attemptsLeft}`;
-    messageElement.textContent = "틀렸습니다!";
+    messageElement.textContent = "틀렸습니다! ❌";
     messageElement.classList.add("incorrect");
     messageElement.classList.remove("correct");
+    if (button) {
+      button.classList.add("incorrect");
+    }
     if (attemptsLeft === 0) {
-      messageElement.textContent = `게임 오버! 정답은 "${selectedWord}"였습니다.`;
+      messageElement.textContent = `게임 오버! 😭 정답은 "${selectedWord}"였습니다.`;
       messageElement.classList.add("incorrect");
       messageElement.classList.remove("correct");
       disableKeyboard();
@@ -85,9 +85,12 @@ function handleGuess(letter) {
       return;
     }
   } else {
-    messageElement.textContent = "맞았습니다!";
+    messageElement.textContent = "맞았습니다! ✅";
     messageElement.classList.add("correct");
     messageElement.classList.remove("incorrect");
+    if (button) {
+      button.classList.add("correct");
+    }
   }
 
   displayWord();
@@ -100,9 +103,9 @@ function createKeyboard() {
     const button = document.createElement("button");
     button.textContent = letter.toUpperCase();
     button.dataset.letter = letter;
-    button.onclick = () => {
-      handleGuess(letter);
-    };
+    button.addEventListener("click", () => {
+      handleGuess(letter, button);
+    });
     keyboardElement.appendChild(button);
   });
 }
