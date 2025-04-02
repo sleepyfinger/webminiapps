@@ -35,6 +35,7 @@ function initializeGame() {
   hangmanStatusElement.textContent = `남은 기회: ${attemptsLeft}`;
   keyboardElement.innerHTML = "";
   restartButton.classList.add("hidden");
+  hintButton.classList.remove("hidden");
 
   createKeyboard();
   displayWord();
@@ -124,6 +125,7 @@ restartButton.addEventListener("click", initializeGame);
 hintButton.addEventListener("click", () => {
   if (selectedHint) {
     hintElement.textContent = `힌트: ${selectedHint}`;
+    hintButton.classList.add("hidden");
   }
 });
 
