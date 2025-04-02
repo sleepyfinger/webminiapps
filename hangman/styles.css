@@ -1,28 +1,30 @@
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
   margin: 0;
-  padding: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .container {
   background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
   text-align: center;
-  width: 90%;
-  max-width: 500px;
+  max-width: 600px;
+  width: 100%;
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 24px;
-  color: #333;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 2.2em;
 }
 
 .game-area {
@@ -33,130 +35,121 @@ h1 {
 
 .info-area {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .hint-button {
-  background-color: #5cb85c;
+  background-color: #3498db;
+  color: #fff;
   border: none;
-  color: white;
-  padding: 12px 24px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 6px;
-  width: fit-content;
-  align-self: center;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease;
 }
 
 .hint-button:hover {
-  background-color: #4cae4c;
+  background-color: #2980b9;
 }
 
 .hint {
-  font-size: 1.1rem;
-  color: #666;
-  min-height: 24px;
+  font-size: 1.1em;
+  color: #777;
 }
 
 .hangman-status {
-  font-size: 1.2rem;
-  color: #444;
+  font-size: 1.1em;
+  color: #555;
 }
 
 .word {
-  font-size: 2.5rem;
+  font-size: 2em;
   font-weight: bold;
+  letter-spacing: 10px;
   margin-bottom: 20px;
-  letter-spacing: 8px;
-  color: #333;
 }
 
 .message {
-  font-size: 1.2rem;
+  font-size: 1.3em;
+  font-weight: bold;
   margin-bottom: 20px;
-  min-height: 24px;
-  color: #444;
+  visibility: hidden; /* Initially hidden */
+  opacity: 0;
+  transition: visibility 0s linear 3s, opacity 0.3s linear; /* Hide after 3s */
+}
+
+.message.correct,
+.message.incorrect {
+  visibility: visible; /* Make visible when class is added */
+  opacity: 1;
+  transition: opacity 0.3s linear;
+}
+
+.message.correct {
+  color: #2ecc71; /* Green for correct */
+}
+
+.message.incorrect {
+  color: #e74c3c; /* Red for incorrect */
 }
 
 .keyboard {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(35px, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 5px;
   margin-bottom: 20px;
 }
 
 .keyboard button {
-  background-color: #e0e0e0;
+  background-color: #ecf0f1;
   border: none;
-  padding: 12px;
-  font-size: 1rem;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 6px;
-  color: #333;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
 }
 
 .keyboard button:hover {
-  background-color: #d0d0e0;
-  transform: scale(1.05);
+  background-color: #d5dbdb;
 }
 
-.keyboard button.used {
-  background-color: #ccc;
-  color: #999;
+.keyboard button.disabled {
+  background-color: #bdc3c7;
+  color: #7f8c8d;
   cursor: default;
 }
 
-.keyboard button.correct {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.keyboard button.incorrect {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
 #restart-button {
-  background-color: #007bff;
+  background-color: #2ecc71;
+  color: #fff;
   border: none;
-  color: white;
-  padding: 12px 24px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  padding: 15px 20px;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
 }
 
 #restart-button:hover {
-  background-color: #0069d9;
+  background-color: #27ae60;
 }
 
 .hidden {
   display: none;
 }
 
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.8rem;
+@media (max-width: 500px) {
+  .info-area {
+    flex-direction: column;
+    gap: 10px;
   }
-
   .word {
-    font-size: 2rem;
+    font-size: 1.5em;
     letter-spacing: 5px;
   }
-
   .keyboard {
     grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
   }
