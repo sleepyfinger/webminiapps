@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>정렬 알고리즘 시각화 도구</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>정렬 알고리즘 시각화 도구</h1>
+      </header>
+
+      <main>
+        <nav class="controls" role="navigation" aria-label="정렬 컨트롤">
+          <div class="control-group">
+            <label for="algorithm-select">알고리즘 선택</label>
+            <select
+              id="algorithm-select"
+              aria-label="정렬 알고리즘 선택"
+              title="정렬 알고리즘 선택"
+            >
+              <option value="bubble">버블 정렬</option>
+              <option value="selection">선택 정렬</option>
+              <option value="insertion">삽입 정렬</option>
+              <option value="merge">병합 정렬</option>
+              <option value="quick">퀵 정렬</option>
+              <option value="heap">힙 정렬</option>
+              <option value="radix">기수 정렬</option>
+              <option value="shell">셸 정렬</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="speed">속도 조절</label>
+            <input
+              type="range"
+              id="speed"
+              min="10"
+              max="500"
+              value="50"
+              aria-label="정렬 속도 조절"
+              title="정렬 속도 조절"
+            />
+          </div>
+
+          <div class="control-group">
+            <button id="start-btn" aria-label="정렬 시작" title="정렬 시작">
+              시작
+            </button>
+            <button id="reset-btn" aria-label="초기화" title="초기화">
+              초기화
+            </button>
+          </div>
+        </nav>
+
+        <section id="visualization" aria-label="정렬 시각화">
+          <div id="array-container"></div>
+          <div class="legend-container">
+            <ul id="legend" aria-label="정렬 상태 범례">
+              <li>
+                <span class="color-default"></span>
+                <p>일반</p>
+              </li>
+              <li>
+                <span class="color-comparing"></span>
+                <p>비교 중</p>
+              </li>
+              <li>
+                <span class="color-swapping"></span>
+                <p>교환 중</p>
+              </li>
+              <li>
+                <span class="color-sorted"></span>
+                <p>정렬 완료</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
