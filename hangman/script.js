@@ -22,82 +22,17 @@ let gameState = {
   attemptsLeft: MAX_ATTEMPTS,
 };
 
-function createTooltip(imageUrl) {
-  const tooltip = document.createElement("div");
-  tooltip.style.position = "absolute";
-  tooltip.style.backgroundColor = "white";
-  tooltip.style.border = "1px solid black";
-  tooltip.style.padding = "5px";
-  tooltip.style.zIndex = "10";
-  tooltip.style.display = "none";
-  tooltip.style.maxWidth = "200px";
-  tooltip.style.maxHeight = "200px";
-  tooltip.style.overflow = "hidden";
-  tooltip.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.3)";
-
-  const image = document.createElement("img");
-  image.src = imageUrl;
-  image.style.width = "100%";
-  image.style.height = "auto";
-  image.style.objectFit = "cover";
-  tooltip.appendChild(image);
-
-  return tooltip;
-}
-
 async function searchImage(word) {
-  const apiKey = "";
-  const searchEngineId = "";
-  const googleSearchUrl = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=${word}&searchType=image&num=1`;
-  const defaultImageUrl = "https://via.placeholder.com/200x200?text=No+Image";
+  const googleImageUrl = `https://www.google.com/search?q=${encodeURIComponent(
+    word
+  )}&tbm=isch`;
 
-  if (!apiKey || !searchEngineId) {
-    const googleImageUrl = `https://www.google.com/search?q=${encodeURIComponent(
-      word
-    )}&tbm=isch`;
-    return googleImageUrl;
-  }
-
-  try {
-    const response = await fetch(googleSearchUrl);
-    const data = await response.json();
-
-    if (data.items && data.items.length > 0) {
-      return data.items[0].link;
-    } else {
-      return defaultImageUrl;
-    }
-  } catch (error) {
-    console.error("Error fetching image:", error);
-    return defaultImageUrl;
-  }
+  return googleImageUrl;
 }
 
-async function showImageTooltip(event, word) {
+async function openImageSearch(word) {
   const imageUrl = await searchImage(word);
-  if (
-    typeof imageUrl === "string" &&
-    imageUrl.startsWith("https://www.google.com/search?")
-  ) {
-    window.open(imageUrl, "_blank");
-    return;
-  }
-
-  const tooltip = createTooltip(imageUrl);
-  document.body.appendChild(tooltip);
-
-  tooltip.style.left = `${event.pageX + 10}px`;
-  tooltip.style.top = `${event.pageY + 10}px`;
-  tooltip.style.display = "block";
-
-  const hideTooltip = (e) => {
-    if (!tooltip.contains(e.target)) {
-      tooltip.style.display = "none";
-      document.body.removeChild(tooltip);
-      document.removeEventListener("mousemove", hideTooltip);
-    }
-  };
-  document.addEventListener("mousemove", hideTooltip);
+  window.open(imageUrl, "_blank");
 }
 
 function getRandomWord() {
@@ -126,7 +61,7 @@ function displayWord() {
 
 const wordClickHandler = (event) => {
   if (gameState.selectedWord) {
-    showImageTooltip(event, gameState.selectedWord);
+    openImageSearch(gameState.selectedWord);
   }
 };
 
