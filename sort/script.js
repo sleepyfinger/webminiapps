@@ -5,6 +5,7 @@ class SortingVisualizer {
     this.speed = 100;
     this.initControls();
     this.generateNewArray(50);
+    this.updateSpeed();
   }
 
   initControls() {
@@ -15,8 +16,13 @@ class SortingVisualizer {
       .getElementById("reset-btn")
       .addEventListener("click", () => this.reset());
     document.getElementById("speed").addEventListener("input", (e) => {
-      this.speed = 500 - e.target.value;
+      this.updateSpeed();
     });
+  }
+
+  updateSpeed() {
+    const speedValue = document.getElementById("speed").value;
+    this.speed = 500 - speedValue;
   }
 
   async toggleSort() {
@@ -421,7 +427,9 @@ class SortingVisualizer {
   highlightBars(indices, state) {
     indices.forEach((index) => {
       const bar = document.getElementById("array-container").children[index];
-      bar.style.backgroundColor = `var(--${state}-color)`;
+      if (bar) {
+        bar.style.backgroundColor = `var(--${state}-color)`;
+      }
     });
   }
 
