@@ -171,7 +171,7 @@ input:active {
   padding: 0;
   flex-wrap: wrap;
   box-sizing: border-box;
-  margin: 0;
+  margin: 5px;
 }
 
 #legend li {
@@ -240,6 +240,18 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]:hover::-webkit-slider-thumb {
   background: var(--secondary-color);
   box-shadow: 0 3px 6px var(--shadow-color);
+}
+
+.creator-info {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-color);
+}
+
+.creator-info a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
 }
 
 @media (min-width: 769px) {
