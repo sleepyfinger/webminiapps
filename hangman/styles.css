@@ -258,6 +258,47 @@ h1 {
   font-weight: 500;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.difficulty-selection {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.difficulty-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80%;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}
+
+.difficulty-buttons button {
+  padding: 15px 20px;
+  font-size: 1.2em;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.difficulty-selection h2 {
+  margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+  .difficulty-buttons {
+    flex-direction: row;
+    width: 100%;
+    max-width: 600px;
+  }
+  .difficulty-buttons button {
+    width: auto;
+  }
+}
+
 @media (max-width: 600px) {
   .container {
     padding: 20px;

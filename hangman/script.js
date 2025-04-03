@@ -1,4 +1,4 @@
-import wordsWithHints from "./words.js";
+import wordData from "./words.js";
 
 const MAX_ATTEMPTS = 6;
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
@@ -13,6 +13,9 @@ const dom = {
   hintButton: document.getElementById("hint-button"),
   themeCheckbox: document.getElementById("theme-checkbox"),
   body: document.body,
+  difficultySelection: document.getElementById("difficulty-selection"),
+  gameContent: document.getElementById("game-content"),
+  startButton: document.getElementById("start-button"),
 };
 
 let gameState = {
@@ -20,6 +23,8 @@ let gameState = {
   selectedHint: "",
   guessedLetters: [],
   attemptsLeft: MAX_ATTEMPTS,
+  selectedDifficulty: null,
+  selectedWordData: [],
 };
 
 async function searchImage(word) {
@@ -36,8 +41,10 @@ async function openImageSearch(word) {
 }
 
 function getRandomWord() {
-  const randomIndex = Math.floor(Math.random() * wordsWithHints.length);
-  return wordsWithHints[randomIndex];
+  const randomIndex = Math.floor(
+    Math.random() * gameState.selectedWordData.length
+  );
+  return gameState.selectedWordData[randomIndex];
 }
 
 function updateHangmanStatus() {
@@ -46,6 +53,7 @@ function updateHangmanStatus() {
 
 function displayWord() {
   const display = gameState.selectedWord
+    .toUpperCase()
     .split("")
     .map((letter) => (gameState.guessedLetters.includes(letter) ? letter : "_"))
     .join(" ");
@@ -95,7 +103,8 @@ function createKeyboard() {
 function initializeGame() {
   const { word, hint } = getRandomWord();
   gameState = {
-    selectedWord: word,
+    ...gameState,
+    selectedWord: word.toUpperCase(),
     selectedHint: hint,
     guessedLetters: [],
     attemptsLeft: MAX_ATTEMPTS,
@@ -115,11 +124,11 @@ function initializeGame() {
 function handleGuess(letter, button) {
   if (gameState.guessedLetters.includes(letter)) return;
 
-  gameState.guessedLetters.push(letter);
+  gameState.guessedLetters.push(letter.toUpperCase());
   button.disabled = true;
   button.classList.add("used");
 
-  if (!gameState.selectedWord.includes(letter)) {
+  if (!gameState.selectedWord.includes(letter.toUpperCase())) {
     gameState.attemptsLeft--;
     updateHangmanStatus();
     updateMessage("틀렸습니다! ❌", "incorrect");
@@ -153,7 +162,7 @@ dom.restartButton.addEventListener("click", initializeGame);
 
 dom.hintButton.addEventListener("click", () => {
   if (gameState.selectedHint) {
-    dom.hint.textContent = `힌트: ${gameState.selectedHint}`;
+    dom.hint.textContent = `Hints: ${gameState.selectedHint}`;
     dom.hintButton.classList.add("hidden");
   }
 });
@@ -178,5 +187,23 @@ dom.themeCheckbox.addEventListener("change", () => {
   setTheme(dom.themeCheckbox.checked ? "dark-mode" : "");
 });
 
+const difficultyButtons = document.querySelectorAll(
+  ".difficulty-buttons button"
+);
+
+difficultyButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    gameState.selectedDifficulty = button.dataset.difficulty;
+    gameState.selectedWordData = wordData[gameState.selectedDifficulty];
+    dom.startButton.classList.remove("hidden");
+    difficultyButtons.forEach((btn) => (btn.disabled = true));
+  });
+});
+
+dom.startButton.addEventListener("click", () => {
+  dom.difficultySelection.classList.add("hidden");
+  dom.gameContent.classList.remove("hidden");
+  initializeGame();
+});
+
 initializeTheme();
-initializeGame();

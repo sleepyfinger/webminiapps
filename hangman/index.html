@@ -14,9 +14,32 @@
     <div class="container">
       <header class="app-header">
         <h1>Hangman</h1>
+        <p>Version 1.0</p>
         <p class="subtitle">Guess the English Word</p>
       </header>
-      <main class="game-content">
+
+      <section class="difficulty-selection" id="difficulty-selection">
+        <h2>Select Difficulty</h2>
+        <div class="difficulty-buttons">
+          <button class="btn btn-primary" data-difficulty="elementary">
+            Elementary School
+          </button>
+          <button class="btn btn-primary" data-difficulty="middle">
+            Middle School
+          </button>
+          <button class="btn btn-primary" data-difficulty="high">
+            High School
+          </button>
+          <button class="btn btn-primary" data-difficulty="general">
+            General
+          </button>
+        </div>
+        <button id="start-button" class="btn btn-secondary hidden">
+          Start Game
+        </button>
+      </section>
+
+      <main class="game-content hidden" id="game-content">
         <section class="game-info">
           <div class="hangman-status" id="hangman-status">
             Remaining Attempts: 6
@@ -39,7 +62,10 @@
       </main>
       <div class="creator-info">
         Made with ❤️ by
-        <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+        <a
+          href="https://blog.naver.com/sleepyfinger/223820008647"
+          target="_blank"
+        >
           SleepyFinger
         </a>
       </div>
