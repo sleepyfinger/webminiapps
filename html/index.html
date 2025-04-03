@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML 연습 사이트</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px;
+        width: 100%;
+        text-align: center;
+      }
+      textarea {
+        width: 90%;
+        height: 200px;
+        margin-top: 20px;
+        font-size: 16px;
+      }
+      iframe {
+        width: 90%;
+        height: 300px;
+        margin-top: 20px;
+        border: 1px solid #ccc;
+      }
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>HTML 연습 사이트</h1>
+    </header>
+    <textarea
+      id="htmlInput"
+      placeholder="여기에 HTML 코드를 입력하세요..."
+    ></textarea>
+    <button onclick="runCode()">코드 실행</button>
+    <iframe id="outputFrame"></iframe>
+
+    <script>
+      function runCode() {
+        const htmlInput = document.getElementById("htmlInput").value;
+        const outputFrame = document.getElementById("outputFrame");
+
+        outputFrame.contentDocument.open();
+        outputFrame.contentDocument.write(htmlInput);
+        outputFrame.contentDocument.close();
+      }
+    </script>
+  </body>
+</html>
