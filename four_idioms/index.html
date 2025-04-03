@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>사자성어</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <img id="logo" src="icon-192x192.png" />
+      <h1 id="title">사자성어</h1>
+      <p id="version">ver 1.0</p>
+      <div id="mainMenu" class="active">
+        <button id="randomBtn">시작하기</button>
+      </div>
+      <div id="questionDisplay"></div>
+      <div id="answerArea">
+        <div id="answerDisplay"></div>
+      </div>
+      <button id="showAnswerButton" class="showAnswerButton">정답 보기</button>
+      <button id="retryButton">다음 질문</button>
+      <button id="backButton" class="back-button">⬅️</button>
+      <button id="optionButton" class="option-button">⚙️</button>
+      <div id="optionModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          <h3>옵션</h3>
+          <div class="option-item">
+            <label for="preventScreenOff">화면 꺼짐 방지</label>
+            <label class="switch">
+              <input type="checkbox" id="preventScreenOff" /><span
+                class="slider round"
+              ></span>
+            </label>
+          </div>
+          <div class="option-item">
+            <label for="fullScreen">전체 화면</label>
+            <label class="switch">
+              <input type="checkbox" id="fullScreen" /><span
+                class="slider round"
+              ></span>
+            </label>
+          </div>
+          <div class="option-item">
+            <label for="themeToggle">테마 변경</label>
+            <label class="switch">
+              <input type="checkbox" id="themeToggle" /><span
+                class="slider round"
+              ></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="creator-info">
+        Made with ❤️ by
+        <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+          SleepyFinger
+        </a>
+      </div>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
