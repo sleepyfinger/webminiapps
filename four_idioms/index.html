@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>사자성어</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="manifest.json" />
   </head>
 
   <body>
     <div class="container">
-      <img id="logo" src="icon-192x192.png" />
+      <img id="logo" src="icon-192x192.png" alt="사자성어 로고" />
       <h1 id="title">사자성어</h1>
       <p id="version">ver 1.0</p>
       <div id="mainMenu" class="active">
@@ -21,11 +22,17 @@
       </div>
       <button id="showAnswerButton" class="showAnswerButton">정답 보기</button>
       <button id="retryButton">다음 질문</button>
-      <button id="backButton" class="back-button">⬅️</button>
-      <button id="optionButton" class="option-button">⚙️</button>
+      <button id="backButton" class="back-button">
+        <span class="emoji">⬅️</span>
+      </button>
+      <button id="optionButton" class="option-button">
+        <span class="emoji">⚙️</span>
+      </button>
       <div id="optionModal" class="modal">
         <div class="modal-content">
-          <span class="close-button">&times;</span>
+          <button class="close-button">
+            <span class="emoji">&times;</span>
+          </button>
           <h3>옵션</h3>
           <div class="option-item">
             <label for="preventScreenOff">화면 꺼짐 방지</label>
@@ -43,14 +50,6 @@
               ></span>
             </label>
           </div>
-          <div class="option-item">
-            <label for="themeToggle">테마 변경</label>
-            <label class="switch">
-              <input type="checkbox" id="themeToggle" /><span
-                class="slider round"
-              ></span>
-            </label>
-          </div>
         </div>
       </div>
 
@@ -62,5 +61,10 @@
       </div>
     </div>
     <script type="module" src="app.js"></script>
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("service-worker.js");
+      }
+    </script>
   </body>
 </html>

@@ -20,7 +20,6 @@ const optionModal = document.getElementById("optionModal");
 const closeButton = document.querySelector(".close-button");
 const preventScreenOffCheckbox = document.getElementById("preventScreenOff");
 const fullScreenCheckbox = document.getElementById("fullScreen");
-const themeToggleCheckbox = document.getElementById("themeToggle");
 
 const questions = data.reduce((acc, item) => {
   (acc[item.topic] = acc[item.topic] || []).push({
@@ -29,18 +28,6 @@ const questions = data.reduce((acc, item) => {
   });
   return acc;
 }, {});
-
-const setTheme = (theme) => {
-  document.body.classList.remove("light-theme", "dark-theme");
-  document.body.classList.add(`${theme}-theme`);
-  localStorage.setItem("theme", theme);
-  themeToggleCheckbox.checked = theme === "dark";
-};
-
-const toggleTheme = () => {
-  const currentTheme = localStorage.getItem("theme") || "dark";
-  setTheme(currentTheme === "light" ? "dark" : "light");
-};
 
 const adjustFontSize = () => {
   const container = questionDisplay.parentElement;
@@ -195,14 +182,12 @@ backButton.onclick = goBack;
 retryButton.onclick = retrySelection;
 
 const init = () => {
-  setTheme(localStorage.getItem("theme") || "dark");
+  document.body.classList.add("dark-theme");
   preventScreenOffCheckbox.checked = wakeLock !== null;
   fullScreenCheckbox.checked = false;
-  themeToggleCheckbox.checked = localStorage.getItem("theme") === "dark";
 
   preventScreenOffCheckbox.addEventListener("change", togglePreventScreenOff);
   fullScreenCheckbox.addEventListener("change", toggleFullScreen);
-  themeToggleCheckbox.addEventListener("change", toggleTheme);
   window.addEventListener("resize", () => {
     if (questionDisplay.classList.contains("active")) {
       adjustFontSize();
