@@ -6,42 +6,100 @@
     <title>HTML 연습 사이트</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
         padding: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
+        background-color: #f4f7fa;
+        color: #333;
+        min-height: 100vh;
+        position: relative;
       }
+
       header {
-        background-color: #4caf50;
+        background-color: #2c3e50;
         color: white;
-        padding: 10px;
+        padding: 20px;
         width: 100%;
         text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
       }
+
+      header h1 {
+        font-size: 2em;
+        font-weight: 600;
+        margin: 0;
+      }
+
       textarea {
         width: 90%;
-        height: 200px;
+        max-width: 800px;
+        height: 250px;
         margin-top: 20px;
         font-size: 16px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        resize: vertical;
+        font-family: monospace;
       }
+
       iframe {
         width: 90%;
-        height: 300px;
+        max-width: 800px;
+        height: 350px;
         margin-top: 20px;
-        border: 1px solid #ccc;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: white;
       }
+
       button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #4caf50;
+        margin-top: 20px;
+        padding: 12px 25px;
+        background-color: #3498db;
         color: white;
         border: none;
+        border-radius: 6px;
         cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
+
       button:hover {
-        background-color: #45a049;
+        background-color: #2980b9;
+      }
+
+      @media (max-width: 768px) {
+        textarea,
+        iframe {
+          width: 95%;
+        }
+      }
+
+      footer {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        background-color: #333;
+        color: #fff;
+        position: absolute;
+        bottom: 0;
+      }
+
+      footer a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
@@ -55,6 +113,15 @@
     ></textarea>
     <button onclick="runCode()">코드 실행</button>
     <iframe id="outputFrame"></iframe>
+
+    <footer>
+      <p>
+        Visit my blog:
+        <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+          SleepyFinger
+        </a>
+      </p>
+    </footer>
 
     <script>
       function runCode() {
