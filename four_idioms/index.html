@@ -11,8 +11,9 @@
     <div id="mainMenu" class="active">
       <img id="logo" src="icon-192x192.png" alt="사자성어 로고" />
       <h1>사자성어 놀이터</h1>
-      <p id="version">ver 1.1</p>
+      <p id="version">ver 1.2</p>
       <button id="randomBtn">새로운 문제!</button>
+      <button id="quizBtn">퀴즈 게임</button>
       <button id="optionButton">설정</button>
     </div>
     <div id="questionArea" class="hidden">
@@ -21,6 +22,16 @@
       <button id="showAnswerButton">정답 보기</button>
       <button id="retryButton">다음 문제</button>
       <button id="backButton">메뉴로 돌아가기</button>
+    </div>
+    <div id="quizArea" class="hidden">
+      <div id="quizQuestion"></div>
+      <div id="quizOptions">
+        <button class="quizOption"></button>
+        <button class="quizOption"></button>
+        <button class="quizOption"></button>
+        <button class="quizOption"></button>
+      </div>
+      <button id="quizBackButton">메뉴로 돌아가기</button>
     </div>
     <div id="optionModal" class="modal">
       <div class="modal-content">

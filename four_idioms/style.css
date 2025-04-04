@@ -29,30 +29,30 @@ body {
   color: #ecf0f1;
   padding: 20px;
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.5;
   box-sizing: border-box;
 }
 
 h1 {
-  font-size: 44px;
-  margin-bottom: 20px;
+  font-size: 52px;
+  margin-bottom: 25px;
   color: #ffffff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 #version {
-  font-size: 14px;
+  font-size: 16px;
   color: #bdc3c7;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 button {
   background-color: #e74c3c;
   color: #fff;
   border: none;
-  padding: 20px 40px;
+  padding: 22px 44px;
   border-radius: 15px;
-  font-size: 22px;
+  font-size: 24px;
   cursor: pointer;
   margin: 15px auto;
   transition: background-color 0.3s ease, transform 0.2s ease,
@@ -75,8 +75,9 @@ button:active {
 }
 
 #mainMenu,
-#questionArea {
-  padding: 40px;
+#questionArea,
+#quizArea {
+  padding: 45px;
   background-color: #34495e;
   border-radius: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -86,17 +87,17 @@ button:active {
 }
 
 #questionDisplay {
-  font-size: 32px;
-  margin-bottom: 30px;
+  font-size: 36px;
+  margin-bottom: 35px;
   color: #ecf0f1;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 #answerDisplay {
-  font-size: 50px;
-  margin-bottom: 30px;
+  font-size: 56px;
+  margin-bottom: 35px;
   color: #2ecc71;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .hidden {
@@ -122,24 +123,25 @@ button:active {
 .modal-content {
   background-color: #34495e;
   margin: 10% auto;
-  padding: 30px;
+  padding: 35px;
   border: 1px solid #555;
   width: 90%;
   border-radius: 15px;
   max-width: 500px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
-  text-align: left; /* Align text to the left */
+  text-align: left;
 }
 
 .modal-content h2 {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-size: 26px;
   color: #fff;
 }
 
 .close-button {
   color: #95a5a6;
   float: right;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -183,8 +185,8 @@ button:active {
 }
 
 .creator-info {
-  margin-top: 30px;
-  font-size: 14px;
+  margin-top: 35px;
+  font-size: 16px;
   color: #95a5a6;
 }
 
@@ -197,20 +199,18 @@ button:active {
   text-decoration: underline;
 }
 
-/* Option Window Specific Styles */
 .option-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .option-item label {
-  font-size: 18px;
+  font-size: 20px;
   color: #ecf0f1;
 }
 
-/* Toggle Switch Styles */
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -264,6 +264,49 @@ button:active {
   transform: translateX(22px);
 }
 
+#quizQuestion {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #ecf0f1;
+  line-height: 1.7;
+}
+
+.quizOption {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 10px;
+  transition: background-color 0.3s ease, transform 0.2s ease,
+    box-shadow 0.3s ease;
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.quizOption:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+}
+
+.quizOption:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.quizOption.correct {
+  background-color: #2ecc71;
+}
+
+.quizOption.incorrect {
+  background-color: #e74c3c;
+}
+
 @media (max-width: 768px) {
   body {
     padding: 30px;
@@ -271,24 +314,25 @@ button:active {
   }
 
   h1 {
-    font-size: 48px;
-    margin-bottom: 15px;
+    font-size: 56px;
+    margin-bottom: 20px;
   }
 
   #version {
-    font-size: 16px;
-    margin-bottom: 30px;
+    font-size: 18px;
+    margin-bottom: 35px;
   }
 
   button {
-    padding: 24px 48px;
-    font-size: 26px;
+    padding: 26px 52px;
+    font-size: 28px;
     max-width: 600px;
   }
 
   #mainMenu,
-  #questionArea {
-    padding: 40px;
+  #questionArea,
+  #quizArea {
+    padding: 50px;
     width: 100%;
     max-width: none;
     border-radius: 25px;
@@ -299,21 +343,21 @@ button:active {
   }
 
   #questionDisplay {
-    font-size: 40px;
-    margin-bottom: 30px;
-    line-height: 1.7;
+    font-size: 44px;
+    margin-bottom: 40px;
+    line-height: 1.8;
   }
 
   .modal-content {
     margin: 10% auto;
-    padding: 35px;
+    padding: 40px;
     width: 95%;
     max-width: 600px;
     border-radius: 20px;
   }
 
   .close-button {
-    font-size: 40px;
+    font-size: 44px;
   }
 
   .loading-spinner {
@@ -324,7 +368,11 @@ button:active {
   }
 
   .creator-info {
-    margin-top: 20px;
-    font-size: 16px;
+    margin-top: 25px;
+    font-size: 18px;
+  }
+
+  #quizQuestion {
+    font-size: 36px;
   }
 }
