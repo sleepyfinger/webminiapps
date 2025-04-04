@@ -6,8 +6,16 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "ChosunGs";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
-  font-family: "ghanachoco", sans-serif;
+  font-family: "ghanachoco", "ChosunGs", sans-serif;
 }
 
 body {
@@ -120,6 +128,12 @@ button:active {
   border-radius: 15px;
   max-width: 500px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+  text-align: left; /* Align text to the left */
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: #fff;
 }
 
 .close-button {
@@ -181,6 +195,73 @@ button:active {
 
 .creator-info a:hover {
   text-decoration: underline;
+}
+
+/* Option Window Specific Styles */
+.option-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.option-item label {
+  font-size: 18px;
+  color: #ecf0f1;
+}
+
+/* Toggle Switch Styles */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.toggle-checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.toggle-label:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #2196f3;
+}
+
+.toggle-checkbox:focus + .toggle-label {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+.toggle-checkbox:checked + .toggle-label:before {
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
 }
 
 @media (max-width: 768px) {

@@ -25,13 +25,24 @@
     <div id="optionModal" class="modal">
       <div class="modal-content">
         <span id="closeButton" class="close-button">&times;</span>
-        <div>
-          <input type="checkbox" id="preventScreenOff" />
+        <h2>설정</h2>
+        <div class="option-item">
           <label for="preventScreenOff">화면 꺼짐 방지</label>
+          <div class="toggle-switch">
+            <input
+              type="checkbox"
+              id="preventScreenOff"
+              class="toggle-checkbox"
+            />
+            <label for="preventScreenOff" class="toggle-label"></label>
+          </div>
         </div>
-        <div>
-          <input type="checkbox" id="fullScreen" />
+        <div class="option-item">
           <label for="fullScreen">전체 화면</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="fullScreen" class="toggle-checkbox" />
+            <label for="fullScreen" class="toggle-label"></label>
+          </div>
         </div>
       </div>
     </div>
