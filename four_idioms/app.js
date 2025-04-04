@@ -24,6 +24,7 @@ let currentQuizQuestion = {};
 let quizData = [];
 let idiomsData = [];
 let timerId = null;
+let isCheckingAnswer = false;
 
 async function fetchRandomQuestion() {
   showLoading();
@@ -91,6 +92,8 @@ function startQuiz() {
 }
 
 function loadQuestion() {
+  isCheckingAnswer = false;
+  clearTimeout(timerId);
   const randomIndex = Math.floor(Math.random() * quizData.length);
   currentQuizQuestion = quizData[randomIndex];
   quizQuestion.textContent = currentQuizQuestion.question;
@@ -115,6 +118,10 @@ function shuffleArray(array) {
 }
 
 function checkAnswer(event) {
+  if (isCheckingAnswer) {
+    return;
+  }
+  isCheckingAnswer = true;
   clearTimeout(timerId);
   const selectedButton = event.target;
   const selectedAnswer = selectedButton.textContent;
