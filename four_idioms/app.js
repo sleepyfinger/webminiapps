@@ -1,205 +1,117 @@
-import { data } from "./data.js";
-
+const randomBtn = document.getElementById("randomBtn");
 const mainMenu = document.getElementById("mainMenu");
+const questionArea = document.getElementById("questionArea");
 const questionDisplay = document.getElementById("questionDisplay");
-const backButton = document.getElementById("backButton");
-const title = document.getElementById("title");
-const version = document.getElementById("version");
-const retryButton = document.getElementById("retryButton");
-const answerArea = document.getElementById("answerArea");
 const answerDisplay = document.getElementById("answerDisplay");
 const showAnswerButton = document.getElementById("showAnswerButton");
-const logo = document.getElementById("logo");
-
-let shuffledQuestions = [];
-let currentQuestionIndex = 0;
-let wakeLock = null;
-
+const retryButton = document.getElementById("retryButton");
+const backButton = document.getElementById("backButton");
 const optionButton = document.getElementById("optionButton");
 const optionModal = document.getElementById("optionModal");
-const closeButton = document.querySelector(".close-button");
+const closeButton = document.getElementById("closeButton");
 const preventScreenOffCheckbox = document.getElementById("preventScreenOff");
 const fullScreenCheckbox = document.getElementById("fullScreen");
+const loadingOverlay = document.querySelector(".loading-overlay");
 
-const questions = data.reduce((acc, item) => {
-  (acc[item.topic] = acc[item.topic] || []).push({
-    qst: item.qst,
-    ans: item.ans,
-  });
-  return acc;
-}, {});
+let currentQuestion = null;
 
-const adjustFontSize = () => {
-  const container = questionDisplay.parentElement;
-  let minSize = 1;
-  let maxSize = 1000;
-  let fontSize;
-  while (maxSize - minSize > 1) {
-    fontSize = Math.floor((minSize + maxSize) / 2);
-    questionDisplay.style.fontSize = `${fontSize}px`;
-    if (
-      questionDisplay.scrollWidth <= container.clientWidth &&
-      questionDisplay.scrollHeight <= container.clientHeight
-    ) {
-      minSize = fontSize;
-    } else {
-      maxSize = fontSize;
+async function fetchRandomQuestion() {
+  showLoading();
+  try {
+    const response = await fetch("idioms.json");
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    const data = await response.json();
+    const randomIndex = Math.floor(Math.random() * data.length);
+    currentQuestion = data[randomIndex];
+    return currentQuestion;
+  } catch (error) {
+    console.error("Error fetching question:", error);
+    return null;
+  } finally {
+    hideLoading();
   }
-  questionDisplay.style.fontSize = `${minSize}px`;
-  const maxWidth = container.clientWidth * 0.3;
-  if (questionDisplay.offsetWidth > maxWidth) {
-    questionDisplay.style.fontSize = `${
-      (minSize * maxWidth) / questionDisplay.offsetWidth
-    }px`;
+}
+
+function displayQuestion(question) {
+  questionDisplay.textContent = question.question;
+  answerDisplay.textContent = "";
+}
+
+function displayAnswer(question) {
+  answerDisplay.textContent = question.answer;
+}
+
+function showLoading() {
+  loadingOverlay.style.display = "flex";
+}
+
+function hideLoading() {
+  loadingOverlay.style.display = "none";
+}
+
+randomBtn.addEventListener("click", async () => {
+  const question = await fetchRandomQuestion();
+  if (question) {
+    displayQuestion(question);
+    mainMenu.classList.remove("active");
+    mainMenu.classList.add("hidden");
+    questionArea.classList.remove("hidden");
+    questionArea.classList.add("active");
   }
-};
+});
 
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+showAnswerButton.addEventListener("click", () => {
+  if (currentQuestion) {
+    displayAnswer(currentQuestion);
   }
-};
+});
 
-const hideAllSections = () => {
-  [mainMenu, questionDisplay, version].forEach((el) =>
-    el.classList.remove("active")
-  );
-  title.style.display = "none";
-  version.style.display = "none";
-  backButton.style.display = "none";
-  retryButton.style.display = "none";
-  showAnswerButton.style.display = "none";
-  answerArea.style.display = "none";
-  questionDisplay.style.display = "none";
-  questionDisplay.textContent = "";
-  logo.style.display = "none";
-};
+retryButton.addEventListener("click", async () => {
+  const question = await fetchRandomQuestion();
+  if (question) {
+    displayQuestion(question);
+  }
+});
 
-const toggleFullScreen = () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
+backButton.addEventListener("click", () => {
+  mainMenu.classList.remove("hidden");
+  mainMenu.classList.add("active");
+  questionArea.classList.remove("active");
+  questionArea.classList.add("hidden");
+});
+
+optionButton.addEventListener("click", () => {
+  optionModal.style.display = "block";
+});
+
+closeButton.addEventListener("click", () => {
+  optionModal.style.display = "none";
+});
+
+window.addEventListener("click", (event) => {
+  if (event.target === optionModal) {
+    optionModal.style.display = "none";
+  }
+});
+
+preventScreenOffCheckbox.addEventListener("change", (event) => {
+  if (event.target.checked) {
+    console.log("Prevent screen off enabled");
+  } else {
+    console.log("Prevent screen off disabled");
+  }
+});
+
+fullScreenCheckbox.addEventListener("change", (event) => {
+  if (event.target.checked) {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    }
   } else {
     if (document.exitFullscreen) {
       document.exitFullscreen();
     }
   }
-};
-
-const togglePreventScreenOff = async () => {
-  if (!wakeLock) {
-    try {
-      wakeLock = await navigator.wakeLock.request("screen");
-      console.log("Wake Lock 활성화");
-    } catch (err) {
-      console.error(`${err.name}, ${err.message}`);
-      preventScreenOffCheckbox.checked = false;
-    }
-  } else {
-    await wakeLock.release();
-    wakeLock = null;
-    console.log("Wake Lock 비활성화");
-  }
-};
-
-const selectRandomQuestionFromAll = () => {
-  hideAllSections();
-  const allQuestions = Object.values(questions).flat();
-
-  if (allQuestions.length === 0) {
-    questionDisplay.style.display = "flex";
-    questionDisplay.textContent = `선택 가능한 질문이 없습니다.`;
-    questionDisplay.classList.add("active");
-    backButton.style.display = "block";
-    return;
-  }
-
-  if (shuffledQuestions.length === 0) {
-    shuffledQuestions = [...allQuestions];
-    shuffleArray(shuffledQuestions);
-    currentQuestionIndex = 0;
-  }
-
-  const selectedQuestion = shuffledQuestions[currentQuestionIndex];
-  currentQuestionIndex++;
-  if (currentQuestionIndex >= shuffledQuestions.length) {
-    currentQuestionIndex = 0;
-    shuffleArray(shuffledQuestions);
-  }
-  showQuestionAndAnswer(selectedQuestion);
-};
-
-const showQuestionAndAnswer = (questionData) => {
-  questionDisplay.style.display = "flex";
-  questionDisplay.classList.add("active");
-  questionDisplay.textContent = questionData.qst;
-  answerDisplay.textContent = "";
-
-  showAnswerButton.onclick = () => showAnswer(questionData);
-  showAnswerButton.style.display = "block";
-
-  adjustFontSize();
-  backButton.style.display = "block";
-  retryButton.style.display = "block";
-};
-
-const showAnswer = (questionData) => {
-  answerDisplay.textContent = `${questionData.ans}`;
-  answerArea.style.display = "flex";
-  showAnswerButton.style.display = "none";
-  answerDisplay.style.display = "flex";
-};
-
-const retrySelection = () => selectRandomQuestionFromAll();
-
-const goBack = () => {
-  hideAllSections();
-  mainMenu.classList.add("active");
-  title.style.display = "block";
-  version.style.display = "block";
-  logo.style.display = "block";
-  backButton.style.display = "none";
-};
-
-optionButton.addEventListener("click", () =>
-  optionModal.classList.add("active")
-);
-closeButton.addEventListener("click", () =>
-  optionModal.classList.remove("active")
-);
-window.addEventListener("click", (event) => {
-  if (event.target === optionModal) optionModal.classList.remove("active");
 });
-
-document.addEventListener("visibilitychange", async () => {
-  if (wakeLock !== null && document.visibilityState === "visible") {
-    wakeLock = await navigator.wakeLock.request("screen");
-  }
-});
-document.getElementById("randomBtn").onclick = selectRandomQuestionFromAll;
-backButton.onclick = goBack;
-retryButton.onclick = retrySelection;
-
-const init = () => {
-  document.body.classList.add("dark-theme");
-  preventScreenOffCheckbox.checked = wakeLock !== null;
-  fullScreenCheckbox.checked = false;
-
-  preventScreenOffCheckbox.addEventListener("change", togglePreventScreenOff);
-  fullScreenCheckbox.addEventListener("change", toggleFullScreen);
-  window.addEventListener("resize", () => {
-    if (questionDisplay.classList.contains("active")) {
-      adjustFontSize();
-    }
-  });
-  hideAllSections();
-  mainMenu.classList.add("active");
-  title.style.display = "block";
-  version.style.display = "block";
-  logo.style.display = "block";
-  backButton.style.display = "none";
-  retryButton.style.display = "none";
-};
-
-init();

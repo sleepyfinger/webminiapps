@@ -1,70 +1,46 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>사자성어</title>
+    <title>사자성어 놀이터</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="manifest" href="manifest.json" />
   </head>
-
   <body>
-    <div class="container">
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+    <div id="mainMenu" class="active">
       <img id="logo" src="icon-192x192.png" alt="사자성어 로고" />
-      <h1 id="title">사자성어</h1>
-      <p id="version">ver 1.0</p>
-      <div id="mainMenu" class="active">
-        <button id="randomBtn">시작하기</button>
-      </div>
+      <h1>사자성어 놀이터</h1>
+      <p id="version">ver 1.1</p>
+      <button id="randomBtn">새로운 문제!</button>
+      <button id="optionButton">설정</button>
+    </div>
+    <div id="questionArea" class="hidden">
       <div id="questionDisplay"></div>
-      <div id="answerArea">
-        <div id="answerDisplay"></div>
-      </div>
-      <button id="showAnswerButton" class="showAnswerButton">정답 보기</button>
-      <button id="retryButton">다음 질문</button>
-      <button id="backButton" class="back-button">
-        <span class="emoji">⬅️</span>
-      </button>
-      <button id="optionButton" class="option-button">
-        <span class="emoji">⚙️</span>
-      </button>
-      <div id="optionModal" class="modal">
-        <div class="modal-content">
-          <button class="close-button">
-            <span class="emoji">&times;</span>
-          </button>
-          <h3>옵션</h3>
-          <div class="option-item">
-            <label for="preventScreenOff">화면 꺼짐 방지</label>
-            <label class="switch">
-              <input type="checkbox" id="preventScreenOff" /><span
-                class="slider round"
-              ></span>
-            </label>
-          </div>
-          <div class="option-item">
-            <label for="fullScreen">전체 화면</label>
-            <label class="switch">
-              <input type="checkbox" id="fullScreen" /><span
-                class="slider round"
-              ></span>
-            </label>
-          </div>
+      <div id="answerDisplay"></div>
+      <button id="showAnswerButton">정답 보기</button>
+      <button id="retryButton">다음 문제</button>
+      <button id="backButton">메뉴로 돌아가기</button>
+    </div>
+    <div id="optionModal" class="modal">
+      <div class="modal-content">
+        <span id="closeButton" class="close-button">&times;</span>
+        <div>
+          <input type="checkbox" id="preventScreenOff" />
+          <label for="preventScreenOff">화면 꺼짐 방지</label>
+        </div>
+        <div>
+          <input type="checkbox" id="fullScreen" />
+          <label for="fullScreen">전체 화면</label>
         </div>
       </div>
-
-      <div class="creator-info">
-        Made with ❤️ by
-        <a href="https://blog.naver.com/sleepyfinger" target="_blank">
-          SleepyFinger
-        </a>
-      </div>
     </div>
-    <script type="module" src="app.js"></script>
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("service-worker.js");
-      }
-    </script>
+    <div class="creator-info">
+      Made with ❤️ by
+      <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+        SleepyFinger
+      </a>
+    </div>
+    <script src="app.js"></script>
   </body>
 </html>
