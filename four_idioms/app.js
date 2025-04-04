@@ -22,6 +22,8 @@ let currentQuestion = null;
 let answerVisible = false;
 let currentQuizQuestion = {};
 let quizData = [];
+let idiomsData = [];
+let timerId = null;
 
 async function fetchRandomQuestion() {
   showLoading();
@@ -30,9 +32,9 @@ async function fetchRandomQuestion() {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    const randomIndex = Math.floor(Math.random() * data.length);
-    currentQuestion = data[randomIndex];
+    idiomsData = await response.json();
+    const randomIndex = Math.floor(Math.random() * idiomsData.length);
+    currentQuestion = idiomsData[randomIndex];
     return currentQuestion;
   } catch (error) {
     console.error("Error fetching question:", error);
@@ -98,7 +100,7 @@ function loadQuestion() {
   const optionButtons = quizOptions.querySelectorAll(".quizOption");
   optionButtons.forEach((button, index) => {
     button.textContent = shuffledOptions[index];
-    button.classList.remove("correct", "incorrect");
+    button.classList.remove("correct", "incorrect", "show-answer");
     button.removeEventListener("click", checkAnswer);
     button.addEventListener("click", checkAnswer);
   });
@@ -113,8 +115,10 @@ function shuffleArray(array) {
 }
 
 function checkAnswer(event) {
+  clearTimeout(timerId);
   const selectedButton = event.target;
   const selectedAnswer = selectedButton.textContent;
+  const optionButtons = quizOptions.querySelectorAll(".quizOption");
 
   if (selectedAnswer === currentQuizQuestion.answer) {
     selectedButton.classList.add("correct");
@@ -122,9 +126,14 @@ function checkAnswer(event) {
   } else {
     selectedButton.classList.add("incorrect");
     selectedButton.textContent = "틀렸습니다!";
+    optionButtons.forEach((button) => {
+      if (button.textContent === currentQuizQuestion.answer) {
+        button.classList.add("show-answer");
+      }
+    });
   }
 
-  setTimeout(() => {
+  timerId = setTimeout(() => {
     loadQuestion();
   }, 1000);
 }

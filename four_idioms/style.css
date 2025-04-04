@@ -307,6 +307,12 @@ button:active {
   background-color: #e74c3c;
 }
 
+.quizOption.show-answer {
+  background-color: #2ecc71;
+  color: #fff;
+  font-weight: bold;
+}
+
 @media (max-width: 768px) {
   body {
     padding: 30px;
