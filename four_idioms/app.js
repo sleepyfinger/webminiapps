@@ -14,6 +14,7 @@ const fullScreenCheckbox = document.getElementById("fullScreen");
 const loadingOverlay = document.querySelector(".loading-overlay");
 
 let currentQuestion = null;
+let answerVisible = false;
 
 async function fetchRandomQuestion() {
   showLoading();
@@ -37,10 +38,16 @@ async function fetchRandomQuestion() {
 function displayQuestion(question) {
   questionDisplay.textContent = question.question;
   answerDisplay.textContent = "";
+  answerVisible = false;
+  showAnswerButton.textContent = "정답 보기";
 }
 
 function displayAnswer(question) {
   answerDisplay.textContent = question.answer;
+}
+
+function hideAnswer() {
+  answerDisplay.textContent = "";
 }
 
 function showLoading() {
@@ -64,7 +71,15 @@ randomBtn.addEventListener("click", async () => {
 
 showAnswerButton.addEventListener("click", () => {
   if (currentQuestion) {
-    displayAnswer(currentQuestion);
+    if (answerVisible) {
+      hideAnswer();
+      showAnswerButton.textContent = "정답 보기";
+      answerVisible = false;
+    } else {
+      displayAnswer(currentQuestion);
+      showAnswerButton.textContent = "정답 숨기기";
+      answerVisible = true;
+    }
   }
 });
 
@@ -80,6 +95,9 @@ backButton.addEventListener("click", () => {
   mainMenu.classList.add("active");
   questionArea.classList.remove("active");
   questionArea.classList.add("hidden");
+  hideAnswer();
+  showAnswerButton.textContent = "정답 보기";
+  answerVisible = false;
 });
 
 optionButton.addEventListener("click", () => {
