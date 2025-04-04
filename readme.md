@@ -17,3 +17,4 @@
 [<img src="rhythmtube/icon-192x192.png" width="128">](rhythmtube "리듬튜브")
 [<img src="mbti/icon-192x192.png" width="128">](mbti "나의 성격 유형은?")
 [<img src="anipop/icon-192x192.png" width="128">](anipop "Cute Animals")
+[<img src="four_idioms/icon-192x192.png" width="128">](four_idioms "사자성어 놀이터")
