@@ -12,32 +12,66 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
-    <h1>지지율 게임</h1>
-    <div class="container">
-      <div class="support-info">
-        <div>
-          <img src="bear.png" alt="후보 A" />
-          후보 A 🐻: <span id="supportA">50</span>%
-        </div>
-        <div>현재 날짜: <span id="currentDay">1</span> / 60</div>
-        <div>
-          <img src="fox.png" alt="후보 B" />
-          후보 B 🦊: <span id="supportB">50</span>%
-        </div>
-      </div>
-      <div class="button-container">
-        <button class="button" onclick="playGame('A')">후보 A 응원</button>
-        <button class="button" onclick="playGame('B')">후보 B 응원</button>
-      </div>
-      <canvas id="supportChart"></canvas>
-      <div id="result"></div>
-    </div>
+    <div class="game-container">
+      <header>
+        <img id="logo" src="icon-192x192.png" alt="지지율 게임 로고" />
+        <h1>지지율 게임</h1>
+      </header>
 
-    <div id="popupOverlay">
-      <div class="popup">
-        <h2 id="popupTitle"></h2>
-        <p id="popupMessage"></p>
-        <button id="restartButton" onclick="restartGame()">다시하기</button>
+      <main>
+        <section class="candidates-info">
+          <div class="candidate">
+            <img src="bear.png" alt="후보 A" class="candidate-image" />
+            <div class="candidate-details">
+              <span class="candidate-name">후보 A 🐻</span>
+              <span id="supportA" class="candidate-support">50</span>%
+            </div>
+          </div>
+          <div class="current-day">
+            현재 날짜: <span id="currentDay">1</span> / 60
+          </div>
+          <div class="candidate">
+            <img src="fox.png" alt="후보 B" class="candidate-image" />
+            <div class="candidate-details">
+              <span class="candidate-name">후보 B 🦊</span>
+              <span id="supportB" class="candidate-support">50</span>%
+            </div>
+          </div>
+        </section>
+
+        <section class="game-actions">
+          <div class="button-container">
+            <button class="button" onclick="playGame('A')">
+              후보 A 응원하기
+            </button>
+            <button class="button" onclick="playGame('B')">
+              후보 B 응원하기
+            </button>
+          </div>
+        </section>
+
+        <section class="chart-section">
+          <canvas id="supportChart"></canvas>
+        </section>
+
+        <section class="game-result">
+          <div id="result"></div>
+        </section>
+
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </main>
+
+      <div id="popupOverlay">
+        <div class="popup">
+          <h2 id="popupTitle"></h2>
+          <p id="popupMessage"></p>
+          <button id="restartButton" onclick="restartGame()">다시하기</button>
+        </div>
       </div>
     </div>
 

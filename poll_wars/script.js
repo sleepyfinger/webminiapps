@@ -120,7 +120,7 @@ function updateChart() {
 }
 
 function playGame(candidate) {
-  if (currentDay > maxDays) return;
+  if (currentDay >= maxDays) return;
 
   const change = Math.floor(Math.random() * 11) - 5;
 
@@ -144,7 +144,7 @@ function playGame(candidate) {
   document.getElementById("currentDay").innerText = currentDay;
   updateChart();
 
-  if (currentDay > maxDays) endGame();
+  if (currentDay >= maxDays) endGame();
 }
 
 function showMessage(candidate, change) {
