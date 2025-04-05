@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>지지율 게임</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h1>지지율 게임</h1>
+    <div class="container">
+      <div class="support-info">
+        <div>
+          <img src="bear.png" alt="후보 A" />
+          후보 A 🐻: <span id="supportA">50</span>%
+        </div>
+        <div>현재 날짜: <span id="currentDay">1</span> / 60</div>
+        <div>
+          <img src="fox.png" alt="후보 B" />
+          후보 B 🦊: <span id="supportB">50</span>%
+        </div>
+      </div>
+      <div class="button-container">
+        <button class="button" onclick="playGame('A')">후보 A 응원</button>
+        <button class="button" onclick="playGame('B')">후보 B 응원</button>
+      </div>
+      <canvas id="supportChart"></canvas>
+      <div id="result"></div>
+    </div>
+
+    <div id="popupOverlay">
+      <div class="popup">
+        <h2 id="popupTitle"></h2>
+        <p id="popupMessage"></p>
+        <button id="restartButton" onclick="restartGame()">다시하기</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
