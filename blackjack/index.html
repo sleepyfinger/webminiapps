@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blackjack Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="game-container">
+      <header>
+        <h1>Blackjack</h1>
+      </header>
+
+      <section id="game-area">
+        <div class="dealer-section">
+          <div class="dealer-info">
+            <h2>🤖 Dealer</h2>
+            <p class="score">Score: <span id="dealer-score">0</span></p>
+          </div>
+          <div id="dealer-cards" class="cards"></div>
+        </div>
+
+        <div class="player-section">
+          <div class="player-info">
+            <h2>👤 Player</h2>
+            <p class="score">Score: <span id="player-score">0</span></p>
+            <p class="money">💰 <span id="player-money">1000</span></p>
+          </div>
+          <div id="player-cards" class="cards"></div>
+        </div>
+
+        <div class="game-controls">
+          <div id="bet-area" class="bet-area">
+            <div class="bet-options">
+              <div id="bet-buttons" class="bet-buttons">
+                <button class="bet-amount" data-percentage="0.05">5%</button>
+                <button class="bet-amount" data-percentage="0.1">10%</button>
+                <button class="bet-amount" data-percentage="0.3">30%</button>
+                <button class="bet-amount" data-percentage="0.5">50%</button>
+                <button class="bet-amount" data-amount="all">All-in</button>
+              </div>
+            </div>
+            <div class="bet-input-area">
+              <div class="bet-input-container">
+                <input
+                  type="number"
+                  id="bet-input"
+                  placeholder="Enter Bet"
+                  min="1"
+                />
+                <button id="bet-button" class="game-button">💸</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button id="hit-button" class="game-button action-button hidden">
+              ➕ Hit
+            </button>
+            <button id="stand-button" class="game-button action-button hidden">
+              🛑 Stand
+            </button>
+          </div>
+        </div>
+
+        <div id="result-container" class="result-container hidden">
+          <div id="result-message" class="result-message"></div>
+          <div class="button-container">
+            <button id="restart-button" class="game-button">Restart</button>
+            <button id="new-game-button" class="game-button">New Game</button>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </footer>
+    </main>
+
+    <script src="blackjack.js"></script>
+  </body>
+</html>
