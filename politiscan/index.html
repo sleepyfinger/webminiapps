@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PolitiScan | 정치 성향 분석</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-wrapper">
+      <header class="app-header">
+        <nav class="header-nav">
+          <h1 class="header-title">
+            <span class="header-icon">🕵️</span> PolitiScan
+          </h1>
+        </nav>
+        <div class="version-info">Version 1.0.0</div>
+      </header>
+
+      <main class="container">
+        <section id="intro-section" class="card">
+          <h2 class="intro-title">나의 정치 성향 알아보기</h2>
+          <p class="intro-description">
+            몇 가지 질문에 답하여 정치적 성향을 알아보세요.
+          </p>
+          <div class="button-container">
+            <button id="start-btn" class="neumorphic-btn primary">
+              테스트 시작하기
+            </button>
+          </div>
+        </section>
+
+        <section id="quiz-section" class="card" style="display: none">
+          <div class="progress-bar-container">
+            <progress
+              id="progress"
+              class="progress"
+              value="0"
+              max="100"
+            ></progress>
+          </div>
+
+          <div class="question-card">
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-grid"></div>
+          </div>
+          <div class="button-container">
+            <button id="next-btn" class="neumorphic-btn primary" disabled>
+              다음 질문
+            </button>
+          </div>
+        </section>
+
+        <section id="result-section" class="card" style="display: none">
+          <h2 class="result-title">📊 분석 결과</h2>
+          <p id="result-text" class="result-text"></p>
+          <div id="result-graph" class="result-graph"></div>
+          <div id="result-detail" class="result-detail"></div>
+          <div id="result-labels" class="result-labels"></div>
+          <div class="button-container">
+            <button id="restart-btn" class="neumorphic-btn secondary">
+              다시 테스트하기
+            </button>
+          </div>
+        </section>
+      </main>
+      <footer class="app-footer">
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

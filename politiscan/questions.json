@@ -1,0 +1,456 @@
+[
+  {
+    "text": "정부의 시장 개입은 최소화되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-conservative", "score": 2 },
+      { "text": "그렇다", "type": "moderate-conservative", "score": 1 },
+      { "text": "보통이다", "type": "pragmatic-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "economic-progressive", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-progressive",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "동성 결혼은 합법화되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "social-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "부유층에 대한 세금은 인상되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "국가 안보를 위해 개인의 자유는 제한될 수 있다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "traditional-conservative", "score": 2 },
+      { "text": "그렇다", "type": "social-conservative", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "conservative-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  },
+  {
+    "text": "환경 보호는 경제 성장보다 우선되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "사회적 약자를 위한 정부의 지원은 확대되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "전통적인 가족 가치는 유지되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "traditional-conservative", "score": 2 },
+      { "text": "그렇다", "type": "social-conservative", "score": 1 },
+      { "text": "보통이다", "type": "moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  },
+  {
+    "text": "표현의 자유는 최대한 보장되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "pragmatic-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "외국인 노동자에 대한 복지 혜택은 내국인과 동일하게 제공되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "social-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "교육은 국가가 책임져야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "economic-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "기업의 이윤 추구는 사회적 책임보다 우선되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-conservative", "score": 2 },
+      { "text": "그렇다", "type": "moderate-conservative", "score": 1 },
+      { "text": "보통이다", "type": "pragmatic-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-progressive",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "개인의 성공은 노력에 의해 가장 크게 좌우된다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-conservative", "score": 2 },
+      { "text": "그렇다", "type": "moderate-conservative", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  },
+  {
+    "text": "사회적 불평등은 완전히 해소될 수 없다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "traditional-conservative", "score": 2 },
+      { "text": "그렇다", "type": "economic-conservative", "score": 1 },
+      { "text": "보통이다", "type": "moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  },
+  {
+    "text": "정부는 소수자의 권리를 보호해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-conservative", "score": -2 }
+    ]
+  },
+  {
+    "text": "정부는 경제적 불평등을 해소하기 위해 노력해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "낙태는 여성의 권리로 존중되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "social-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "최저임금은 인상되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "사형 제도는 유지되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "traditional-conservative", "score": 2 },
+      { "text": "그렇다", "type": "social-conservative", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "conservative-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  },
+  {
+    "text": "대기업에 대한 규제는 강화되어야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "국방력 강화는 국가의 최우선 과제라고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "traditional-conservative", "score": 2 },
+      { "text": "그렇다", "type": "social-conservative", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "conservative-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  },
+  {
+    "text": "정부는 사회적 갈등을 조정하고 해결하는 데 적극적으로 나서야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "다양한 문화적 배경을 가진 사람들과의 교류는 사회 발전에 도움이 된다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 과학 기술 발전을 적극적으로 지원해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "pragmatic-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 예술과 문화 활동을 적극적으로 지원해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 공공 의료 시스템을 강화해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 노동자의 권리 보호를 위해 더 적극적으로 나서야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 부동산 투기를 억제하기 위해 적극적으로 나서야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "economic-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "progressive-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "economic-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 젠더 평등을 위해 더 적극적으로 노력해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-conservative", "score": -2 }
+    ]
+  },
+  {
+    "text": "정부는 언론의 자유를 최대한 보장해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "pragmatic-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 개인의 사생활을 최대한 존중해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "social-progressive", "score": 2 },
+      { "text": "그렇다", "type": "moderate-progressive", "score": 1 },
+      { "text": "보통이다", "type": "balanced-moderate", "score": 0 },
+      { "text": "그렇지 않다", "type": "moderate-conservative", "score": -1 },
+      {
+        "text": "전혀 그렇지 않다",
+        "type": "traditional-conservative",
+        "score": -2
+      }
+    ]
+  },
+  {
+    "text": "정부는 시민의 안전을 위해 더 적극적으로 노력해야 한다고 생각하십니까?",
+    "options": [
+      { "text": "매우 그렇다", "type": "traditional-conservative", "score": 2 },
+      { "text": "그렇다", "type": "social-conservative", "score": 1 },
+      {
+        "text": "보통이다",
+        "type": "conservative-leaning-moderate",
+        "score": 0
+      },
+      { "text": "그렇지 않다", "type": "moderate-progressive", "score": -1 },
+      { "text": "전혀 그렇지 않다", "type": "social-progressive", "score": -2 }
+    ]
+  }
+]
