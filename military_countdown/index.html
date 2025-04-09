@@ -169,6 +169,109 @@
 
     <script>
       let intervalId;
+      const storagePrefix = "militaryCountdown_";
+
+      function saveSettings() {
+        const enlistDateValue = document.getElementById("enlistDate").value;
+        const serviceTypeValue = document.getElementById("serviceType").value;
+        const serviceMonthsValue =
+          document.getElementById("serviceMonths").value;
+        const dischargeDateValue =
+          document.getElementById("dischargeDate").value;
+
+        if (enlistDateValue) {
+          localStorage.setItem(storagePrefix + "enlistDate", enlistDateValue);
+        } else {
+          localStorage.removeItem(storagePrefix + "enlistDate");
+        }
+
+        if (serviceTypeValue) {
+          localStorage.setItem(storagePrefix + "serviceType", serviceTypeValue);
+        } else {
+          localStorage.removeItem(storagePrefix + "serviceType");
+        }
+
+        if (serviceTypeValue === "customMonths" && serviceMonthsValue) {
+          localStorage.setItem(
+            storagePrefix + "serviceMonths",
+            serviceMonthsValue
+          );
+          localStorage.removeItem(storagePrefix + "dischargeDate");
+        } else {
+          localStorage.removeItem(storagePrefix + "serviceMonths");
+        }
+
+        if (serviceTypeValue === "customDischargeDate" && dischargeDateValue) {
+          localStorage.setItem(
+            storagePrefix + "dischargeDate",
+            dischargeDateValue
+          );
+          localStorage.removeItem(storagePrefix + "serviceMonths");
+        } else {
+          localStorage.removeItem(storagePrefix + "dischargeDate");
+        }
+      }
+
+      function loadSettings() {
+        const savedEnlistDate = localStorage.getItem(
+          storagePrefix + "enlistDate"
+        );
+        const savedServiceType = localStorage.getItem(
+          storagePrefix + "serviceType"
+        );
+        const savedServiceMonths = localStorage.getItem(
+          storagePrefix + "serviceMonths"
+        );
+        const savedDischargeDate = localStorage.getItem(
+          storagePrefix + "dischargeDate"
+        );
+
+        const enlistDateInput = document.getElementById("enlistDate");
+        const serviceTypeSelect = document.getElementById("serviceType");
+        const serviceMonthsInput = document.getElementById("serviceMonths");
+        const dischargeDateInput = document.getElementById("dischargeDate");
+
+        if (savedEnlistDate) {
+          enlistDateInput.value = savedEnlistDate;
+        }
+
+        if (savedServiceType) {
+          serviceTypeSelect.value = savedServiceType;
+          toggleCustomInputs();
+
+          if (savedServiceType === "customMonths" && savedServiceMonths) {
+            serviceMonthsInput.value = savedServiceMonths;
+          } else if (
+            savedServiceType === "customDischargeDate" &&
+            savedDischargeDate
+          ) {
+            dischargeDateInput.value = savedDischargeDate;
+          }
+        }
+
+        if (canAutoCalculate()) {
+          calculateByServicePeriod();
+        }
+      }
+
+      function canAutoCalculate() {
+        const enlistDateValue = document.getElementById("enlistDate").value;
+        const serviceTypeValue = document.getElementById("serviceType").value;
+        const serviceMonthsValue =
+          document.getElementById("serviceMonths").value;
+        const dischargeDateValue =
+          document.getElementById("dischargeDate").value;
+
+        if (!enlistDateValue) return false;
+
+        if (serviceTypeValue === "customMonths") {
+          return !!serviceMonthsValue;
+        } else if (serviceTypeValue === "customDischargeDate") {
+          return !!dischargeDateValue;
+        } else {
+          return !!serviceTypeValue && !isNaN(parseInt(serviceTypeValue));
+        }
+      }
 
       function toggleCustomInputs() {
         const serviceType = document.getElementById("serviceType").value;
@@ -176,26 +279,42 @@
         const customDischargeDateInput = document.getElementById(
           "customDischargeDateInput"
         );
+        const serviceMonthsField = document.getElementById("serviceMonths");
+        const dischargeDateField = document.getElementById("dischargeDate");
 
         if (serviceType === "customMonths") {
           customMonthsInput.style.display = "block";
           customDischargeDateInput.style.display = "none";
-          document.getElementById("serviceMonths").value = "";
-          document.getElementById("dischargeDate").value = "";
+          if (
+            !localStorage.getItem(storagePrefix + "serviceType") ||
+            localStorage.getItem(storagePrefix + "serviceType") !==
+              "customMonths"
+          ) {
+            serviceMonthsField.value = "";
+          }
+          dischargeDateField.value = "";
         } else if (serviceType === "customDischargeDate") {
           customMonthsInput.style.display = "none";
           customDischargeDateInput.style.display = "block";
-          document.getElementById("serviceMonths").value = "";
-          document.getElementById("dischargeDate").value = "";
+          if (
+            !localStorage.getItem(storagePrefix + "serviceType") ||
+            localStorage.getItem(storagePrefix + "serviceType") !==
+              "customDischargeDate"
+          ) {
+            dischargeDateField.value = "";
+          }
+          serviceMonthsField.value = "";
         } else {
           customMonthsInput.style.display = "none";
           customDischargeDateInput.style.display = "none";
-          document.getElementById("serviceMonths").value = "";
-          document.getElementById("dischargeDate").value = "";
+          serviceMonthsField.value = "";
+          dischargeDateField.value = "";
         }
       }
 
       function calculateByServicePeriod() {
+        clearInterval(intervalId);
+
         const enlistDateInput = document.getElementById("enlistDate").value;
         const serviceType = document.getElementById("serviceType").value;
 
@@ -205,6 +324,10 @@
         }
 
         const enlistDate = new Date(enlistDateInput);
+        if (isNaN(enlistDate.getTime())) {
+          alert("유효한 입대일을 입력해주세요.");
+          return;
+        }
 
         let targetDate;
 
@@ -217,12 +340,13 @@
           }
           serviceMonths = parseInt(serviceMonths);
 
-          if (serviceMonths <= 0) {
-            alert("복무 기간은 양수여야 합니다.");
+          if (isNaN(serviceMonths) || serviceMonths <= 0) {
+            alert("복무 기간은 유효한 양수여야 합니다.");
             return;
           }
-          enlistDate.setMonth(enlistDate.getMonth() + serviceMonths);
-          targetDate = enlistDate;
+          const calculatedDate = new Date(enlistDate);
+          calculatedDate.setMonth(calculatedDate.getMonth() + serviceMonths);
+          targetDate = calculatedDate;
         } else if (serviceType === "customDischargeDate") {
           const dischargeDateInput =
             document.getElementById("dischargeDate").value;
@@ -231,22 +355,44 @@
             return;
           }
           targetDate = new Date(dischargeDateInput);
+          if (isNaN(targetDate.getTime())) {
+            alert("유효한 전역일을 입력해주세요.");
+            return;
+          }
         } else {
           const serviceMonths = parseInt(serviceType);
-          enlistDate.setMonth(enlistDate.getMonth() + serviceMonths);
-          targetDate = enlistDate;
+          if (isNaN(serviceMonths)) {
+            alert("유효한 복무 기간을 선택해주세요.");
+            return;
+          }
+          const calculatedDate = new Date(enlistDate);
+          calculatedDate.setMonth(calculatedDate.getMonth() + serviceMonths);
+          targetDate = calculatedDate;
         }
 
+        saveSettings();
         startCountdown(targetDate);
       }
 
       function startCountdown(targetDate) {
         clearInterval(intervalId);
 
+        if (!(targetDate instanceof Date) || isNaN(targetDate.getTime())) {
+          console.error(
+            "Invalid targetDate provided to startCountdown:",
+            targetDate
+          );
+          document.getElementById("result").innerHTML =
+            "날짜 계산 중 오류가 발생했습니다.";
+          return;
+        }
+
         intervalId = setInterval(() => {
           const today = new Date();
-          targetDate.setHours(0, 0, 0, 0);
-          const diffInMilliseconds = targetDate - today;
+          const targetDateStartOfDay = new Date(targetDate);
+          targetDateStartOfDay.setHours(0, 0, 0, 0);
+
+          const diffInMilliseconds = targetDateStartOfDay - today;
 
           const resultElement = document.getElementById("result");
           if (diffInMilliseconds > 0) {
@@ -288,6 +434,8 @@
           }
         }, 1000);
       }
+
+      document.addEventListener("DOMContentLoaded", loadSettings);
     </script>
   </body>
 </html>
