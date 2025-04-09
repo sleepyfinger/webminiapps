@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✨ 로또 번호 생성기 ✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --primary-hue: 205;
+        --secondary-hue: 155;
+        --primary-color: hsl(var(--primary-hue), 55%, 50%);
+        --primary-dark: hsl(var(--primary-hue), 55%, 40%);
+        --primary-light: hsl(var(--primary-hue), 60%, 92%);
+        --secondary-color: hsl(var(--secondary-hue), 45%, 58%);
+        --secondary-dark: hsl(var(--secondary-hue), 45%, 48%);
+        --secondary-light: hsl(var(--secondary-hue), 50%, 94%);
+        --background-color: hsl(var(--primary-hue), 30%, 97%);
+        --card-background: #ffffff;
+        --text-color: hsl(var(--primary-hue), 20%, 25%);
+        --text-light: hsl(var(--primary-hue), 15%, 98%);
+        --grey-light: hsl(var(--primary-hue), 25%, 90%);
+        --grey-medium: hsl(var(--primary-hue), 15%, 75%);
+        --grey-dark: hsl(var(--primary-hue), 10%, 55%);
+        --error-color: #e65c5c;
+        --success-color: #5cb85c;
+        --border-radius-lg: 16px;
+        --border-radius-md: 10px;
+        --border-radius-sm: 6px;
+        --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.06);
+        --shadow-medium: 0 6px 20px rgba(0, 0, 0, 0.08);
+        --transition-speed: 0.25s;
+        --transition-bounce: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Poppins", "Noto Sans KR", Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        background-color: var(--background-color);
+        padding: 60px 20px;
+        color: var(--text-color);
+        line-height: 1.7;
+      }
+
+      .container {
+        background-color: var(--card-background);
+        padding: 45px 55px;
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-medium);
+        max-width: 720px;
+        width: 100%;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      h1 {
+        color: var(--primary-dark);
+        margin-bottom: 50px;
+        font-weight: 700;
+        font-size: 2.3rem;
+        letter-spacing: -0.5px;
+      }
+      h1 .emoji {
+        display: inline-block;
+        margin: 0 8px;
+        font-size: 1.8rem;
+        vertical-align: -3px;
+      }
+
+      .number-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(55px, 1fr));
+        gap: 15px;
+        max-width: 100%;
+        margin: 50px auto;
+      }
+
+      .number-grid button {
+        width: 55px;
+        height: 55px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: 2px solid var(--grey-light);
+        border-radius: 50%;
+        background-color: var(--card-background);
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .number-grid button:hover {
+        background-color: var(--primary-light);
+        border-color: var(--primary-color);
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-medium);
+        color: var(--primary-dark);
+      }
+
+      .number-grid button.selected {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--secondary-dark)
+        );
+        color: var(--text-light);
+        border-color: transparent;
+        font-weight: 700;
+        transform: scale(1.1) translateY(-2px);
+        box-shadow: 0 6px 15px hsla(var(--secondary-hue), 45%, 58%, 0.4);
+        transition: all var(--transition-speed) var(--transition-bounce);
+      }
+
+      .selection-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 40px;
+        margin-bottom: 50px;
+        padding: 15px;
+        background-color: var(--primary-light);
+        border-radius: var(--border-radius-md);
+      }
+
+      .control-button {
+        padding: 9px 18px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        border: 1px solid var(--grey-medium);
+        border-radius: var(--border-radius-sm);
+        background-color: var(--card-background);
+        color: var(--grey-dark);
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        box-shadow: none;
+      }
+
+      .control-button:hover {
+        background-color: var(--card-background);
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      }
+      .control-button:active {
+        transform: translateY(0);
+        background-color: var(--grey-light);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      #deselectAllButton {
+        background-color: hsl(0, 60%, 93%);
+        border-color: var(--error-color);
+        color: hsl(0, 50%, 45%);
+      }
+      #deselectAllButton:hover {
+        background-color: var(--error-color);
+        border-color: hsl(0, 60%, 45%);
+        color: var(--text-light);
+      }
+
+      .set-count-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 40px 0;
+        gap: 15px;
+        background-color: var(--secondary-light);
+        padding: 15px 25px;
+        border-radius: var(--border-radius-md);
+      }
+
+      .set-count-control label {
+        font-weight: 500;
+        color: var(--secondary-dark);
+        font-size: 0.9rem;
+      }
+
+      #setCountSlider {
+        width: 60%;
+        max-width: 250px;
+        cursor: pointer;
+        accent-color: var(--secondary-color);
+        height: 8px;
+        background: var(--grey-light);
+        border-radius: 4px;
+        outline: none;
+        transition: background var(--transition-speed);
+        vertical-align: middle;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      #setCountSlider:hover {
+        background: var(--grey-medium);
+      }
+
+      #setCountSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 22px;
+        height: 22px;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        cursor: pointer;
+        margin-top: -7px;
+        border: 3px solid var(--card-background);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        transition: background 0.2s ease;
+      }
+      #setCountSlider::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: var(--secondary-color);
+        border-radius: 50%;
+        cursor: pointer;
+        border: 3px solid var(--card-background);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        transition: background 0.2s ease;
+      }
+      #setCountSlider:active::-webkit-slider-thumb {
+        background: var(--secondary-dark);
+      }
+      #setCountSlider:active::-moz-range-thumb {
+        background: var(--secondary-dark);
+      }
+
+      #setCountDisplay {
+        font-weight: 700;
+        color: var(--secondary-dark);
+        min-width: 40px;
+        text-align: center;
+        font-size: 1.15rem;
+        background-color: var(--card-background);
+        padding: 6px 14px;
+        border-radius: var(--border-radius-sm);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+        line-height: 1;
+      }
+
+      .generate-button {
+        padding: 16px 45px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        border: none;
+        border-radius: var(--border-radius-md);
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--primary-dark)
+        );
+        color: var(--text-light);
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        box-shadow: 0 5px 15px hsla(var(--primary-hue), 55%, 50%, 0.35);
+        margin-top: 25px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .generate-button .icon {
+        font-size: 1.3em;
+      }
+
+      .generate-button:hover {
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark),
+          hsl(var(--primary-hue), 55%, 35%)
+        );
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 8px 20px hsla(var(--primary-hue), 55%, 50%, 0.45);
+      }
+      .generate-button:active {
+        transform: translateY(0) scale(1);
+        box-shadow: 0 3px 8px hsla(var(--primary-hue), 55%, 50%, 0.3);
+      }
+
+      .result-container {
+        margin-top: 50px;
+        position: relative;
+      }
+
+      .result {
+        font-size: 1rem;
+        line-height: 1.8;
+        color: var(--text-color);
+        font-weight: 400;
+        min-height: 120px;
+        background-color: var(--background-color);
+        padding: 30px 35px;
+        border-radius: var(--border-radius-md);
+        text-align: left;
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        overflow-y: auto;
+        max-height: 450px;
+        border: 1px solid var(--grey-light);
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.04);
+      }
+
+      .result.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .result-header {
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 20px;
+        display: block;
+        font-size: 1.15rem;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--primary-light);
+      }
+      .result-header .emoji {
+        margin-right: 8px;
+        font-size: 1.1em;
+        vertical-align: -1px;
+      }
+
+      .result-error {
+        color: var(--error-color);
+        font-weight: 600;
+        font-size: 1.05rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .result-error .icon {
+        font-size: 1.3em;
+      }
+
+      .lotto-set {
+        margin-bottom: 12px;
+        padding: 15px 10px 15px 15px;
+        border-bottom: 1px solid var(--grey-light);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.1rem;
+        letter-spacing: 1.5px;
+        background-color: transparent;
+        border-radius: var(--border-radius-sm);
+        transition: background-color 0.2s ease;
+      }
+      .lotto-set:hover {
+        background-color: hsla(var(--secondary-hue), 50%, 90%, 0.4);
+      }
+      .lotto-set:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+      .lotto-set::before {
+        content: "SET";
+        font-weight: 700;
+        color: var(--secondary-dark);
+        font-size: 0.75rem;
+        background-color: var(--secondary-light);
+        padding: 4px 8px;
+        border-radius: 4px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .lotto-set span {
+        flex-grow: 1;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+      }
+
+      #copyButton {
+        position: absolute;
+        top: 28px;
+        right: 30px;
+        padding: 8px 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid var(--grey-medium);
+        border-radius: var(--border-radius-sm);
+        background-color: var(--card-background);
+        color: var(--primary-color);
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.9) translateY(-5px);
+        box-shadow: var(--shadow-soft);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #copyButton .icon {
+        font-size: 1.1em;
+      }
+
+      #copyButton.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1) translateY(0);
+      }
+
+      #copyButton:hover:not(.copied) {
+        background-color: var(--primary-light);
+        border-color: var(--primary-color);
+        color: var(--primary-dark);
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: var(--shadow-medium);
+      }
+
+      #copyButton.copied {
+        background-color: var(--success-color);
+        border-color: hsl(120, 39%, 44%);
+        color: var(--text-light);
+        transform: scale(1) translateY(0);
+      }
+      #copyButton.copied:hover {
+        background-color: hsl(120, 40%, 50%);
+        border-color: hsl(120, 39%, 40%);
+        color: var(--text-light);
+        transform: scale(1.05) translateY(-2px);
+      }
+
+      .app-footer {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid var(--grey-light);
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--grey-dark);
+      }
+
+      .app-footer .creator-info a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color var(--transition-speed) ease;
+      }
+
+      .app-footer .creator-info a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 40px 15px;
+        }
+        .container {
+          padding: 30px 35px;
+        }
+        h1 {
+          font-size: 1.9rem;
+          margin-bottom: 35px;
+        }
+        .number-grid {
+          gap: 10px;
+          margin: 35px auto;
+          grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        }
+        .number-grid button {
+          width: 50px;
+          height: 50px;
+          font-size: 1rem;
+        }
+        .selection-controls {
+          padding: 10px;
+          gap: 8px;
+          margin-bottom: 40px;
+        }
+        .control-button {
+          padding: 8px 15px;
+          font-size: 0.75rem;
+        }
+        .set-count-control {
+          flex-direction: column;
+          gap: 12px;
+          padding: 15px;
+          margin: 30px 0;
+        }
+        #setCountSlider {
+          width: 80%;
+          max-width: none;
+        }
+        .generate-button {
+          padding: 14px 35px;
+          font-size: 1.05rem;
+        }
+        .result-container {
+          margin-top: 40px;
+        }
+        .result {
+          padding: 20px 25px;
+          max-height: 350px;
+        }
+        .lotto-set {
+          font-size: 1rem;
+          padding: 12px 8px 12px 10px;
+          gap: 8px;
+          letter-spacing: 1px;
+        }
+        .lotto-set::before {
+          font-size: 0.7rem;
+          padding: 3px 6px;
+        }
+        #copyButton {
+          top: 20px;
+          right: 20px;
+          padding: 6px 10px;
+          font-size: 0.75rem;
+        }
+        .app-footer {
+          margin-top: 30px;
+          padding-top: 15px;
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 25px 10px;
+        }
+        .container {
+          padding: 25px 20px;
+        }
+        h1 {
+          font-size: 1.7rem;
+          margin-bottom: 30px;
+        }
+        .number-grid {
+          gap: 8px;
+          margin: 30px auto;
+          grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
+        }
+        .number-grid button {
+          width: 45px;
+          height: 45px;
+          font-size: 0.9rem;
+        }
+        .selection-controls {
+          margin-bottom: 30px;
+        }
+        .generate-button {
+          padding: 12px 30px;
+          font-size: 1rem;
+          width: 100%;
+          justify-content: center;
+        }
+        .result {
+          padding: 15px 20px;
+          max-height: 300px;
+        }
+        .lotto-set {
+          font-size: 0.95rem;
+        }
+        #copyButton {
+          top: 15px;
+          right: 15px;
+        }
+        .app-footer {
+          margin-top: 25px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        <span class="emoji">✨</span> 로또 번호 생성기
+        <span class="emoji">✨</span>
+      </h1>
+
+      <div class="number-grid" id="numberGrid"></div>
+
+      <div class="selection-controls">
+        <button class="control-button" id="selectAllButton">전체 선택</button>
+        <button class="control-button" id="selectEvenButton">짝수+</button>
+        <button class="control-button" id="selectOddButton">홀수+</button>
+        <button class="control-button" id="select1_10Button">1-10+</button>
+        <button class="control-button" id="select11_20Button">11-20+</button>
+        <button class="control-button" id="select21_30Button">21-30+</button>
+        <button class="control-button" id="select31_40Button">31-40+</button>
+        <button class="control-button" id="select41_45Button">41-45+</button>
+        <button class="control-button" id="deselectAllButton">전체 해제</button>
+      </div>
+
+      <div class="set-count-control">
+        <label for="setCountSlider">생성 개수:</label>
+        <input type="range" id="setCountSlider" min="1" max="10" value="5" />
+        <span id="setCountDisplay">5</span>
+      </div>
+
+      <button class="generate-button" id="generateButton">
+        <span class="icon">🚀</span> 번호 생성
+      </button>
+
+      <div class="result-container">
+        <div class="result" id="result">
+          번호를 선택하고 생성 버튼을 누르세요.
+        </div>
+        <button id="copyButton"><span class="icon">📋</span> 복사</button>
+      </div>
+
+      <footer class="app-footer">
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const numberGrid = document.getElementById("numberGrid");
+      const selectAllButton = document.getElementById("selectAllButton");
+      const deselectAllButton = document.getElementById("deselectAllButton");
+      const selectEvenButton = document.getElementById("selectEvenButton");
+      const selectOddButton = document.getElementById("selectOddButton");
+      const select1_10Button = document.getElementById("select1_10Button");
+      const select11_20Button = document.getElementById("select11_20Button");
+      const select21_30Button = document.getElementById("select21_30Button");
+      const select31_40Button = document.getElementById("select31_40Button");
+      const select41_45Button = document.getElementById("select41_45Button");
+      const generateButton = document.getElementById("generateButton");
+      const result = document.getElementById("result");
+      const setCountSlider = document.getElementById("setCountSlider");
+      const setCountDisplay = document.getElementById("setCountDisplay");
+      const copyButton = document.getElementById("copyButton");
+
+      const numberButtons = [];
+      let copyTimeout = null;
+
+      function initializeNumberGrid() {
+        const fragment = document.createDocumentFragment();
+        for (let i = 1; i <= 45; i++) {
+          const button = document.createElement("button");
+          button.textContent = i;
+          button.dataset.number = i;
+          button.addEventListener("click", () => {
+            button.classList.toggle("selected");
+            updateResultPlaceholder();
+          });
+          fragment.appendChild(button);
+          numberButtons.push(button);
+        }
+        numberGrid.appendChild(fragment);
+      }
+
+      function updateResultPlaceholder() {
+        if (!result.querySelector(".result-header")) {
+          const selectedCount = document.querySelectorAll(
+            ".number-grid button.selected"
+          ).length;
+          let message = "";
+          let style = "color: var(--grey-dark); font-style: italic;";
+
+          if (selectedCount < 6) {
+            message = `${selectedCount}개 선택됨. 6개 이상 선택해주세요.`;
+          } else {
+            message = `${selectedCount}개 선택됨. 번호를 생성할 준비가 되었습니다.`;
+            style = "color: var(--text-color);";
+          }
+          result.innerHTML = `<span style="${style}">${message}</span>`;
+          result.classList.remove("visible");
+          copyButton.classList.remove("visible");
+          resetCopyButton();
+        }
+      }
+
+      function resetCopyButton() {
+        if (copyTimeout) {
+          clearTimeout(copyTimeout);
+          copyTimeout = null;
+        }
+        copyButton.innerHTML = '<span class="icon">📋</span> 복사';
+        copyButton.classList.remove("copied");
+        copyButton.disabled = false;
+      }
+
+      function displayResults(lottoSets) {
+        const setCount = lottoSets.length;
+        let resultHTML = `<span class="result-header"><span class="emoji">🍀</span> 생성된 번호 세트 (${setCount}개)</span>`;
+        result.innerHTML = resultHTML;
+
+        const fragment = document.createDocumentFragment();
+        lottoSets.forEach((set) => {
+          const setElement = document.createElement("div");
+          setElement.classList.add("lotto-set");
+          const numbersSpan = document.createElement("span");
+          numbersSpan.textContent = set.join(", ");
+          setElement.appendChild(numbersSpan);
+          fragment.appendChild(setElement);
+        });
+        result.appendChild(fragment);
+
+        result.classList.add("visible");
+        if (setCount > 0) {
+          setTimeout(() => copyButton.classList.add("visible"), 150);
+        }
+      }
+
+      function displayError(message) {
+        result.innerHTML = `<span class="result-error"><span class="icon">⚠️</span> ${message}</span>`;
+        result.classList.add("visible");
+        copyButton.classList.remove("visible");
+        resetCopyButton();
+      }
+
+      function handleSetCountChange() {
+        setCountDisplay.textContent = setCountSlider.value;
+      }
+
+      function handleSelectAll() {
+        numberButtons.forEach((btn) => btn.classList.add("selected"));
+        updateResultPlaceholder();
+      }
+
+      function handleDeselectAll() {
+        numberButtons.forEach((btn) => btn.classList.remove("selected"));
+        updateResultPlaceholder();
+      }
+
+      function handleSelectEven() {
+        numberButtons.forEach((btn) => {
+          if (parseInt(btn.dataset.number) % 2 === 0) {
+            btn.classList.add("selected");
+          }
+        });
+        updateResultPlaceholder();
+      }
+
+      function handleSelectOdd() {
+        numberButtons.forEach((btn) => {
+          if (parseInt(btn.dataset.number) % 2 !== 0) {
+            btn.classList.add("selected");
+          }
+        });
+        updateResultPlaceholder();
+      }
+
+      function handleSelectRange(min, max) {
+        numberButtons.forEach((btn) => {
+          const num = parseInt(btn.dataset.number);
+          if (num >= min && num <= max) {
+            btn.classList.add("selected");
+          }
+        });
+        updateResultPlaceholder();
+      }
+
+      function handleGenerate() {
+        const selectedButtons = numberGrid.querySelectorAll("button.selected");
+        const selectedNumbers = Array.from(selectedButtons, (btn) =>
+          parseInt(btn.dataset.number)
+        );
+        const setCount = parseInt(setCountSlider.value);
+
+        result.classList.remove("visible");
+        copyButton.classList.remove("visible");
+        resetCopyButton();
+
+        setTimeout(() => {
+          if (selectedNumbers.length < 6) {
+            displayError(
+              `6개 이상의 숫자를 선택해주세요! (${selectedNumbers.length}개 선택됨)`
+            );
+            return;
+          }
+
+          const generatedSets = [];
+          for (let i = 0; i < setCount; i++) {
+            let shuffledNumbers = [...selectedNumbers];
+            for (let j = shuffledNumbers.length - 1; j > 0; j--) {
+              const k = Math.floor(Math.random() * (j + 1));
+              [shuffledNumbers[j], shuffledNumbers[k]] = [
+                shuffledNumbers[k],
+                shuffledNumbers[j],
+              ];
+            }
+            const lottoNumbers = shuffledNumbers
+              .slice(0, 6)
+              .sort((a, b) => a - b);
+            generatedSets.push(lottoNumbers);
+          }
+
+          displayResults(generatedSets);
+        }, 50);
+      }
+
+      function handleCopy() {
+        const sets = result.querySelectorAll(".lotto-set span");
+        if (
+          sets.length === 0 ||
+          copyButton.classList.contains("copied") ||
+          !copyButton.classList.contains("visible")
+        ) {
+          return;
+        }
+
+        const textToCopy = Array.from(sets)
+          .map((span) => span.textContent)
+          .join("\n");
+
+        if (!navigator.clipboard) {
+          console.error("Clipboard API not supported.");
+          alert(
+            "클립보드 복사 기능이 지원되지 않는 브라우저 또는 환경입니다.\n(참고: file:// 또는 http:// 환경에서는 보안상 제한될 수 있습니다. https:// 환경에서 시도해보세요.)"
+          );
+          copyButton.innerHTML = '<span class="icon">❌</span> 지원안됨';
+          copyButton.disabled = true;
+          if (copyTimeout) clearTimeout(copyTimeout);
+          copyTimeout = setTimeout(resetCopyButton, 2500);
+          return;
+        }
+
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            copyButton.innerHTML = '<span class="icon">✅</span> 복사됨!';
+            copyButton.classList.add("copied");
+            if (copyTimeout) clearTimeout(copyTimeout);
+            copyTimeout = setTimeout(resetCopyButton, 2000);
+          })
+          .catch((err) => {
+            console.error("Copy failed:", err);
+            let failMsg = '<span class="icon">❌</span> 실패';
+            let alertMsg = `복사에 실패했습니다. 에러: ${err.message}\n(참고: file:// 또는 http:// 환경에서는 보안상 제한될 수 있습니다. https:// 환경에서 시도해보세요.)`;
+
+            if (err.name === "NotAllowedError") {
+              failMsg = '<span class="icon">❌</span> 권한필요';
+              alertMsg =
+                "클립보드 쓰기 권한이 필요합니다. 브라우저 설정을 확인해주세요.\n(참고: file:// 또는 http:// 환경에서는 보안상 제한될 수 있습니다. https:// 환경에서 시도해보세요.)";
+            }
+            alert(alertMsg);
+
+            copyButton.innerHTML = failMsg;
+            copyButton.disabled = true;
+            if (copyTimeout) clearTimeout(copyTimeout);
+            copyTimeout = setTimeout(resetCopyButton, 2500);
+          });
+      }
+
+      function setupEventListeners() {
+        setCountSlider.addEventListener("input", handleSetCountChange);
+        selectAllButton.addEventListener("click", handleSelectAll);
+        deselectAllButton.addEventListener("click", handleDeselectAll);
+        selectEvenButton.addEventListener("click", handleSelectEven);
+        selectOddButton.addEventListener("click", handleSelectOdd);
+
+        select1_10Button.addEventListener("click", () =>
+          handleSelectRange(1, 10)
+        );
+        select11_20Button.addEventListener("click", () =>
+          handleSelectRange(11, 20)
+        );
+        select21_30Button.addEventListener("click", () =>
+          handleSelectRange(21, 30)
+        );
+        select31_40Button.addEventListener("click", () =>
+          handleSelectRange(31, 40)
+        );
+        select41_45Button.addEventListener("click", () =>
+          handleSelectRange(41, 45)
+        );
+
+        generateButton.addEventListener("click", handleGenerate);
+        copyButton.addEventListener("click", handleCopy);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeNumberGrid();
+        setupEventListeners();
+        updateResultPlaceholder();
+      });
+    </script>
+  </body>
+</html>
