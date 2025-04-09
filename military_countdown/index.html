@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>전역일 계산기</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Orbitron:wght@500;700&family=Roboto+Mono:wght@400;500;700&display=swap");
+
+      :root {
+        --bg-light-main: #f8f9fa;
+        --bg-light-container: #ffffff;
+        --bg-light-input: #ffffff;
+        --text-light-primary: #24292f;
+        --text-light-secondary: #57606a;
+        --accent-light-color: #0969da;
+        --accent-light-hover: #0550ae;
+        --border-light-color: #d0d7de;
+        --error-light-color: #d73a49;
+        --progress-light-bg: #eaeff3;
+      }
+
       * {
         box-sizing: border-box;
         margin: 0;
@@ -13,30 +28,37 @@
 
       body {
         font-family: "Noto Sans KR", sans-serif;
-        background-color: #f8f8fa;
-        color: #333;
+        background-color: var(--bg-light-main);
+        color: var(--text-light-primary);
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
         padding: 20px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
       .container {
         max-width: 600px;
         width: 100%;
-        background-color: #fff;
-        border-radius: 15px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        padding: 30px;
+        background-color: var(--bg-light-container);
+        border-radius: 10px;
+        border: 1px solid var(--border-light-color);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        padding: 35px;
         text-align: center;
       }
 
       h1 {
-        color: #2e86de;
-        font-size: 2.2rem;
-        margin-bottom: 20px;
+        font-family: "Orbitron", sans-serif;
+        color: var(--accent-light-color);
+        font-size: 2.1rem;
+        margin-bottom: 30px;
         font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        text-shadow: none;
       }
 
       label {
@@ -44,86 +66,182 @@
         margin-top: 20px;
         font-weight: 500;
         text-align: left;
+        color: var(--text-light-secondary);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
       }
 
       input[type="date"],
       input[type="number"],
       select {
         width: 100%;
-        padding: 12px;
+        padding: 12px 15px;
         margin-top: 8px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+        background-color: var(--bg-light-input);
+        border: 1px solid var(--border-light-color);
+        border-radius: 6px;
         font-size: 16px;
-        transition: border-color 0.3s ease;
+        color: var(--text-light-primary);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        font-family: "Noto Sans KR", sans-serif;
+        appearance: none;
+      }
+
+      input[type="date"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.2s ease;
+      }
+      input[type="date"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 0.9;
       }
 
       input[type="date"]:focus,
       input[type="number"]:focus,
       select:focus {
         outline: none;
-        border-color: #2e86de;
+        border-color: var(--accent-light-color);
+        box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
+      }
+
+      select {
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 16px 12px;
+        padding-right: 40px;
       }
 
       button {
-        background-color: #2e86de;
-        color: white;
+        background-color: var(--accent-light-color);
+        color: #ffffff;
         border: none;
-        border-radius: 8px;
-        padding: 12px 20px;
+        border-radius: 6px;
+        padding: 14px 30px;
         cursor: pointer;
         font-size: 16px;
-        margin-top: 20px;
-        transition: background-color 0.3s ease;
+        font-weight: 600;
+        margin-top: 30px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: "Noto Sans KR", sans-serif;
+        box-shadow: none;
       }
 
       button:hover {
-        background-color: #2471a3;
+        background-color: var(--accent-light-hover);
+        transform: none;
+      }
+      button:active {
+        transform: scale(0.98);
+        background-color: var(--accent-light-color);
       }
 
       #customMonthsInput,
       #customDischargeDateInput {
         display: none;
+        margin-top: 15px;
+      }
+
+      .progress-container {
+        width: 100%;
+        background-color: var(--progress-light-bg);
+        border-radius: 5px;
+        margin-top: 30px;
+        height: 8px;
+        overflow: hidden;
+        box-shadow: none;
+      }
+
+      #progressBar {
+        width: 0%;
+        height: 100%;
+        background-color: var(--accent-light-color);
+        border-radius: 5px;
+        transition: width 0.5s ease-out;
+        box-shadow: none;
       }
 
       #result {
-        margin-top: 30px;
+        margin-top: 15px;
         padding: 20px;
-        background-color: #e8f0fe;
-        border-left: 5px solid #2e86de;
+        background-color: var(--bg-light-input);
+        border: 1px solid var(--border-light-color);
         border-radius: 8px;
         text-align: left;
+        font-size: 1rem;
+        line-height: 1.8;
+        font-family: "Roboto Mono", monospace;
+        color: var(--text-light-primary);
+      }
+      #result .label {
+        color: var(--text-light-secondary);
+        font-size: 0.85rem;
+        margin-right: 8px;
+      }
+      #result .value {
+        color: var(--text-light-primary);
+        font-weight: 700;
         font-size: 1.1rem;
-        line-height: 1.6;
+      }
+      #result .unit {
+        color: var(--text-light-secondary);
+        font-size: 0.9rem;
+        margin-left: 2px;
+        margin-right: 10px;
+      }
+      #result br {
+        display: none;
+      }
+      #result > div {
+        margin-bottom: 8px;
+      }
+      #result > div:last-child {
+        margin-bottom: 0;
+      }
+
+      #result .error {
+        color: var(--error-light-color);
+        font-weight: 500;
+        font-family: "Noto Sans KR", sans-serif;
       }
 
       .creator-info {
-        margin-top: 20px;
+        margin-top: 30px;
         text-align: center;
-        font-size: 0.8rem;
-        color: #777;
+        font-size: 0.75rem;
+        color: var(--text-light-secondary);
+        opacity: 0.8;
       }
 
       .creator-info a {
-        color: #2e86de;
+        color: var(--accent-light-color);
         text-decoration: none;
         font-weight: 500;
+        transition: color 0.2s ease;
+      }
+      .creator-info a:hover {
+        color: var(--accent-light-hover);
+        text-decoration: underline;
       }
 
       @media (max-width: 480px) {
         .container {
-          padding: 20px;
+          padding: 25px;
         }
-
         h1 {
           font-size: 1.8rem;
         }
+        #result {
+          font-size: 0.9rem;
+          padding: 15px;
+        }
+        #result .value {
+          font-size: 1rem;
+        }
       }
     </style>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body>
     <div class="container">
@@ -132,18 +250,18 @@
       <label for="enlistDate">입대일:</label>
       <input type="date" id="enlistDate" required />
 
-      <label for="serviceType">복무 기간:</label>
+      <label for="serviceType">복무 구분:</label>
       <select id="serviceType" onchange="toggleCustomInputs()">
         <option value="18">육군/해병대/의경/해경 (18개월)</option>
         <option value="20">해군/소방원 (20개월)</option>
         <option value="22">공군 (22개월)</option>
         <option value="21">사회복무요원 (21개월)</option>
-        <option value="customMonths">직접 입력(개월)</option>
-        <option value="customDischargeDate">직접 입력(전역일)</option>
+        <option value="customMonths">직접 입력 (개월)</option>
+        <option value="customDischargeDate">직접 입력 (전역일)</option>
       </select>
 
       <div id="customMonthsInput">
-        <label for="serviceMonths">복무 기간(개월):</label>
+        <label for="serviceMonths">복무 기간 (개월):</label>
         <input type="number" id="serviceMonths" placeholder="예: 18" min="1" />
       </div>
 
@@ -154,7 +272,11 @@
 
       <button onclick="calculateByServicePeriod()">전역일 계산</button>
 
-      <div id="result"></div>
+      <div class="progress-container">
+        <div id="progressBar"></div>
+      </div>
+
+      <div id="result">계산 대기 중...</div>
 
       <div class="creator-info">
         Made with ❤️ by
@@ -170,6 +292,7 @@
     <script>
       let intervalId;
       const storagePrefix = "militaryCountdown_";
+      let initialEnlistDate;
 
       function saveSettings() {
         const enlistDateValue = document.getElementById("enlistDate").value;
@@ -230,6 +353,8 @@
         const serviceTypeSelect = document.getElementById("serviceType");
         const serviceMonthsInput = document.getElementById("serviceMonths");
         const dischargeDateInput = document.getElementById("dischargeDate");
+        const resultElement = document.getElementById("result");
+        const progressBar = document.getElementById("progressBar");
 
         if (savedEnlistDate) {
           enlistDateInput.value = savedEnlistDate;
@@ -247,10 +372,16 @@
           ) {
             dischargeDateInput.value = savedDischargeDate;
           }
+        } else {
+          toggleCustomInputs();
         }
 
         if (canAutoCalculate()) {
           calculateByServicePeriod();
+        } else {
+          clearInterval(intervalId);
+          resultElement.innerHTML = "계산 대기 중...";
+          progressBar.style.width = "0%";
         }
       }
 
@@ -282,33 +413,24 @@
         const serviceMonthsField = document.getElementById("serviceMonths");
         const dischargeDateField = document.getElementById("dischargeDate");
 
+        const isLoading =
+          typeof event === "undefined" || !event || event.type !== "change";
+
         if (serviceType === "customMonths") {
           customMonthsInput.style.display = "block";
           customDischargeDateInput.style.display = "none";
-          if (
-            !localStorage.getItem(storagePrefix + "serviceType") ||
-            localStorage.getItem(storagePrefix + "serviceType") !==
-              "customMonths"
-          ) {
-            serviceMonthsField.value = "";
-          }
-          dischargeDateField.value = "";
+          if (!isLoading) dischargeDateField.value = "";
         } else if (serviceType === "customDischargeDate") {
           customMonthsInput.style.display = "none";
           customDischargeDateInput.style.display = "block";
-          if (
-            !localStorage.getItem(storagePrefix + "serviceType") ||
-            localStorage.getItem(storagePrefix + "serviceType") !==
-              "customDischargeDate"
-          ) {
-            dischargeDateField.value = "";
-          }
-          serviceMonthsField.value = "";
+          if (!isLoading) serviceMonthsField.value = "";
         } else {
           customMonthsInput.style.display = "none";
           customDischargeDateInput.style.display = "none";
-          serviceMonthsField.value = "";
-          dischargeDateField.value = "";
+          if (!isLoading) {
+            serviceMonthsField.value = "";
+            dischargeDateField.value = "";
+          }
         }
       }
 
@@ -317,15 +439,22 @@
 
         const enlistDateInput = document.getElementById("enlistDate").value;
         const serviceType = document.getElementById("serviceType").value;
+        const resultElement = document.getElementById("result");
+        const progressBar = document.getElementById("progressBar");
+
+        progressBar.style.width = "0%";
 
         if (!enlistDateInput) {
-          alert("입대일을 입력해주세요.");
+          resultElement.innerHTML = `<span class="error">오류: 입대일을 입력해주세요.</span>`;
           return;
         }
 
         const enlistDate = new Date(enlistDateInput);
+        enlistDate.setHours(0, 0, 0, 0);
+        initialEnlistDate = new Date(enlistDate);
+
         if (isNaN(enlistDate.getTime())) {
-          alert("유효한 입대일을 입력해주세요.");
+          resultElement.innerHTML = `<span class="error">오류: 유효한 입대일을 입력해주세요.</span>`;
           return;
         }
 
@@ -335,101 +464,179 @@
           let serviceMonths = document.getElementById("serviceMonths").value;
 
           if (!serviceMonths) {
-            alert("복무 기간을 입력해주세요.");
+            resultElement.innerHTML = `<span class="error">오류: 복무 기간(개월)을 입력해주세요.</span>`;
             return;
           }
           serviceMonths = parseInt(serviceMonths);
 
           if (isNaN(serviceMonths) || serviceMonths <= 0) {
-            alert("복무 기간은 유효한 양수여야 합니다.");
+            resultElement.innerHTML = `<span class="error">오류: 복무 기간은 양수여야 합니다.</span>`;
             return;
           }
           const calculatedDate = new Date(enlistDate);
           calculatedDate.setMonth(calculatedDate.getMonth() + serviceMonths);
+          calculatedDate.setDate(calculatedDate.getDate() - 1);
           targetDate = calculatedDate;
         } else if (serviceType === "customDischargeDate") {
           const dischargeDateInput =
             document.getElementById("dischargeDate").value;
           if (!dischargeDateInput) {
-            alert("전역일을 입력해주세요.");
+            resultElement.innerHTML = `<span class="error">오류: 전역일을 입력해주세요.</span>`;
             return;
           }
           targetDate = new Date(dischargeDateInput);
+          targetDate.setHours(0, 0, 0, 0);
+
           if (isNaN(targetDate.getTime())) {
-            alert("유효한 전역일을 입력해주세요.");
+            resultElement.innerHTML = `<span class="error">오류: 유효한 전역일을 입력해주세요.</span>`;
             return;
           }
         } else {
           const serviceMonths = parseInt(serviceType);
           if (isNaN(serviceMonths)) {
-            alert("유효한 복무 기간을 선택해주세요.");
+            resultElement.innerHTML = `<span class="error">오류: 유효한 복무 구분을 선택해주세요.</span>`;
             return;
           }
           const calculatedDate = new Date(enlistDate);
           calculatedDate.setMonth(calculatedDate.getMonth() + serviceMonths);
+          calculatedDate.setDate(calculatedDate.getDate() - 1);
           targetDate = calculatedDate;
+        }
+
+        if (targetDate < enlistDate) {
+          resultElement.innerHTML = `<span class="error">오류: 전역일은 입대일보다 빠를 수 없습니다.</span>`;
+          return;
         }
 
         saveSettings();
         startCountdown(targetDate);
       }
 
+      function formatNumber(num) {
+        return num < 10 ? "0" + num : String(num);
+      }
+
       function startCountdown(targetDate) {
         clearInterval(intervalId);
 
-        if (!(targetDate instanceof Date) || isNaN(targetDate.getTime())) {
+        if (
+          !(targetDate instanceof Date) ||
+          isNaN(targetDate.getTime()) ||
+          !initialEnlistDate
+        ) {
           console.error(
-            "Invalid targetDate provided to startCountdown:",
-            targetDate
+            "Invalid date provided to startCountdown:",
+            targetDate,
+            initialEnlistDate
           );
-          document.getElementById("result").innerHTML =
-            "날짜 계산 중 오류가 발생했습니다.";
+          document.getElementById(
+            "result"
+          ).innerHTML = `<span class="error">오류: 날짜 계산 초기화 실패.</span>`;
+          document.getElementById("progressBar").style.width = "0%";
           return;
         }
 
+        const targetEndOfDay = new Date(targetDate);
+        targetEndOfDay.setHours(23, 59, 59, 999);
+
+        const totalDuration = targetEndOfDay - initialEnlistDate;
+
         intervalId = setInterval(() => {
           const today = new Date();
-          const targetDateStartOfDay = new Date(targetDate);
-          targetDateStartOfDay.setHours(0, 0, 0, 0);
-
-          const diffInMilliseconds = targetDateStartOfDay - today;
-
+          const diffInMilliseconds = targetEndOfDay - today;
           const resultElement = document.getElementById("result");
+          const progressBar = document.getElementById("progressBar");
+
+          const elapsedDuration = today - initialEnlistDate;
+          let progressPercent = 0;
+          if (totalDuration > 0) {
+            progressPercent = Math.max(
+              0,
+              Math.min(100, (elapsedDuration / totalDuration) * 100)
+            );
+          } else if (elapsedDuration >= 0) {
+            progressPercent = 100;
+          }
+          progressBar.style.width = progressPercent + "%";
+
+          const targetDateString = targetDate.toLocaleDateString("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+
           if (diffInMilliseconds > 0) {
-            const diffInDays = Math.floor(
-              diffInMilliseconds / (1000 * 60 * 60 * 24)
-            );
-            const diffInHours = Math.floor(
-              (diffInMilliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            );
-            const diffInMinutes = Math.floor(
-              (diffInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const diffInSeconds = Math.floor(
-              (diffInMilliseconds % (1000 * 60)) / 1000
-            );
+            let remainingSeconds = Math.floor(diffInMilliseconds / 1000);
+            const diffInDays = Math.floor(remainingSeconds / (60 * 60 * 24));
+            remainingSeconds %= 60 * 60 * 24;
+            const diffInHours = Math.floor(remainingSeconds / (60 * 60));
+            remainingSeconds %= 60 * 60;
+            const diffInMinutes = Math.floor(remainingSeconds / 60);
+            remainingSeconds %= 60;
+            const diffInSeconds = remainingSeconds;
+
             resultElement.innerHTML = `
-              전역일 : ${targetDate.toLocaleDateString("ko-KR")}<br/>
-              남은 시간 : ${diffInDays}일 ${diffInHours}시간 ${diffInMinutes}분 ${diffInSeconds}초
+              <div>
+                  <span class="label">전역일:</span>
+                  <span class="value">${targetDateString}</span>
+              </div>
+              <div>
+                  <span class="label">남은 시간:</span>
+                  <span class="value">${diffInDays}</span><span class="unit">일</span>
+                  <span class="value">${formatNumber(
+                    diffInHours
+                  )}</span><span class="unit">시간</span>
+                  <span class="value">${formatNumber(
+                    diffInMinutes
+                  )}</span><span class="unit">분</span>
+                  <span class="value">${formatNumber(
+                    diffInSeconds
+                  )}</span><span class="unit">초</span>
+              </div>
+               <div>
+                  <span class="label">진행률:</span>
+                  <span class="value">${progressPercent.toFixed(
+                    6
+                  )}</span><span class="unit">%</span>
+              </div>
             `;
           } else {
             const diffInMillisecondsPast = Math.abs(diffInMilliseconds);
-            const passedDays = Math.floor(
-              diffInMillisecondsPast / (1000 * 60 * 60 * 24)
-            );
-            const passedHours = Math.floor(
-              (diffInMillisecondsPast % (1000 * 60 * 60 * 24)) /
-                (1000 * 60 * 60)
-            );
-            const passedMinutes = Math.floor(
-              (diffInMillisecondsPast % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const passedSeconds = Math.floor(
-              (diffInMillisecondsPast % (1000 * 60)) / 1000
-            );
+            let passedTotalSeconds = Math.floor(diffInMillisecondsPast / 1000);
+
+            const passedDays = Math.floor(passedTotalSeconds / (60 * 60 * 24));
+            passedTotalSeconds %= 60 * 60 * 24;
+            const passedHours = Math.floor(passedTotalSeconds / (60 * 60));
+            passedTotalSeconds %= 60 * 60;
+            const passedMinutes = Math.floor(passedTotalSeconds / 60);
+            passedTotalSeconds %= 60;
+            const passedSeconds = passedTotalSeconds;
+
+            progressBar.style.width = "100%";
+
             resultElement.innerHTML = `
-              전역일 : ${targetDate.toLocaleDateString("ko-KR")}<br/>
-              전역한 지 ${passedDays}일 ${passedHours}시간 ${passedMinutes}분 ${passedSeconds}초 지났습니다.
+              <div>
+                  <span class="label">전역일:</span>
+                  <span class="value">${targetDateString}</span>
+              </div>
+              <div>
+                  <span class="label">전역한 지:</span>
+                  <span class="value">${passedDays}</span><span class="unit">일</span>
+                  <span class="value">${formatNumber(
+                    passedHours
+                  )}</span><span class="unit">시간</span>
+                  <span class="value">${formatNumber(
+                    passedMinutes
+                  )}</span><span class="unit">분</span>
+                  <span class="value">${formatNumber(
+                    passedSeconds
+                  )}</span><span class="unit">초</span>
+                  <span class="label">지남</span>
+              </div>
+               <div>
+                  <span class="label">진행률:</span>
+                  <span class="value">100</span><span class="unit">%</span>
+              </div>
             `;
           }
         }, 1000);
