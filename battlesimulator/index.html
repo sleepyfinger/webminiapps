@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>로봇 배틀 시뮬레이터</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #0a0a1f;
+        --primary-neon: #00f0ff;
+        --secondary-neon: #ff00ff;
+        --accent-neon: #00ff00;
+        --danger-neon: #ff4136;
+        --warning-neon: #ffdc00;
+        --text-color: #e0e0e0;
+        --container-bg: rgba(10, 30, 60, 0.8);
+        --border-color: rgba(0, 240, 255, 0.5);
+        --glow-shadow: 0 0 8px var(--primary-neon);
+        --font-primary: "Orbitron", "Noto Sans KR", sans-serif;
+        --font-secondary: "Noto Sans KR", sans-serif;
+        --font-mono: "Courier New", monospace;
+      }
+
+      body {
+        font-family: var(--font-secondary);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        padding-bottom: 50px;
+        min-height: 100vh;
+        background-image: linear-gradient(
+            rgba(0, 240, 255, 0.03) 1px,
+            transparent 1px
+          ),
+          linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+
+      h1 {
+        font-family: var(--font-primary);
+        color: var(--primary-neon);
+        text-shadow: 0 0 10px var(--primary-neon), 0 0 20px var(--primary-neon);
+        margin: 30px 0;
+        text-align: center;
+        font-size: 2.5em;
+      }
+
+      #betting-area,
+      #battle-arena,
+      #controls,
+      #battle-log {
+        width: 90%;
+        max-width: 800px;
+        background-color: var(--container-bg);
+        padding: 25px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.2),
+          inset 0 0 10px rgba(0, 240, 255, 0.1);
+        margin: 15px 0;
+        backdrop-filter: blur(5px);
+      }
+
+      #betting-area h2 {
+        font-family: var(--font-primary);
+        margin-top: 0;
+        color: var(--secondary-neon);
+        text-align: center;
+        margin-bottom: 20px;
+        text-shadow: 0 0 8px var(--secondary-neon);
+      }
+
+      #betting-controls {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        gap: 20px;
+      }
+
+      #betting-area fieldset {
+        border: 1px solid var(--border-color);
+        padding: 15px;
+        border-radius: 5px;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      #betting-area legend {
+        font-weight: bold;
+        padding: 0 10px;
+        color: var(--primary-neon);
+        font-family: var(--font-primary);
+      }
+
+      .bet-option label {
+        margin-right: 10px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+      .bet-option label:hover {
+        color: var(--primary-neon);
+      }
+      .bet-option input[type="radio"] {
+        margin-right: 5px;
+        accent-color: var(--primary-neon);
+        cursor: pointer;
+      }
+
+      #bet-amount-control {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      #bet-amount-control > div:first-child {
+        display: flex;
+        align-items: center;
+      }
+      #bet-amount-control label {
+        margin-right: 8px;
+        color: var(--text-color);
+      }
+      #bet-amount {
+        width: 80px;
+        padding: 8px;
+        text-align: right;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        border-radius: 4px;
+        font-size: 1em;
+      }
+      #bet-amount:focus {
+        outline: none;
+        box-shadow: var(--glow-shadow);
+        border-color: var(--primary-neon);
+      }
+
+      #bet-percentage-buttons button {
+        padding: 5px 10px;
+        font-size: 0.9em;
+        margin: 0 4px;
+        cursor: pointer;
+        background-color: rgba(0, 240, 255, 0.1);
+        border: 1px solid var(--border-color);
+        color: var(--primary-neon);
+        border-radius: 4px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+      }
+      #bet-percentage-buttons button:hover {
+        background-color: rgba(0, 240, 255, 0.3);
+        box-shadow: var(--glow-shadow);
+      }
+      #bet-percentage-buttons button:disabled {
+        background-color: rgba(100, 100, 100, 0.2);
+        color: #888;
+        cursor: not-allowed;
+        border-color: #555;
+        box-shadow: none;
+      }
+
+      #balance-display {
+        font-weight: bold;
+        color: var(--accent-neon);
+        text-align: center;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 1.1em;
+        text-shadow: 0 0 5px var(--accent-neon);
+      }
+
+      #battle-arena {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+      }
+
+      .robot {
+        border: 2px solid var(--border-color);
+        padding: 20px;
+        width: 45%;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        transition: transform 0.1s ease-in-out, box-shadow 0.2s ease,
+          border-color 0.2s ease;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+      }
+      .robot.attacking {
+        transform: scale(1.03);
+        border-color: var(--danger-neon);
+        box-shadow: 0 0 15px var(--danger-neon);
+      }
+      .robot h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: var(--primary-neon);
+        font-family: var(--font-primary);
+        font-size: 1.5em;
+        text-shadow: 0 0 5px var(--primary-neon);
+      }
+      .robot-visual {
+        font-size: 5em;
+        margin-bottom: 15px;
+        text-shadow: 0 0 10px currentColor;
+        line-height: 1;
+        font-family: var(--font-primary);
+        color: var(--primary-neon);
+      }
+      #robot2 .robot-visual {
+        color: var(--secondary-neon);
+      }
+
+      progress {
+        width: 100%;
+        height: 28px;
+        appearance: none;
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      progress::-webkit-progress-bar {
+        background-color: transparent;
+      }
+      progress::-webkit-progress-value {
+        background-color: var(--accent-neon);
+        box-shadow: 0 0 5px var(--accent-neon);
+        transition: width 0.3s ease, background-color 0.3s ease;
+        border-radius: 0;
+      }
+      progress::-moz-progress-bar {
+        background-color: var(--accent-neon);
+        box-shadow: 0 0 5px var(--accent-neon);
+        transition: width 0.3s ease, background-color 0.3s ease;
+        border-radius: 5px;
+      }
+      progress.low-health::-webkit-progress-value,
+      progress.low-health::-moz-progress-bar {
+        background-color: var(--warning-neon);
+        box-shadow: 0 0 5px var(--warning-neon);
+      }
+      progress.critical-health::-webkit-progress-value,
+      progress.critical-health::-moz-progress-bar {
+        background-color: var(--danger-neon);
+        box-shadow: 0 0 5px var(--danger-neon);
+      }
+      .robot p {
+        margin-top: 10px;
+        font-size: 0.9em;
+        color: var(--text-color);
+      }
+
+      #controls {
+        text-align: center;
+      }
+      button#start-battle,
+      button#reset-battle {
+        padding: 12px 25px;
+        font-size: 1.1em;
+        font-family: var(--font-primary);
+        cursor: pointer;
+        background: linear-gradient(
+          45deg,
+          var(--primary-neon),
+          var(--secondary-neon)
+        );
+        color: var(--bg-color);
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        margin: 0 10px;
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+        text-shadow: none;
+      }
+      button#start-battle:hover,
+      button#reset-battle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 0, 255, 0.4);
+      }
+      button#start-battle:active,
+      button#reset-battle:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0, 240, 255, 0.3);
+      }
+      button:disabled {
+        background: #555;
+        color: #999;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        opacity: 0.7;
+      }
+      button#reset-battle {
+        background: linear-gradient(45deg, #888, #666);
+        color: #ccc;
+      }
+      button#reset-battle:hover:not(:disabled) {
+        background: linear-gradient(45deg, #999, #777);
+        box-shadow: 0 5px 15px rgba(150, 150, 150, 0.3);
+      }
+      button#reset-battle:disabled {
+        background: #555;
+        color: #999;
+      }
+
+      #battle-log {
+        height: 250px;
+        overflow-y: scroll;
+        font-family: var(--font-mono);
+        white-space: pre-wrap;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid var(--border-color);
+        padding: 15px;
+        font-size: 0.9em;
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-neon) rgba(0, 0, 0, 0.5);
+      }
+      #battle-log::-webkit-scrollbar {
+        width: 8px;
+      }
+      #battle-log::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 4px;
+      }
+      #battle-log::-webkit-scrollbar-thumb {
+        background-color: var(--primary-neon);
+        border-radius: 4px;
+        border: 1px solid var(--bg-color);
+      }
+
+      .log-entry {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed rgba(0, 240, 255, 0.2);
+        line-height: 1.4;
+      }
+      .log-entry:last-child {
+        border-bottom: none;
+      }
+      .log-attack {
+        color: #ff8c8c;
+      }
+      .log-damage {
+        color: var(--danger-neon);
+        font-weight: bold;
+      }
+      .log-critical {
+        color: var(--warning-neon);
+        font-weight: bold;
+        text-shadow: 0 0 5px var(--warning-neon);
+      }
+      .log-info {
+        color: #a0e0ff;
+      }
+      .log-win {
+        color: var(--accent-neon);
+        font-weight: bold;
+        font-size: 1.1em;
+        text-shadow: 0 0 5px var(--accent-neon);
+      }
+      .log-turn {
+        color: #88aaff;
+        font-style: italic;
+      }
+      .log-bet {
+        color: var(--secondary-neon);
+        font-weight: bold;
+      }
+      .log-bet-win {
+        color: var(--accent-neon);
+        font-weight: bold;
+        text-shadow: 0 0 5px var(--accent-neon);
+      }
+      .log-bet-lose {
+        color: var(--danger-neon);
+        font-weight: bold;
+      }
+
+      #betting-controls fieldset:disabled,
+      #bet-amount-control input:disabled,
+      #bet-percentage-buttons button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      #betting-controls fieldset:disabled input,
+      #betting-controls fieldset:disabled label {
+        cursor: not-allowed;
+      }
+
+      #popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        display: none;
+      }
+
+      #game-over-popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--container-bg);
+        border: 2px solid var(--danger-neon);
+        border-radius: 8px;
+        padding: 30px 40px;
+        text-align: center;
+        z-index: 1000;
+        box-shadow: 0 0 20px var(--danger-neon);
+        display: none;
+        color: var(--text-color);
+        min-width: 300px;
+      }
+
+      #game-over-popup h2 {
+        color: var(--danger-neon);
+        font-family: var(--font-primary);
+        margin-top: 0;
+        margin-bottom: 15px;
+        text-shadow: 0 0 8px var(--danger-neon);
+        font-size: 1.8em;
+      }
+
+      #game-over-popup p {
+        margin-bottom: 25px;
+        font-size: 1.1em;
+      }
+
+      #game-over-popup button#restart-button {
+        padding: 10px 20px;
+        font-size: 1em;
+        font-family: var(--font-primary);
+        cursor: pointer;
+        background: linear-gradient(
+          45deg,
+          var(--warning-neon),
+          var(--danger-neon)
+        );
+        color: var(--bg-color);
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+      }
+      #game-over-popup button#restart-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 220, 0, 0.4);
+      }
+
+      .app-footer {
+        width: 90%;
+        max-width: 800px;
+        margin-top: 40px;
+        padding: 15px 0;
+        text-align: center;
+        border-top: 1px dashed var(--border-color);
+        font-size: 0.9em;
+        color: var(--text-color);
+      }
+
+      .creator-info {
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+      }
+
+      .app-footer:hover .creator-info {
+        opacity: 1;
+      }
+
+      .creator-info a {
+        color: var(--primary-neon);
+        text-decoration: none;
+        font-weight: bold;
+        transition: text-shadow 0.3s ease, color 0.3s ease;
+      }
+
+      .creator-info a:hover {
+        color: #fff;
+        text-shadow: 0 0 8px var(--primary-neon);
+      }
+
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2em;
+        }
+        #betting-controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        #bet-amount-control {
+          width: 100%;
+          align-items: center;
+        }
+        #bet-percentage-buttons {
+          display: flex;
+          justify-content: center;
+          flex-wrap: nowrap;
+          gap: 4px;
+        }
+        #battle-arena {
+          flex-direction: column;
+          align-items: center;
+        }
+        .robot {
+          width: 90%;
+          max-width: 400px;
+        }
+        .robot:first-child {
+          margin-bottom: 20px;
+        }
+        .robot-visual {
+          font-size: 4em;
+        }
+        #controls {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        button#start-battle,
+        button#reset-battle {
+          width: 80%;
+          margin: 0 auto;
+        }
+        .app-footer {
+          margin-top: 30px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.8em;
+        }
+        #betting-area,
+        #battle-arena,
+        #controls,
+        #battle-log {
+          padding: 15px;
+        }
+        .robot h2 {
+          font-size: 1.3em;
+        }
+        #battle-log {
+          height: 200px;
+          font-size: 0.85em;
+        }
+        button#start-battle,
+        button#reset-battle {
+          font-size: 1em;
+          padding: 10px 20px;
+        }
+        #game-over-popup {
+          padding: 20px 25px;
+          min-width: 80%;
+        }
+        #game-over-popup h2 {
+          font-size: 1.5em;
+        }
+        #game-over-popup p {
+          font-size: 1em;
+        }
+        .app-footer {
+          font-size: 0.8em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🤖 배틀 시뮬레이터 💥</h1>
+
+    <div id="betting-area">
+      <h2>💰 베팅하기 💰</h2>
+      <div id="betting-controls">
+        <fieldset id="bet-robot-select">
+          <legend>승자 선택</legend>
+          <span class="bet-option">
+            <input
+              type="radio"
+              id="bet-robot1"
+              name="bet-robot"
+              value="robot1"
+              checked
+            />
+            <label for="bet-robot1">알파 유닛 [α]</label>
+          </span>
+          <span class="bet-option">
+            <input
+              type="radio"
+              id="bet-robot2"
+              name="bet-robot"
+              value="robot2"
+            />
+            <label for="bet-robot2">베타 유닛 [β]</label>
+          </span>
+        </fieldset>
+
+        <div id="bet-amount-control">
+          <div>
+            <label for="bet-amount">베팅 금액:</label>
+            <input type="number" id="bet-amount" min="1" value="10" />
+          </div>
+          <div id="bet-percentage-buttons">
+            <button class="bet-percentage-btn" data-percentage="10">10%</button>
+            <button class="bet-percentage-btn" data-percentage="25">25%</button>
+            <button class="bet-percentage-btn" data-percentage="50">50%</button>
+            <button class="bet-percentage-btn" data-percentage="75">75%</button>
+            <button class="bet-percentage-btn" data-percentage="100">
+              올인
+            </button>
+          </div>
+        </div>
+
+        <p id="balance-display">
+          크레딧: <span id="current-balance">100</span>
+        </p>
+      </div>
+    </div>
+
+    <div id="battle-arena">
+      <div class="robot" id="robot1">
+        <h2>알파 유닛 [α]</h2>
+        <div class="robot-visual">Λ_Λ</div>
+        <progress id="hp1" value="105" max="105"></progress>
+        <p>HP: <span id="hp-text1">105</span> / 105</p>
+      </div>
+      <div class="robot" id="robot2">
+        <h2>베타 유닛 [β]</h2>
+        <div class="robot-visual">(⊙_⊙)</div>
+        <progress id="hp2" value="120" max="120"></progress>
+        <p>HP: <span id="hp-text2">120</span> / 120</p>
+      </div>
+    </div>
+
+    <div id="controls">
+      <button id="start-battle">전투 시작!</button>
+      <button id="reset-battle" disabled>시뮬레이션 초기화</button>
+    </div>
+
+    <div id="battle-log">[ 전투 로그 초기화 중... 베팅 후 전투 시작 ]</div>
+
+    <div id="popup-overlay"></div>
+    <div id="game-over-popup">
+      <h2>게임 오버</h2>
+      <p>크레딧을 모두 소진했습니다!</p>
+      <button id="restart-button">다시 시작하기</button>
+    </div>
+
+    <footer class="app-footer">
+      <div class="creator-info">
+        Made with ❤️ by
+        <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+          SleepyFinger
+        </a>
+      </div>
+    </footer>
+
+    <script>
+      const robot1Element = document.getElementById("robot1");
+      const robot2Element = document.getElementById("robot2");
+      const hpBar1 = document.getElementById("hp1");
+      const hpText1 = document.getElementById("hp-text1");
+      const hpBar2 = document.getElementById("hp2");
+      const hpText2 = document.getElementById("hp-text2");
+      const startButton = document.getElementById("start-battle");
+      const resetButton = document.getElementById("reset-battle");
+      const battleLog = document.getElementById("battle-log");
+      const bettingControls = document.getElementById("betting-controls");
+      const betRobotSelect = document.getElementById("bet-robot-select");
+      const betAmountInput = document.getElementById("bet-amount");
+      const currentBalanceSpan = document.getElementById("current-balance");
+      const betRobot1Radio = document.getElementById("bet-robot1");
+      const betRobot2Radio = document.getElementById("bet-robot2");
+      const percentageButtons = document.querySelectorAll(
+        ".bet-percentage-btn"
+      );
+      const gameOverPopup = document.getElementById("game-over-popup");
+      const popupOverlay = document.getElementById("popup-overlay");
+      const restartButton = document.getElementById("restart-button");
+      const CRITICAL_CHANCE = 0.1;
+      const CRITICAL_MULTIPLIER = 2;
+
+      class Robot {
+        constructor(
+          name,
+          initialHp,
+          attackPower,
+          elementId,
+          hpBarElement,
+          hpTextElement,
+          visualElement
+        ) {
+          this.name = name;
+          this.initialHp = initialHp;
+          this.hp = initialHp;
+          this.attackPower = attackPower;
+          this.elementId = elementId;
+          this.hpBarElement = hpBarElement;
+          this.hpTextElement = hpTextElement;
+          this.element = document.getElementById(elementId);
+          this.hpBarElement.max = this.initialHp;
+          this.updateDisplay();
+        }
+        attack(target) {
+          const damageVariation = 0.8 + Math.random() * 0.4;
+          let damage = Math.round(this.attackPower * damageVariation);
+          const isCritical = Math.random() < CRITICAL_CHANCE;
+          if (isCritical) {
+            damage = Math.round(damage * CRITICAL_MULTIPLIER);
+            logMessage(
+              `💥 치명타! ${this.name}가 ${target.name}에게 <span class="log-critical">-${damage}</span> 피해!`,
+              "log-critical"
+            );
+          } else {
+            logMessage(
+              `${this.name}가 ${target.name}을(를) 공격! <span class="log-damage">-${damage}</span> 피해.`,
+              "log-attack"
+            );
+          }
+          target.takeDamage(damage);
+          this.element.classList.add("attacking");
+          setTimeout(() => {
+            this.element.classList.remove("attacking");
+          }, 200);
+        }
+        takeDamage(damage) {
+          this.hp -= damage;
+          if (this.hp < 0) {
+            this.hp = 0;
+          }
+          this.updateDisplay();
+        }
+        updateDisplay() {
+          this.hpBarElement.value = this.hp;
+          this.hpTextElement.textContent = this.hp;
+          const healthPercentage = (this.hp / this.initialHp) * 100;
+          this.hpBarElement.classList.remove("low-health", "critical-health");
+          if (healthPercentage <= 25) {
+            this.hpBarElement.classList.add("critical-health");
+          } else if (healthPercentage <= 50) {
+            this.hpBarElement.classList.add("low-health");
+          }
+        }
+        isDefeated() {
+          return this.hp <= 0;
+        }
+        reset() {
+          this.hp = this.initialHp;
+          this.updateDisplay();
+          this.element.classList.remove("attacking");
+        }
+      }
+
+      let robot1, robot2;
+      let battleInterval = null;
+      let turn = 1;
+      let isBattleOver = false;
+      let playerBalance = 100;
+      let currentBet = {
+        robotId: null,
+        amount: 0,
+      };
+
+      function updateBalanceDisplay() {
+        currentBalanceSpan.textContent = playerBalance;
+        const isBattleRunning = startButton.disabled;
+        const isPopupVisible = gameOverPopup.style.display === "block";
+        const canBet = playerBalance > 0 && !isBattleRunning && !isPopupVisible;
+        percentageButtons.forEach((button) => {
+          button.disabled = !canBet;
+        });
+        betAmountInput.disabled = !canBet;
+        betRobotSelect.disabled = !canBet;
+        if (
+          parseInt(betAmountInput.value) > playerBalance &&
+          playerBalance > 0
+        ) {
+          betAmountInput.value = playerBalance;
+        } else if (playerBalance <= 0 && betAmountInput.value !== "0") {
+          betAmountInput.value = "0";
+        }
+      }
+
+      function logMessage(message, className = "log-info") {
+        const entry = document.createElement("div");
+        entry.classList.add("log-entry");
+        if (className) {
+          entry.classList.add(className);
+        }
+        entry.innerHTML = message;
+        battleLog.appendChild(entry);
+        battleLog.scrollTop = battleLog.scrollHeight;
+      }
+
+      function showGameOverPopup() {
+        popupOverlay.style.display = "block";
+        gameOverPopup.style.display = "block";
+        startButton.disabled = true;
+        resetButton.disabled = true;
+        updateBalanceDisplay();
+      }
+
+      function hideGameOverPopup() {
+        popupOverlay.style.display = "none";
+        gameOverPopup.style.display = "none";
+      }
+
+      function battleStep() {
+        if (isBattleOver) return;
+        logMessage(`--- ${turn} 턴 ---`, "log-turn");
+        let attacker, defender;
+        if (turn % 2 !== 0) {
+          attacker = robot1;
+          defender = robot2;
+        } else {
+          attacker = robot2;
+          defender = robot1;
+        }
+        attacker.attack(defender);
+        if (defender.isDefeated()) {
+          logMessage(`${defender.name} 작동 중지!`, "log-info");
+          logMessage(`🏆 ${attacker.name} 전투 승리! 🏆`, "log-win");
+          endBattle(attacker);
+          return;
+        }
+        turn++;
+        battleInterval = setTimeout(battleStep, 1200);
+      }
+
+      function startBattle() {
+        const selectedRobotRadio = document.querySelector(
+          'input[name="bet-robot"]:checked'
+        );
+        const betAmount = parseInt(betAmountInput.value);
+        if (!selectedRobotRadio) {
+          alert("베팅할 로봇을 선택하세요.");
+          return;
+        }
+        if (isNaN(betAmount) || betAmount <= 0) {
+          if (playerBalance > 0) {
+            alert("유효한 베팅 금액을 입력하세요 (최소 1).");
+          } else {
+            alert("베팅할 크레딧이 부족합니다.");
+          }
+          return;
+        }
+        if (betAmount > playerBalance) {
+          alert("베팅 금액이 현재 크레딧을 초과합니다!");
+          return;
+        }
+        currentBet.robotId = selectedRobotRadio.value;
+        currentBet.amount = betAmount;
+        playerBalance -= betAmount;
+        startButton.disabled = true;
+        resetButton.disabled = true;
+        updateBalanceDisplay();
+        const betOnRobotName =
+          currentBet.robotId === "robot1"
+            ? robot1Element.querySelector("h2").textContent
+            : robot2Element.querySelector("h2").textContent;
+        logMessage(
+          `[베팅 완료] ${betOnRobotName}에게 ${currentBet.amount} 크레딧 베팅!`,
+          "log-bet"
+        );
+        robot1 = new Robot(
+          "알파 유닛 [α]",
+          105,
+          14,
+          "robot1",
+          hpBar1,
+          hpText1,
+          robot1Element
+        );
+        robot2 = new Robot(
+          "베타 유닛 [β]",
+          120,
+          13,
+          "robot2",
+          hpBar2,
+          hpText2,
+          robot2Element
+        );
+        turn = 1;
+        isBattleOver = false;
+        battleLog.innerHTML = "";
+        logMessage(
+          `[베팅 완료] ${betOnRobotName}에게 ${currentBet.amount} 크레딧 베팅!`,
+          "log-bet"
+        );
+        robot1.reset();
+        robot2.reset();
+        logMessage("전투 시퀀스 초기화 중...", "log-info");
+        logMessage(
+          `${robot1.name} (HP: ${robot1.hp}, ATK: ${robot1.attackPower}) vs ${robot2.name} (HP: ${robot2.hp}, ATK: ${robot2.attackPower})`,
+          "log-info"
+        );
+        logMessage("전투 시작!", "log-info");
+        battleInterval = setTimeout(battleStep, 700);
+      }
+
+      function endBattle(winner) {
+        isBattleOver = true;
+        clearTimeout(battleInterval);
+        battleInterval = null;
+        if (currentBet.robotId && currentBet.amount > 0) {
+          const winnerId = winner.elementId;
+          if (currentBet.robotId === winnerId) {
+            const winnings = currentBet.amount * 2;
+            playerBalance += winnings;
+            logMessage(
+              `🎉 베팅 성공! ${winnings} 크레딧 획득! (잔액: ${playerBalance})`,
+              "log-bet-win"
+            );
+          } else {
+            logMessage(
+              `💸 베팅 실패... ${currentBet.amount} 크레딧 손실. (잔액: ${playerBalance})`,
+              "log-bet-lose"
+            );
+          }
+          updateBalanceDisplay();
+          if (playerBalance <= 0) {
+            logMessage("--- 크레딧 소진 --- 게임 오버! ---", "log-critical");
+            showGameOverPopup();
+          } else {
+            resetButton.disabled = false;
+          }
+        } else {
+          if (playerBalance > 0) {
+            resetButton.disabled = false;
+          } else {
+            logMessage("--- 크레딧 소진 --- 게임 오버! ---", "log-critical");
+            showGameOverPopup();
+          }
+        }
+        currentBet = { robotId: null, amount: 0 };
+      }
+
+      function resetSimulation() {
+        hideGameOverPopup();
+        if (battleInterval) {
+          clearTimeout(battleInterval);
+          battleInterval = null;
+        }
+        isBattleOver = true;
+        if (robot1) robot1.reset();
+        else {
+          hpBar1.value = 105;
+          hpBar1.max = 105;
+          hpText1.textContent = 105;
+          hpBar1.classList.remove("low-health", "critical-health");
+          robot1Element.classList.remove("attacking");
+        }
+        if (robot2) robot2.reset();
+        else {
+          hpBar2.value = 120;
+          hpBar2.max = 120;
+          hpText2.textContent = 120;
+          hpBar2.classList.remove("low-health", "critical-health");
+          robot2Element.classList.remove("attacking");
+        }
+        betAmountInput.value = Math.max(1, Math.min(10, playerBalance));
+        if (playerBalance <= 0) {
+          betAmountInput.value = 0;
+        }
+        betRobot1Radio.checked = true;
+        battleLog.innerHTML =
+          "[ 시뮬레이션 초기화됨. 베팅 후 전투를 시작하세요. ]";
+        startButton.disabled = playerBalance <= 0;
+        resetButton.disabled = true;
+        updateBalanceDisplay();
+      }
+
+      function fullResetGame() {
+        playerBalance = 100;
+        resetSimulation();
+      }
+
+      function handlePercentageBet(event) {
+        const percentage = parseInt(event.target.dataset.percentage);
+        if (isNaN(percentage) || playerBalance <= 0) {
+          betAmountInput.value = "0";
+          return;
+        }
+        let calculatedAmount = Math.floor(playerBalance * (percentage / 100));
+        calculatedAmount = Math.max(1, calculatedAmount);
+        betAmountInput.value = calculatedAmount;
+      }
+
+      startButton.addEventListener("click", startBattle);
+      resetButton.addEventListener("click", resetSimulation);
+      restartButton.addEventListener("click", fullResetGame);
+      percentageButtons.forEach((button) => {
+        button.addEventListener("click", handlePercentageBet);
+      });
+
+      fullResetGame();
+    </script>
+  </body>
+</html>
