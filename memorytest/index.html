@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✨ 반짝반짝 기억력 테스트 ✨</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <section id="main-menu" class="screen active">
+        <div class="screen-content">
+          <h1>기억력 테스트</h1>
+          <p>숫자가 나타나는 순서를<br />정확하게 기억하고 맞춰봐!</p>
+          <button id="start-game-btn" class="btn btn-primary">
+            <i class="fas fa-play"></i> 게임 시작!
+          </button>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen hidden">
+        <div class="screen-content">
+          <div class="game-header">
+            <h1>Level <span id="level">1</span></h1>
+            <p id="game-message">숫자를 기억하세요!</p>
+          </div>
+          <div id="game-container"></div>
+        </div>
+      </section>
+
+      <section id="result-screen" class="screen hidden">
+        <div class="screen-content">
+          <h1>결과 발표</h1>
+          <p id="result-message">결과가 여기에 표시됩니다.</p>
+          <div class="button-container">
+            <button id="restart-btn" class="btn btn-secondary">
+              <i class="fas fa-redo-alt"></i> 다시 도전
+            </button>
+            <button id="share-btn" class="btn btn-secondary">
+              <i class="fas fa-share-alt"></i> 결과 공유
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
