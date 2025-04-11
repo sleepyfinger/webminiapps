@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="지렁이 키우기 시뮬레이션" />
+    <title>지렁이 키우기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="game-header">
+        <h1 class="game-title">지렁이 키우기</h1>
+        <p class="game-subtitle">당신의 지렁이를 키우고 번식시켜보세요!</p>
+      </div>
+
+      <div class="game-stats">
+        <div class="stat-item">
+          <div class="stat-value" id="earthwormCount">0</div>
+          <div class="stat-label">지렁이 수</div>
+          <div class="stat-max">
+            (최대: <span id="maxEarthwormCount">0</span>)
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="foodCount">0</div>
+          <div class="stat-label">먹이 수</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="eggCount">0</div>
+          <div class="stat-label">알 수</div>
+        </div>
+      </div>
+
+      <div class="simulation-container">
+        <canvas id="simulationCanvas"></canvas>
+      </div>
+
+      <div class="game-controls">
+        <button class="control-button" id="restartButton">
+          <span class="button-icon">🔄</span>
+          다시 시작
+        </button>
+        <button class="control-button" id="addFoodButton">
+          <span class="button-icon">🍎</span>
+          먹이 추가
+        </button>
+      </div>
+
+      <div class="game-instructions">
+        <h2 class="instructions-title">플레이 방법</h2>
+        <ul class="instructions-list">
+          <li>지렁이들은 자동으로 움직이고 먹이를 찾습니다.</li>
+          <li>먹이를 클릭하여 추가할 수 있습니다.</li>
+          <li>지렁이들이 번식하여 새로운 지렁이를 만들 수 있습니다.</li>
+        </ul>
+      </div>
+
+      <footer class="app-footer">
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </footer>
+    </div>
+    <script defer src="script.js"></script>
+  </body>
+</html>
