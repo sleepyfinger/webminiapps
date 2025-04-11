@@ -7,7 +7,7 @@ const REPRODUCTION_COOLDOWN_FEMALE = 12000;
 const REPRODUCTION_COOLDOWN_MALE = 6000;
 const MIN_HUNGER_TO_REPRODUCE_FEMALE = 85;
 const MIN_HUNGER_TO_REPRODUCE_MALE = 75;
-const EAT_DISTANCE = 30;
+const EAT_DISTANCE = 35;
 const REPRODUCTION_DISTANCE = 55;
 const INITIAL_EARTHWORMS = 5;
 const MUTATION_RATE = 0.15;
@@ -20,12 +20,12 @@ const EARTHWORM_MOVEMENT_CHANCE = 0.7;
 const EARTHWORM_SPEED_VARIATION = 0.5;
 const REPRODUCTION_LIMIT_HIGH = 100;
 const REPRODUCTION_LIMIT_LOW = 30;
-const INSECT_INITIAL_FOOD = 500;
+const INSECT_INITIAL_FOOD = 100;
 const EARTHWORM_EAT_RATE = 1.5;
 const FOOD_TO_HUNGER_RATIO = 0.8;
 const FOOD_SEARCH_HUNGER_THRESHOLD = 90;
 const FOOD_EAT_HUNGER_THRESHOLD = 95;
-const MAX_INSECTS = 3;
+const MAX_INSECTS = 5;
 
 const MATING_DURATION = 3500;
 const EGG_HATCH_TIME = 8000;
@@ -55,11 +55,15 @@ let showHealthBar = false;
 let showHungerBar = false;
 let resizeTimeout;
 let maxEarthwormCount = 0;
+let survivalTimer = 0;
+const SURVIVAL_BONUS_TIME = 60000;
+let survivalGaugeBarElement;
+let totalTimeValueElement;
 
 const distance = (a, b) => Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 const mutateValue = (value) =>
   value * (1 + (Math.random() - 0.5) * 2 * MUTATION_RATE);
-const getRandomColor = () => `hsl(${Math.random() * 360}, 70%, 60%)`;
+
 const lightenColor = (hex, percent) => {
   hex = hex.replace(/^#/, "");
   const num = parseInt(hex, 16);
@@ -184,7 +188,7 @@ class Earthworm {
     if (!this.isEating) {
       this.checkReproduction(earthworms);
       if (!this.isMating) {
-        this.move(dtFactor);
+        this.move(dtFactor, insects);
       }
     }
 
@@ -362,89 +366,82 @@ class Earthworm {
     }
   }
 
-  move(speedFactor) {
-    const baseDirection = this.direction;
+  move(speedFactor, insects) {
+    let escapeAngle = null;
+    let isEscaping = false;
+    const escapeThresholdFactor = 0.8;
+    const escapeDistanceSq = (EAT_DISTANCE * escapeThresholdFactor) ** 2;
+    const escapeTurnStrength = 0.15;
+
+    if (insects && insects.length > 0) {
+      for (const insect of insects) {
+        if (
+          !insect ||
+          insect.foodAmount <= 0 ||
+          (this.isEating &&
+            this.eatingTarget === insect &&
+            this.hunger < FOOD_EAT_HUNGER_THRESHOLD)
+        ) {
+          continue;
+        }
+
+        const dx = this.position.x - insect.x;
+        const dy = this.position.y - insect.y;
+        const distSq = dx * dx + dy * dy;
+
+        if (
+          distSq < escapeDistanceSq &&
+          (this.eatingTarget !== insect ||
+            this.hunger >= FOOD_EAT_HUNGER_THRESHOLD)
+        ) {
+          escapeAngle = Math.atan2(dy, dx);
+          isEscaping = true;
+          break;
+        }
+      }
+    }
+
+    let targetDirection = this.direction;
+
+    if (isEscaping && escapeAngle !== null) {
+      targetDirection = lerpAngle(
+        this.direction,
+        escapeAngle,
+        escapeTurnStrength
+      );
+    } else {
+      if (Math.random() < 0.01) {
+        const randomTargetAngle =
+          this.direction + (Math.random() - 0.5) * EARTHWORM_TURN_RATE * 0.5;
+        targetDirection = lerpAngle(this.direction, randomTargetAngle, 0.03);
+      }
+    }
+
+    this.direction = targetDirection;
 
     const swaySpeed = 0.1;
     const swayAmplitude = 0.2;
-    const swayOffset = Math.sin(totalSimulationTime * swaySpeed) * swayAmplitude;
-    const swayDirection = baseDirection + swayOffset;
-
-    const distToLeft = this.position.x - CANVAS_PADDING;
-    const distToRight = WORLD_WIDTH - CANVAS_PADDING - this.position.x;
-    const distToTop = this.position.y - CANVAS_PADDING;
-    const distToBottom = WORLD_HEIGHT - CANVAS_PADDING - this.position.y;
-
-    const boundaryThreshold = 50;
-    let boundaryInfluence = 0;
-
-    if (distToLeft < boundaryThreshold) {
-      boundaryInfluence = (boundaryThreshold - distToLeft) / boundaryThreshold;
-      this.direction = lerpAngle(this.direction, 0, boundaryInfluence * 0.1);
-    } else if (distToRight < boundaryThreshold) {
-      boundaryInfluence = (boundaryThreshold - distToRight) / boundaryThreshold;
-      this.direction = lerpAngle(
-        this.direction,
-        Math.PI,
-        boundaryInfluence * 0.1
-      );
-    }
-
-    if (distToTop < boundaryThreshold) {
-      boundaryInfluence = (boundaryThreshold - distToTop) / boundaryThreshold;
-      this.direction = lerpAngle(
-        this.direction,
-        Math.PI / 2,
-        boundaryInfluence * 0.1
-      );
-    } else if (distToBottom < boundaryThreshold) {
-      boundaryInfluence =
-        (boundaryThreshold - distToBottom) / boundaryThreshold;
-      this.direction = lerpAngle(
-        this.direction,
-        -Math.PI / 2,
-        boundaryInfluence * 0.1
-      );
-    }
-
-    if (Math.random() < 0.01 && boundaryInfluence < 0.5) {
-      const targetAngle =
-        this.direction + (Math.random() - 0.5) * EARTHWORM_TURN_RATE * 0.5;
-      this.direction = lerpAngle(this.direction, targetAngle, 0.03);
-    }
+    const swayOffset =
+      Math.sin(totalSimulationTime * swaySpeed) * swayAmplitude;
+    const moveDirection = this.direction + swayOffset;
 
     const speedVariation =
       1 + (Math.random() - 0.5) * EARTHWORM_SPEED_VARIATION;
     const currentSpeed = this.dna.speed * speedFactor * speedVariation;
 
-    this.position.x += Math.cos(swayDirection) * currentSpeed;
-    this.position.y += Math.sin(swayDirection) * currentSpeed;
+    this.position.x += Math.cos(moveDirection) * currentSpeed;
+    this.position.y += Math.sin(moveDirection) * currentSpeed;
 
-    let bounced = false;
     if (this.position.x < CANVAS_PADDING) {
-      this.position.x = CANVAS_PADDING;
-      this.direction = lerpAngle(this.direction, Math.PI - this.direction, 0.1);
-      bounced = true;
-    } else if (this.position.x > WORLD_WIDTH - CANVAS_PADDING) {
       this.position.x = WORLD_WIDTH - CANVAS_PADDING;
-      this.direction = lerpAngle(this.direction, Math.PI - this.direction, 0.1);
-      bounced = true;
+    } else if (this.position.x > WORLD_WIDTH - CANVAS_PADDING) {
+      this.position.x = CANVAS_PADDING;
     }
+
     if (this.position.y < CANVAS_PADDING) {
-      this.position.y = CANVAS_PADDING;
-      this.direction = lerpAngle(this.direction, -this.direction, 0.1);
-      bounced = true;
-    } else if (this.position.y > WORLD_HEIGHT - CANVAS_PADDING) {
       this.position.y = WORLD_HEIGHT - CANVAS_PADDING;
-      this.direction = lerpAngle(this.direction, -this.direction, 0.1);
-      bounced = true;
-    }
-    if (bounced) {
-      this.direction = lerpAngle(
-        this.direction,
-        this.direction + (Math.random() - 0.5) * 0.2,
-        0.05
-      );
+    } else if (this.position.y > WORLD_HEIGHT - CANVAS_PADDING) {
+      this.position.y = CANVAS_PADDING;
     }
   }
 
@@ -497,7 +494,7 @@ class Earthworm {
       const dx = this.position.x - insect.x;
       const dy = this.position.y - insect.y;
       const dSq = dx * dx + dy * dy;
-      
+
       if (dSq < FOOD_DETECTION_RADIUS * FOOD_DETECTION_RADIUS) {
         if (dSq < minDistSq) {
           minDistSq = dSq;
@@ -515,13 +512,17 @@ class Earthworm {
           closestInsect.y - this.position.y,
           closestInsect.x - this.position.x
         );
-        
+
         let angleDiff = targetAngle - this.direction;
         while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
         while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-        
+
         if (Math.abs(angleDiff) > Math.PI / 2) {
-          this.direction = lerpAngle(this.direction, targetAngle + Math.PI, 0.1);
+          this.direction = lerpAngle(
+            this.direction,
+            targetAngle + Math.PI,
+            0.1
+          );
         } else {
           this.direction = lerpAngle(this.direction, targetAngle, 0.1);
         }
@@ -819,30 +820,41 @@ class Earthworm {
 
 class Insect {
   constructor(x, y) {
-    this.x = x !== undefined ? x : Math.random() * (WORLD_WIDTH - CANVAS_PADDING * 2) + CANVAS_PADDING;
-    this.y = y !== undefined ? y : Math.random() * (WORLD_HEIGHT - CANVAS_PADDING * 2) + CANVAS_PADDING;
-    this.baseSize = Math.random() * 4 + 25;
-    this.color = getRandomColor();
+    this.x =
+      x !== undefined
+        ? x
+        : Math.random() * (WORLD_WIDTH - CANVAS_PADDING * 2) + CANVAS_PADDING;
+    this.y =
+      y !== undefined
+        ? y
+        : Math.random() * (WORLD_HEIGHT - CANVAS_PADDING * 2) + CANVAS_PADDING;
+
     this.maxFoodAmount = INSECT_INITIAL_FOOD;
     this.foodAmount = this.maxFoodAmount;
+    this.emojiBaseSize = 30;
   }
+
   update(deltaTime) {}
+
   beEaten(amount) {
     const eatenAmount = Math.min(amount, this.foodAmount);
     this.foodAmount -= eatenAmount;
     return eatenAmount;
   }
+
   draw(ctx) {
     if (this.foodAmount <= 0 || !ctx) return;
-    const currentSize = this.baseSize * (this.foodAmount / this.maxFoodAmount);
-    if (currentSize < 1) return;
-    ctx.fillStyle = this.color;
-    ctx.shadowColor = this.color;
-    ctx.shadowBlur = Math.max(2, 8 * (this.foodAmount / this.maxFoodAmount));
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, currentSize, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
+
+    const sizeRatio = Math.max(0.1, this.foodAmount / this.maxFoodAmount);
+    const currentFontSize = this.emojiBaseSize * sizeRatio;
+
+    if (currentFontSize < 1) return;
+
+    ctx.font = `${currentFontSize}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText("🍎", this.x, this.y);
   }
 }
 
@@ -945,14 +957,33 @@ const initializeSimulation = () => {
 
   const earthwormCountEl = document.getElementById("earthwormCount");
   const maxEarthwormCountEl = document.getElementById("maxEarthwormCount");
-  if (!canvas || !ctx || !restartButton || !earthwormCountEl || !maxEarthwormCountEl) {
+  if (
+    !canvas ||
+    !ctx ||
+    !restartButton ||
+    !earthwormCountEl ||
+    !maxEarthwormCountEl ||
+    !survivalGaugeBarElement ||
+    !totalTimeValueElement
+  ) {
     console.error("Initialization failed: Required DOM elements not found.");
+
     canvas = document.getElementById("simulationCanvas");
     ctx = canvas ? canvas.getContext("2d") : null;
     restartButton = document.getElementById("restartButton");
+    survivalGaugeBarElement = document.getElementById("survivalGaugeBar");
+    totalTimeValueElement = document.getElementById("totalTimeValue");
     const tempEarthwormEl = document.getElementById("earthwormCount");
     const tempMaxEarthwormEl = document.getElementById("maxEarthwormCount");
-    if (!canvas || !ctx || !restartButton || !tempEarthwormEl || !tempMaxEarthwormEl) {
+    if (
+      !canvas ||
+      !ctx ||
+      !restartButton ||
+      !tempEarthwormEl ||
+      !tempMaxEarthwormEl ||
+      !survivalGaugeBarElement ||
+      !totalTimeValueElement
+    ) {
       console.error("Fatal: Cannot proceed with initialization.");
       return;
     }
@@ -967,6 +998,13 @@ const initializeSimulation = () => {
   maxEarthwormCount = 0;
   simulationRunning = true;
   reproductionAllowed = true;
+  survivalTimer = 0;
+  if (survivalGaugeBarElement) {
+    survivalGaugeBarElement.style.width = "0%";
+  }
+  if (totalTimeValueElement) {
+    totalTimeValueElement.textContent = "00:00";
+  }
   restartButton.classList.add("hidden");
   if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -981,8 +1019,20 @@ const initializeSimulation = () => {
 
   lastTimestamp = performance.now();
   if (earthwormCountEl) earthwormCountEl.textContent = earthworms.length;
+  if (maxEarthwormCountEl) maxEarthwormCountEl.textContent = maxEarthwormCount;
   animationFrameId = requestAnimationFrame(animate);
 };
+
+function addBonusEarthworm() {
+  if (!simulationRunning) return;
+  const gender = Math.random() < 0.5 ? "male" : "female";
+  const position = {
+    x: Math.random() * (WORLD_WIDTH - CANVAS_PADDING * 2) + CANVAS_PADDING,
+    y: Math.random() * (WORLD_HEIGHT - CANVAS_PADDING * 2) + CANVAS_PADDING,
+  };
+  earthworms.push(new Earthworm(gender, position));
+  console.log("Bonus earthworm added!");
+}
 
 const animate = (timestamp) => {
   if (!lastTimestamp) lastTimestamp = timestamp;
@@ -991,6 +1041,29 @@ const animate = (timestamp) => {
 
   if (simulationRunning) {
     totalSimulationTime += deltaTime;
+    survivalTimer += deltaTime;
+
+    if (survivalTimer >= SURVIVAL_BONUS_TIME) {
+      addBonusEarthworm();
+      survivalTimer -= SURVIVAL_BONUS_TIME;
+    }
+
+    if (survivalGaugeBarElement) {
+      const gaugePercent = Math.min(
+        100,
+        (survivalTimer / SURVIVAL_BONUS_TIME) * 100
+      );
+      survivalGaugeBarElement.style.width = gaugePercent + "%";
+    }
+
+    if (totalTimeValueElement) {
+      const totalSeconds = Math.floor(totalSimulationTime / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      const formattedMinutes = String(minutes).padStart(2, "0");
+      const formattedSeconds = String(seconds).padStart(2, "0");
+      totalTimeValueElement.textContent = `${formattedMinutes}:${formattedSeconds}`;
+    }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -998,7 +1071,8 @@ const animate = (timestamp) => {
     if (currentEarthwormCount > maxEarthwormCount) {
       maxEarthwormCount = currentEarthwormCount;
       const maxEarthwormCountEl = document.getElementById("maxEarthwormCount");
-      if (maxEarthwormCountEl) maxEarthwormCountEl.textContent = maxEarthwormCount;
+      if (maxEarthwormCountEl)
+        maxEarthwormCountEl.textContent = maxEarthwormCount;
     }
 
     if (
@@ -1041,7 +1115,7 @@ const animate = (timestamp) => {
     const earthwormCountEl = document.getElementById("earthwormCount");
     const foodCountEl = document.getElementById("foodCount");
     const eggCountEl = document.getElementById("eggCount");
-    
+
     if (earthwormCountEl) earthwormCountEl.textContent = earthworms.length;
     if (foodCountEl) foodCountEl.textContent = insects.length;
     if (eggCountEl) eggCountEl.textContent = eggs.length;
@@ -1080,7 +1154,8 @@ const handleAddFoodClick = () => {
     return;
   }
   const x = Math.random() * (WORLD_WIDTH - CANVAS_PADDING * 2) + CANVAS_PADDING;
-  const y = Math.random() * (WORLD_HEIGHT - CANVAS_PADDING * 2) + CANVAS_PADDING;
+  const y =
+    Math.random() * (WORLD_HEIGHT - CANVAS_PADDING * 2) + CANVAS_PADDING;
   insects.push(new Insect(x, y));
 };
 
@@ -1106,12 +1181,20 @@ window.addEventListener("DOMContentLoaded", () => {
   restartButton = document.getElementById("restartButton");
   addFoodButton = document.getElementById("addFoodButton");
   simulationContainer = document.querySelector(".simulation-container");
+  survivalGaugeBarElement = document.getElementById("survivalGaugeBar");
+  totalTimeValueElement = document.getElementById("totalTimeValue");
 
   if (canvas) {
     ctx = canvas.getContext("2d");
   } else {
     console.error("Canvas not found!");
     return;
+  }
+  if (!survivalGaugeBarElement) {
+    console.error("Survival gauge bar element not found!");
+  }
+  if (!totalTimeValueElement) {
+    console.error("Total time value element not found!");
   }
 
   if (canvas) {
