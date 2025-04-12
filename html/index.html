@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self';"
+    />
     <title>HTML 연습 사이트</title>
     <style>
       body {
@@ -16,6 +20,7 @@
         color: #333;
         min-height: 100vh;
         position: relative;
+        padding-bottom: 60px;
       }
 
       header {
@@ -53,7 +58,7 @@
         max-width: 800px;
         height: 350px;
         margin-top: 20px;
-        border: none;
+        border: 1px solid #ccc;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         background-color: white;
@@ -91,6 +96,7 @@
         color: #fff;
         position: absolute;
         bottom: 0;
+        left: 0;
       }
 
       footer a {
@@ -112,12 +118,16 @@
       placeholder="여기에 HTML 코드를 입력하세요..."
     ></textarea>
     <button onclick="runCode()">코드 실행</button>
-    <iframe id="outputFrame"></iframe>
+
+    <iframe id="outputFrame" sandbox="allow-scripts allow-forms"></iframe>
 
     <footer>
       <p>
         Visit my blog:
-        <a href="https://blog.naver.com/sleepyfinger/223820993118" target="_blank">
+        <a
+          href="https://blog.naver.com/sleepyfinger/223820993118"
+          target="_blank"
+        >
           SleepyFinger
         </a>
       </p>
@@ -128,9 +138,7 @@
         const htmlInput = document.getElementById("htmlInput").value;
         const outputFrame = document.getElementById("outputFrame");
 
-        outputFrame.contentDocument.open();
-        outputFrame.contentDocument.write(htmlInput);
-        outputFrame.contentDocument.close();
+        outputFrame.srcdoc = htmlInput;
       }
     </script>
   </body>
