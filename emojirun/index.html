@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이모지 런</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>이모지 런</h1>
+      <canvas id="gameCanvas" width="800" height="400"></canvas>
+      <div id="ui-container">
+        <p id="score">점수: 0</p>
+        <p id="instructions">스페이스바, ↑ 또는 화면 탭으로 점프!</p>
+      </div>
+
+      <div id="gameOverOverlay" class="hidden">
+        <div id="gameOverContent">
+          <h2>게임 오버!</h2>
+          <p id="finalScore"></p>
+          <p id="highScoreDisplay"></p>
+          <button id="restartButton">다시 시작</button>
+          <p class="restart-hint">(Enter 또는 화면 탭으로도 가능)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog-link-container">
+      <a
+        href="https://blog.naver.com/sleepyfinger"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        개발자 블로그 방문하기 📝
+      </a>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
