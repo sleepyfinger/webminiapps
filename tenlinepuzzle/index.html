@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ten Line Puzzle</title>
     <link rel="manifest" href="manifest.json" />
     <style>
@@ -12,56 +14,191 @@
         font-style: normal;
       }
 
-      body {
-        margin: 0;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-        font-family: "SBAggroB", Roboto;
+      :root {
+        --background-color: #f8f9fa;
+        --container-bg: #ffffff;
+        --primary-text-color: #212529;
+        --secondary-text-color: #6c757d;
+        --border-color: #dee2e6;
+        --accent-color: #007bff;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --button-bg: #6c757d;
+        --button-hover-bg: #5a6268;
+        --button-text: #ffffff;
+        --font-primary: "SBAggroB", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --gauge-bg: #e9ecef;
+        --gauge-fill: #007bff;
+        --game-over-bg: rgba(49, 46, 46, 0.85);
+        --game-over-text: #ffffff;
       }
 
-      #gameText {
-        font-size: 1em;
-        color: #424242;
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--background-color);
+        font-family: var(--font-primary);
+        color: var(--primary-text-color);
+        overflow: hidden;
+        padding: 10px;
       }
 
       #gameContainer {
         display: flex;
         flex-direction: column;
         align-items: center;
+        background-color: var(--container-bg);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+
+        width: 100%;
+        max-width: 450px;
+        height: auto;
+        max-height: 95%;
+        padding: 15px;
+        gap: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px var(--shadow-color);
+        justify-content: flex-start;
+        overflow-y: auto;
       }
 
-      canvas {
+      @media (min-width: 600px) {
+        body {
+          padding: 20px;
+        }
+        #gameContainer {
+          min-height: 500px;
+          padding: 25px;
+          gap: 15px;
+          max-height: 90vh;
+        }
+      }
+
+      #gameStats {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 400px;
+        font-size: 1em;
+        color: var(--secondary-text-color);
+        padding: 0 5px;
+        flex-shrink: 0;
+      }
+
+      #gameStats span {
+        font-weight: bold;
+        color: var(--primary-text-color);
+      }
+
+      #gameGaugeContainer {
+        width: 100%;
+        max-width: 400px;
+        height: 10px;
+        background-color: var(--gauge-bg);
+        border-radius: 5px;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      #gameGaugeFill {
+        height: 100%;
+        width: 100%;
+        background-color: var(--gauge-fill);
+        border-radius: 5px;
+        transition: width 0.3s ease-in-out;
+      }
+
+      #gameLogo {
+        max-width: 50px;
+        height: auto;
+        flex-shrink: 0;
+        margin-top: 5px;
+      }
+
+      #gameTitle {
+        font-size: 1.6em;
+        margin: 0;
+        color: var(--primary-text-color);
+        flex-shrink: 0;
+      }
+
+      .game-info {
+        font-size: 0.85em;
+        color: var(--secondary-text-color);
+        margin: 0;
+        flex-shrink: 0;
+      }
+
+      #gameCanvas {
         display: block;
-        border: 2px solid #333;
+        border: 1px solid var(--border-color);
         background-color: #fff;
-      }
-
-      h1 {
-        font-size: 2.5em;
-        margin: 0 0 0 0;
-        color: #4a4a4a;
-        text-shadow: 3px 3px 0px #d5d5d5;
+        border-radius: 8px;
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        object-fit: contain;
+        flex-shrink: 1;
+        min-height: 0;
+        margin-bottom: 10px;
       }
 
       #scaleButtons {
-        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        flex-shrink: 0;
+        width: 100%;
       }
 
       #scaleButtons button {
-        padding: 8px 16px;
-        font-size: 20px;
-        margin: 0 5px;
+        padding: 10px 18px;
+        font-size: 1rem;
+        font-family: inherit;
+        margin: 0;
         cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        background-color: var(--button-bg);
+        color: var(--button-text);
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      #scaleButtons button:hover {
+        background-color: var(--button-hover-bg);
+        transform: translateY(-1px);
+      }
+
+      #scaleButtons button:active {
+        transform: translateY(0px);
+      }
+
+      footer {
+        flex-shrink: 0;
+        padding-top: 10px;
       }
 
       #copyright {
-        font-size: 0.7rem;
-        color: #888;
+        font-size: 0.8rem;
+        color: var(--secondary-text-color);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -69,14 +206,71 @@
       }
 
       #copyright a {
-        color: inherit;
+        color: var(--accent-color);
         text-decoration: none;
+        transition: text-decoration 0.2s ease;
+      }
+
+      #copyright a:hover {
+        text-decoration: underline;
+      }
+
+      #gameOverScreen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--game-over-bg);
+        color: var(--game-over-text);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        padding: 20px;
+        text-align: center;
+        gap: 15px;
+        border-radius: inherit;
+      }
+
+      #gameOverScreen h2 {
+        font-size: 2.5em;
+        margin: 0 0 10px 0;
+        color: var(--game-over-text);
+      }
+
+      #gameOverScreen p {
+        font-size: 1.2em;
+        margin: 5px 0;
+      }
+
+      #gameOverScreen span {
+        font-weight: bold;
+      }
+
+      #gameOverScreen button {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        background-color: var(--accent-color);
+        color: var(--button-text);
+        transition: background-color 0.2s ease, transform 0.1s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        margin-top: 15px;
+      }
+
+      #gameOverScreen button:hover {
+        background-color: #0056b3;
+        transform: translateY(-1px);
+      }
+      #gameOverScreen button:active {
+        transform: translateY(0px);
       }
     </style>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-    />
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("service-worker.js");
@@ -85,43 +279,52 @@
   </head>
   <body>
     <div id="gameContainer">
-      <img src="icon-192x192.png" width="128" />
+      <img src="icon-192x192.png" id="gameLogo" alt="Ten Line Puzzle Icon" />
       <h1 id="gameTitle">10 Line Puzzle</h1>
-      <div id="gameText" style="margin-bottom: 15px">ver 1.1</div>
+      <div class="game-info" id="gameVersion">ver 1.2</div>
+
+      <div id="gameStats">
+        <div>Score: <span id="currentScore">0</span></div>
+        <div>HighScore: <span id="highScore">0</span></div>
+      </div>
+
+      <div id="gameGaugeContainer">
+        <div id="gameGaugeFill"></div>
+      </div>
+
       <canvas id="gameCanvas"></canvas>
-      <div id="gameText" style="margin: 10px">
+
+      <div class="game-info" id="gameInstructions">
         셀을 선택해서 숫자 10이 되도록 연결(Drag)하세요
       </div>
+
       <div id="scaleButtons">
-        <button id="scaleMaxButton">최대</button>
-        <button id="scaleUpButton">확대</button>
-        <button id="scaleDownButton">축소</button>
-        <button id="scaleResetButton">원래 크기로</button>
         <button id="resetButton">재시작</button>
       </div>
+
+      <footer>
+        <p id="copyright">
+          <a
+            href="https://blog.naver.com/sleepyfinger/223764694015"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="개발자 블로그 방문"
+          >
+            Created by SleepyFinger.
+          </a>
+        </p>
+      </footer>
+
+      <div id="gameOverScreen">
+        <h2>Game Over</h2>
+        <p>High Score: <span id="gameOverHighScoreValue">0</span></p>
+        <p>Final Score: <span id="finalScoreValue">0</span></p>
+        <button id="restartButtonHtml">다시 시작</button>
+      </div>
     </div>
+
     <audio id="scoreSound" src="get_score.mp3" preload="auto"></audio>
 
     <script src="game.js"></script>
-
-    <div style="margin: 20px 0 0 0">
-      <a
-        href="https://hits.sh/sleepyfinger.github.io/webminiapps/tenlinepuzzle/index.html/"
-        ><img
-          alt="Hits"
-          src="https://hits.sh/sleepyfinger.github.io/webminiapps/tenlinepuzzle/index.html.svg"
-      /></a>
-    </div>
-
-    <p id="copyright">
-      <a
-        href="https://blog.naver.com/sleepyfinger/223764694015"
-        target="_blank"
-        title="개발자 블로그 방문"
-      >
-        <i class="fas fa-comment-alt"></i>
-        Created by SleepyFinger.
-      </a>
-    </p>
   </body>
 </html>
