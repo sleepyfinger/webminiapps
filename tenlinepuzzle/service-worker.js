@@ -1,4 +1,4 @@
-const CACHE_NAME = "10linepuzzle-v1";
+const CACHE_NAME = "10linepuzzle-v2";
 const PRECACHE_URLS = ["index.html", "game.js", "get_score.mp3"];
 
 self.addEventListener("install", (event) => {
