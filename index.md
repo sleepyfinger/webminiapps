@@ -1,6 +1,6 @@
 ---
 layout: home
-title: 홈
+title: Web Mini Apps
 ---
 
 <div class="container intro-section" style="text-align: center; margin-bottom: 30px;">
