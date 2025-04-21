@@ -1,0 +1,41 @@
+---
+layout: default
+---
+
+<div class="container page-content category-page">
+  <header class="page-header text-center mb-5">
+    <h1>{{ page.title }}</h1>
+    {% if page.description %}
+    <p class="lead">{{ page.description }}</p>
+    {% endif %}
+  </header>
+
+  {% assign apps = site.apps | where_exp: "item", "item.category != nil" %}
+  {% assign categories = "" | split: "," %}
+  {% for app in apps %}
+  {% unless categories contains app.category %}
+  {% assign categories = categories | push: app.category %}
+  {% endunless %}
+  {% endfor %}
+  {% assign sorted_categories = categories | sort %}
+
+  <section class="categories-list">
+    {% if sorted_categories.size > 0 %}
+    {% for category in sorted_categories %}
+    <div class="category-section mb-5">
+      <h2 id="{{ category | slugify }}" class="category-title mb-4">{{ category }}</h2>
+
+      <div class="app-grid">
+        {% assign apps_in_category = apps | where: "category", category | sort: 'date' | reverse %}
+        {% for app in apps_in_category %}
+        {% include app_card.html app=app %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p class="text-center">표시할 카테고리가 없습니다. 앱에 'category' 항목을 추가해주세요.</p>
+    {% endif %}
+  </section>
+
+</div>

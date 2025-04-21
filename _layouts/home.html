@@ -1,0 +1,42 @@
+---
+layout: default
+---
+
+<section id="recommended-app" class="app-section container recommended-section-simple">
+  {% assign all_apps = site.apps %}
+  {% if all_apps.size > 0 %}
+  {% assign random_index = site.time | date: '%s' | modulo: all_apps.size %}
+  {% assign random_app = all_apps[random_index] %}
+  <div class="recommended-simple-content">
+    <h2>오늘의 추천 앱</h2>
+    <h2><a href="{{ random_app.url | relative_url }}">{{ random_app.title }}</a></h2>
+  </div>
+  {% if random_app.description %}
+  <p>{{ random_app.description }}<br>지금 바로 플레이하세요.</p>
+  {% endif %}
+  <a href="{{ random_app.url | relative_url }}" class="play-now-button">지금 플레이!</a>
+  </div>
+  {% else %}
+  <p style="text-align: center;">추천 앱이 아직 없습니다.</p>
+  {% endif %}
+</section>
+
+<section id="latest-apps" class="app-section container">
+  <h2>최신 앱</h2>
+  <div class="app-grid">
+    {% assign sorted_apps = site.apps | sort: 'date' | reverse %}
+    {% for app in sorted_apps limit:4 %}
+    {% include app_card.html app=app %}
+    {% endfor %}
+  </div>
+</section>
+
+<section id="popular-apps" class="app-section container">
+  <h2>인기 앱</h2>
+  <div class="app-grid">
+    {% assign popular_apps = site.apps | where_exp: "app", "app.popular == true" %}
+    {% for app in popular_apps limit:4 %}
+    {% include app_card.html app=app %}
+    {% endfor %}
+  </div>
+</section>
