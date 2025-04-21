@@ -7,6 +7,7 @@ app_folder: /apps/cute-animals/
 tags: [game, puzzle]
 category: "게임"
 orientation: vertical
+date: 2025-04-22 00:28:35 +0900
 popular: true
 ---
 
