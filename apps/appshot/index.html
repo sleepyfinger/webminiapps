@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AppShot - 앱 스크린샷 생성기</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&family=Montserrat:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;700&family=Nanum+Gothic:wght@400;700&family=Poppins:wght@400;500;700&family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header class="main-header">
+      <h1>AppShot: 앱 스크린샷 생성기</h1>
+    </header>
+
+    <main class="editor-container">
+      <aside class="controls">
+        <div class="control-section">
+          <label for="screenshotFile">스크린샷 업로드:</label>
+          <input type="file" id="screenshotFile" accept="image/*" />
+        </div>
+
+        <div class="control-section inline-controls">
+          <label for="deviceFrame">기기 프레임:</label>
+          <select id="deviceFrame">
+            <option value="type_01">Type 01</option>
+            <option value="type_02">Type 02</option>
+            <option value="type_03">Type 03</option>
+            <option value="type_04">Type 04</option>
+          </select>
+        </div>
+
+        <div class="button-group">
+          <button
+            id="undoButton"
+            class="button-secondary"
+            title="되돌리기 (Ctrl+Z)"
+            disabled
+          >
+            되돌리기
+          </button>
+          <button
+            id="redoButton"
+            class="button-secondary"
+            title="다시 실행 (Ctrl+Y)"
+            disabled
+          >
+            다시실행
+          </button>
+          <button
+            id="resetButton"
+            class="button-danger"
+            title="선택된 기기 기본값으로 재설정"
+          >
+            초기화
+          </button>
+        </div>
+
+        <div class="control-group collapsible">
+          <h3 class="collapsible-header">
+            스크린샷 레이아웃 조정 <span class="toggle-icon">-</span>
+          </h3>
+          <div class="collapsible-content">
+            <div class="slider-group">
+              <label for="screenX">X 위치:</label>
+              <input
+                type="range"
+                id="screenXRange"
+                min="-200"
+                max="1000"
+                value="94"
+              />
+              <input type="number" id="screenX" value="94" />
+            </div>
+            <div class="slider-group">
+              <label for="screenY">Y 위치:</label>
+              <input
+                type="range"
+                id="screenYRange"
+                min="-200"
+                max="1500"
+                value="188"
+              />
+              <input type="number" id="screenY" value="188" />
+            </div>
+            <div class="slider-group">
+              <label for="screenWidth">너비:</label>
+              <input
+                type="range"
+                id="screenWidthRange"
+                min="10"
+                max="1200"
+                value="623"
+              />
+              <input type="number" id="screenWidth" value="623" min="10" />
+            </div>
+            <div class="slider-group">
+              <label for="screenHeight">높이:</label>
+              <input
+                type="range"
+                id="screenHeightRange"
+                min="10"
+                max="2000"
+                value="1255"
+              />
+              <input type="number" id="screenHeight" value="1255" min="10" />
+            </div>
+            <div class="slider-group">
+              <label for="screenScale">비율:</label>
+              <input
+                type="range"
+                id="screenScaleRange"
+                min="0.1"
+                max="2"
+                step="0.01"
+                value="1"
+              />
+              <input
+                type="number"
+                id="screenScale"
+                value="1"
+                min="0.1"
+                max="2"
+                step="0.01"
+              />
+            </div>
+            <div class="slider-group">
+              <label for="borderRadius">모서리:</label>
+              <input
+                type="range"
+                id="borderRadiusRange"
+                min="0"
+                max="200"
+                value="55"
+              />
+              <input type="number" id="borderRadius" value="55" min="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group collapsible">
+          <h3 class="collapsible-header">
+            프레임 레이아웃 조정 <span class="toggle-icon">-</span>
+          </h3>
+          <div class="collapsible-content">
+            <div class="slider-group">
+              <label for="frameX">X 위치:</label>
+              <input
+                type="range"
+                id="frameXRange"
+                min="-200"
+                max="1000"
+                value="0"
+              />
+              <input type="number" id="frameX" value="0" />
+            </div>
+            <div class="slider-group">
+              <label for="frameY">Y 위치:</label>
+              <input
+                type="range"
+                id="frameYRange"
+                min="-200"
+                max="1500"
+                value="0"
+              />
+              <input type="number" id="frameY" value="0" />
+            </div>
+            <div class="slider-group">
+              <label for="frameWidth">너비:</label>
+              <input
+                type="range"
+                id="frameWidthRange"
+                min="10"
+                max="1200"
+                value="810"
+              />
+              <input type="number" id="frameWidth" value="810" min="10" />
+            </div>
+            <div class="slider-group">
+              <label for="frameHeight">높이:</label>
+              <input
+                type="range"
+                id="frameHeightRange"
+                min="10"
+                max="2000"
+                value="1440"
+              />
+              <input type="number" id="frameHeight" value="1440" min="10" />
+            </div>
+            <div class="slider-group">
+              <label for="frameScale">비율:</label>
+              <input
+                type="range"
+                id="frameScaleRange"
+                min="0.1"
+                max="2"
+                step="0.01"
+                value="1"
+              />
+              <input
+                type="number"
+                id="frameScale"
+                value="1"
+                min="0.1"
+                max="2"
+                step="0.01"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group collapsible">
+          <h3 class="collapsible-header">
+            디자인 & 텍스트 <span class="toggle-icon">-</span>
+          </h3>
+          <div class="collapsible-content">
+            <div class="setting-group">
+              <div class="control-item">
+                <label for="backgroundColor">배경색:</label>
+                <input type="color" id="backgroundColor" value="#ffffff" />
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="control-item">
+                <label for="titleText">제목:</label>
+                <input
+                  type="text"
+                  id="titleText"
+                  placeholder="앱의 멋진 기능을 설명하세요"
+                />
+              </div>
+              <div class="control-item">
+                <label for="subtitleText">설명:</label>
+                <input
+                  type="text"
+                  id="subtitleText"
+                  placeholder="추가적인 설명을 입력하세요 (선택 사항)"
+                />
+              </div>
+            </div>
+
+            <div class="setting-group">
+              <div class="control-item">
+                <label for="textColor">텍스트 색상:</label>
+                <input type="color" id="textColor" value="#000000" />
+              </div>
+              <div class="control-item">
+                <label for="fontFamily">폰트:</label>
+                <select id="fontFamily">
+                  <option value="'Noto Sans KR', sans-serif">
+                    Noto Sans KR
+                  </option>
+                  <option value="'Roboto', sans-serif">Roboto</option>
+                  <option value="'Montserrat', sans-serif">Montserrat</option>
+                  <option value="'Nanum Gothic', sans-serif">
+                    Nanum Gothic
+                  </option>
+                  <option value="'Gothic A1', sans-serif">Gothic A1</option>
+                  <option value="'Poppins', sans-serif">Poppins</option>
+                  <option value="'Open Sans', sans-serif">Open Sans</option>
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                  <option value="Tahoma, sans-serif">Tahoma</option>
+                  <option value="Helvetica, sans-serif">Helvetica</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="'Times New Roman', Times, serif">
+                    Times New Roman
+                  </option>
+                  <option value="'Courier New', Courier, monospace">
+                    Courier New
+                  </option>
+                  <option value="'Lucida Console', Monaco, monospace">
+                    Lucida Console
+                  </option>
+                  <option value="Impact, Charcoal, sans-serif">Impact</option>
+                  <option value="'Comic Sans MS', cursive, sans-serif">
+                    Comic Sans MS
+                  </option>
+                  <option value="'Trebuchet MS', sans-serif">
+                    Trebuchet MS
+                  </option>
+                  <option value="'Malgun Gothic', '맑은 고딕', sans-serif">
+                    Malgun Gothic
+                  </option>
+                  <option value="'Dotum', '돋움', sans-serif">Dotum</option>
+                  <option value="'Gulim', '굴림', sans-serif">Gulim</option>
+                  <option value="'Batang', '바탕', serif">Batang</option>
+                </select>
+              </div>
+              <div class="slider-group">
+                <label for="fontSize">텍스트 크기:</label>
+                <input
+                  type="range"
+                  id="fontSizeRange"
+                  min="10"
+                  max="150"
+                  value="50"
+                />
+                <input
+                  type="number"
+                  id="fontSize"
+                  value="50"
+                  min="10"
+                  max="150"
+                />
+              </div>
+              <div class="slider-group">
+                <label for="textYOffset">텍스트 Y 위치:</label>
+                <input
+                  type="range"
+                  id="textYOffsetRange"
+                  min="-100"
+                  max="1000"
+                  value="80"
+                />
+                <input
+                  type="number"
+                  id="textYOffset"
+                  value="80"
+                  min="-100"
+                  max="1000"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="preview">
+        <div class="canvas-container">
+          <canvas id="previewCanvas" width="810" height="1440"></canvas>
+        </div>
+        <button
+          id="downloadButton"
+          class="button-primary"
+          style="display: none"
+        >
+          이미지 다운로드
+        </button>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <p class="version-info">version 1.0.0</p>
+        <div class="creator-info">
+          Made with ❤️ by
+          <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+            SleepyFinger
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
