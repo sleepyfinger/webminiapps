@@ -1,21 +1,56 @@
 {% assign app = include.app %}
-<div class="app-card">
-    {% if app.thumbnail %}
-    <a href="{{ app.url | relative_url }}" class="card-thumbnail">
-        <img src="{{ app.thumbnail | relative_url }}" alt="{{ app.title }} thumbnail">
-    </a>
-    {% endif %}
-    <div class="card-content">
-        <h3 class="card-title"><a href="{{ app.url | relative_url }}">{{ app.title }}</a></h3>
-        {% if app.description %}
-        <p class="card-description">{{ app.description | truncatewords: 15 }}</p>
-        {% endif %}
-        {% if app.tags %}
-        <div class="card-tags">
-            {% for tag in app.tags %}
+{% assign layout_type = include.layout_type | default: 'default' %}
+
+{% assign app_url = app.url | default: '#' %}
+{% assign app_thumbnail = app.thumbnail | default: '/assets/images/placeholder.png' %}
+{% assign app_title = app.title | default: '제목 없음' %}
+{% assign app_description = app.description | default: '설명이 없습니다.' %}
+{% assign app_tags = app.tags | default: '' %}
+
+{% if layout_type == 'horizontal' %}
+
+<div class="app-card-horizontal">
+    <div class="app-card-thumbnail">
+        <a href="{{ app_url | relative_url }}">
+            <img src="{{ app_thumbnail | relative_url }}" alt="{{ app_title }} 썸네일" loading="lazy">
+        </a>
+    </div>
+    <div class="app-card-content">
+        <h3 class="app-card-title">
+            <a href="{{ app_url | relative_url }}">{{ app_title }}</a>
+        </h3>
+        <p class="app-card-description">{{ app_description | truncatewords: 20 }}</p>
+        {% if app_tags != '' %}
+        <div class="app-card-tags">
+            {% for tag in app_tags %}
             <span class="tag">{{ tag }}</span>
             {% endfor %}
         </div>
         {% endif %}
     </div>
 </div>
+
+{% else %}
+
+<div class="app-card">
+    {% if app.thumbnail and app.thumbnail != '/assets/images/placeholder.png' %}
+    <a href="{{ app_url | relative_url }}" class="card-thumbnail">
+        <img src="{{ app_thumbnail | relative_url }}" alt="{{ app_title }} 썸네일" loading="lazy">
+    </a>
+    {% endif %}
+    <div class="card-content">
+        <h3 class="card-title"><a href="{{ app_url | relative_url }}">{{ app_title }}</a></h3>
+        {% if app.description and app.description != '설명이 없습니다.' %}
+        <p class="card-description">{{ app_description | truncatewords: 15 }}</p>
+        {% endif %}
+        {% if app_tags != '' %}
+        <div class="card-tags">
+            {% for tag in app_tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endif %}

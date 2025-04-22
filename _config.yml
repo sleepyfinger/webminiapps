@@ -1,6 +1,6 @@
 title: Web Mini Apps
 description: >-
-  재미있는 미니 웹 게임들을 만나보세요!
+  재미있는 미니 웹앱들을 만나보세요!
 lang: ko-KR
 url: "https://sleepyfinger.github.io"
 baseurl: "/webminiapps"
@@ -12,7 +12,7 @@ collections:
 
 markdown: kramdown
 
-google_analytics: G-5KLVLPX86G
+google_analytics_id: G-5KLVLPX86G
 
 exclude:
 - Gemfile

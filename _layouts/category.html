@@ -28,7 +28,7 @@ layout: default
       <div class="app-grid">
         {% assign apps_in_category = apps | where: "category", category | sort: 'date' | reverse %}
         {% for app in apps_in_category %}
-        {% include app_card.html app=app %}
+        {% include app_card.html app=app layout_type='horizontal' %}
         {% endfor %}
       </div>
     </div>

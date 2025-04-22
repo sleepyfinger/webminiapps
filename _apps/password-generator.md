@@ -1,6 +1,6 @@
 ---
 layout: app
-title: "Password Generator"
+title: "비밀번호 생성기"
 description: "안전한 무작위 비밀번호 생성기"
 thumbnail: /assets/images/thumbnails/password-generator.png
 app_folder: /apps/password-generator/
