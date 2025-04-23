@@ -5,13 +5,6 @@ layout: default
 
 <article class="app-detail-container container app-orientation-{{ orientation }}">
 
-    <header class="app-header">
-        <h1 class="app-title">{{ page.title }}</h1>
-        {% if page.description %}
-        <p class="app-description">{{ page.description }}</p>
-        {% endif %}
-    </header>
-
     {% if orientation == 'vertical' %}
     <div class="app-detail-vertical-layout">
         <div class="app-player-wrapper">
