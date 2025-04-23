@@ -322,9 +322,7 @@ function restartGame() {
   scoreElement.textContent = `점수: ${score}`;
   gameOverOverlay.classList.remove("visible");
   setTimeout(() => {
-    if (!gameRunning) {
-      gameOverOverlay.classList.add("hidden");
-    }
+    gameOverOverlay.classList.add("hidden");
   }, 300);
 
   initializeClouds();
@@ -335,9 +333,6 @@ function restartGame() {
 
 function handleKeyDown(e) {
   if (!gameRunning) {
-    if (e.code === "Enter" || e.code === "Space") {
-      restartGame();
-    }
     return;
   }
 
@@ -350,7 +345,6 @@ function handleTouchStart(e) {
   e.preventDefault();
 
   if (!gameRunning) {
-    restartGame();
     return;
   }
 
@@ -395,6 +389,10 @@ if (gameContainer) {
   canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
 }
 restartButton.addEventListener("click", restartGame);
+restartButton.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  restartGame();
+});
 
 initializeClouds();
 highScore = parseInt(localStorage.getItem("emojiRunHighScore") || "0");
