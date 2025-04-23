@@ -7,7 +7,7 @@ app_folder: /apps/name_score/
 tags: [game, fun, test]
 category: "게임"
 orientation: horizontal
-date: 2025-04-23 14:39:00 +
+date: 2025-04-23 22:36:57 +0900
 popular: true
 ---
 
