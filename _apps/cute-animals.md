@@ -8,7 +8,6 @@ tags: [game, puzzle]
 category: "게임"
 orientation: vertical
 date: 2025-04-22 00:28:35 +0900
-popular: true
 ---
 
 Cute Animals는 귀여운 동물 캐릭터 공을 떨어뜨려 같은 동물끼리 합쳐 더 큰 캐릭터로 만드는 간단하면서도 중독성 강한 물리 퍼즐 게임입니다.

@@ -7,7 +7,8 @@ app_folder: /apps/name_score/
 tags: [game, fun, test]
 category: "게임"
 orientation: horizontal
-date: 2025-04-23 14:39:00 +0900
+date: 2025-04-23 14:39:00 +
+popular: true
 ---
 
 두 사람의 이름을 입력하면 궁합 점수를 확인할 수 있는 재미있는 이름 궁합 테스트입니다.

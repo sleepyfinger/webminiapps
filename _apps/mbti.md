@@ -8,6 +8,7 @@ tags: [utility, psychology, test]
 category: "유틸리티"
 orientation: horizontal
 date: 2025-04-23 14:34:00 +0900
+popular: true
 ---
 
 간단한 질문에 답하며 나의 MBTI 성격 유형을 빠르게 확인할 수 있는 성격 검사 앱입니다.
