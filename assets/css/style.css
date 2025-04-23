@@ -179,6 +179,21 @@ header h1 a {
     transition: color var(--transition-speed) ease;
 }
 
+header h1 a.site-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--light-color);
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+header h1 a.site-logo img {
+    height: 40px;
+    width: auto;
+}
+
 body.light-theme header h1 a {
     color: var(--light-color);
 }
