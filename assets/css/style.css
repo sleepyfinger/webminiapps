@@ -1,54 +1,54 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap");
 
 :root {
-    --primary-color: #1abc9c;
-    --primary-hover-color: #16a085;
-    --secondary-color: #2c3e50;
-    --light-color: #ecf0f1;
-    --dark-color: #1a1d21;
-    --card-background: rgba(40, 44, 52, 0.85);
-    --content-background: #252930;
-    --text-color: #c8ced3;
+    --primary-color: #18b394;
+    --primary-hover-color: #149a7e;
+    --secondary-color: #34495e;
+    --light-color: #f0f3f4;
+    --dark-color: #1e2227;
+    --card-background: rgba(var(--card-bg-rgb), 0.9);
+    --content-background: #282c34;
+    --text-color: #bdc3c7;
     --subtle-text-color: #95a5a6;
-    --border-color: rgba(236, 240, 241, 0.07);
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --shadow-hover-color: rgba(0, 0, 0, 0.4);
-    --bg-light-color: #343a40;
-    --hover-background-color: #343a40;
-    --hover-text-color: #1abc9c;
+    --border-color: rgba(236, 240, 241, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --shadow-hover-color: rgba(0, 0, 0, 0.3);
+    --bg-light-color: #3a4149;
+    --hover-background-color: rgba(var(--primary-rgb), 0.1);
+    --hover-text-color: var(--primary-color);
 
-    --border-radius: 8px;
-    --transition-speed: 0.25s;
-    --box-shadow: 0 5px 15px var(--shadow-color);
-    --hover-shadow: 0 8px 25px var(--shadow-hover-color);
+    --border-radius: 6px;
+    --transition-speed: 0.3s;
+    --box-shadow: 0 4px 12px var(--shadow-color);
+    --hover-shadow: 0 6px 20px var(--shadow-hover-color);
 
-    --secondary-rgb: 44, 62, 80;
-    --primary-rgb: 26, 188, 156;
-    --dark-rgb: 26, 29, 33;
+    --secondary-rgb: 52, 73, 94;
+    --primary-rgb: 24, 179, 148;
+    --dark-rgb: 30, 34, 39;
     --card-bg-rgb: 40, 44, 52;
-    --content-bg-rgb: 37, 41, 48;
+    --content-bg-rgb: 40, 44, 52;
 }
 
 body.light-theme {
-    --primary-color: #5dade2;
-    --primary-hover-color: #4fa7d6;
-    --secondary-color: #e9ecef;
+    --primary-color: #4a90e2;
+    --primary-hover-color: #357abd;
+    --secondary-color: #f8f9fa;
     --light-color: #212529;
-    --dark-color: #f8f9fa;
+    --dark-color: #ffffff;
     --card-background: #ffffff;
     --content-background: #ffffff;
     --text-color: #495057;
     --subtle-text-color: #6c757d;
-    --border-color: #dee2e6;
-    --shadow-color: rgba(0, 0, 0, 0.04);
-    --shadow-hover-color: rgba(0, 0, 0, 0.08);
-    --bg-light-color: #e9ecef;
+    --border-color: #e9ecef;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --shadow-hover-color: rgba(0, 0, 0, 0.1);
+    --bg-light-color: #f8f9fa;
     --hover-background-color: #e9ecef;
-    --hover-text-color: #4fa7d6;
+    --hover-text-color: var(--primary-hover-color);
 
-    --secondary-rgb: 233, 236, 239;
-    --primary-rgb: 93, 173, 226;
-    --dark-rgb: 248, 249, 250;
+    --primary-rgb: 74, 144, 226;
+    --secondary-rgb: 248, 249, 250;
+    --dark-rgb: 255, 255, 255;
     --card-bg-rgb: 255, 255, 255;
     --content-bg-rgb: 255, 255, 255;
 }
@@ -93,7 +93,7 @@ main {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(var(--primary-rgb), 0.6);
+    background-color: rgba(var(--primary-rgb), 0.5);
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;
@@ -101,7 +101,7 @@ main {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(var(--primary-rgb), 0.8);
+    background-color: rgba(var(--primary-rgb), 0.7);
 }
 
 a {
@@ -120,8 +120,8 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 3px;
+    outline: 2px solid rgba(var(--primary-rgb), 0.5);
+    outline-offset: 2px;
     border-radius: 4px;
 }
 
@@ -143,25 +143,26 @@ img {
 }
 
 header {
-    background-color: rgba(var(--dark-rgb), 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: rgba(var(--dark-rgb), 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     color: var(--light-color);
     padding: 1rem 0;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
     position: sticky;
     top: 0;
     z-index: 1000;
     transition: background-color var(--transition-speed) ease,
-        box-shadow var(--transition-speed) ease, color var(--transition-speed) ease, top 0.3s ease-in-out;
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease, top 0.3s ease-in-out;
     border-bottom: 1px solid var(--border-color);
 }
 
 body.light-theme header {
-    background-color: rgba(var(--dark-rgb), 0.85);
+    background-color: rgba(var(--dark-rgb), 0.9);
     border-bottom-color: var(--border-color);
     color: var(--light-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: none;
 }
 
 header .container {
@@ -172,9 +173,9 @@ header .container {
 
 header h1 a {
     color: var(--light-color);
-    font-size: 1.6rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
     text-shadow: none;
     transition: color var(--transition-speed) ease;
 }
@@ -219,18 +220,18 @@ body.light-theme header nav ul li a {
 header nav ul li a::after {
     content: "";
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 0;
     height: 2px;
     background-color: var(--primary-color);
-    transition: width var(--transition-speed) ease,
-        background-color var(--transition-speed) ease;
+    transition: width var(--transition-speed) ease;
 }
 
 header nav ul li a:hover::after,
 header nav ul li a:focus::after {
-    width: 100%;
+    width: 60%;
 }
 
 header nav ul li a:hover,
@@ -260,19 +261,19 @@ header nav ul li.dropdown .dropdown-menu {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: var(--card-background);
+    background-color: var(--content-background);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     padding: 8px 0;
     margin: 2px 0 0;
     list-style: none;
     min-width: 160px;
     z-index: 1000;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--box-shadow);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(10px);
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.2s ease-in-out;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
 }
 
 header nav ul li.dropdown:hover .dropdown-menu,
@@ -320,13 +321,15 @@ header nav ul li.dropdown .dropdown-menu li a:hover {
     height: 36px;
     transition: background-color var(--transition-speed) ease,
         color var(--transition-speed) ease,
-        border-color var(--transition-speed) ease, transform 0.2s ease;
+        border-color var(--transition-speed) ease, transform 0.2s ease,
+        box-shadow var(--transition-speed) ease;
 }
 
 #theme-toggle-button:hover {
     background-color: rgba(var(--primary-rgb), 0.1);
     color: var(--primary-color);
-    border-color: rgba(var(--primary-rgb), 0.3);
+    border-color: rgba(var(--primary-rgb), 0.2);
+    box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.1);
 }
 
 #theme-toggle-button:active {
@@ -360,17 +363,15 @@ body.light-theme .icon-sun {
 .play-now-button,
 .btn {
     display: inline-block;
-    background: linear-gradient(45deg,
-            var(--primary-color),
-            var(--primary-hover-color));
+    background-color: var(--primary-color);
     color: #fff !important;
-    padding: 0.9rem 2.2rem;
-    border-radius: 50px;
-    font-size: 1.05rem;
-    font-weight: 600;
+    padding: 0.8rem 2rem;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 500;
     transition: transform 0.2s ease, box-shadow var(--transition-speed) ease,
-        background var(--transition-speed) ease;
-    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.2);
+        background-color var(--transition-speed) ease;
+    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.15);
     border: none;
     cursor: pointer;
     text-align: center;
@@ -382,8 +383,9 @@ body.light-theme .icon-sun {
 .play-now-button:focus,
 .btn:hover,
 .btn:focus {
-    transform: translateY(-3px);
-    box-shadow: 0 7px 18px rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.25);
+    background-color: var(--primary-hover-color);
     color: #fff !important;
     text-decoration: none;
 }
@@ -402,13 +404,13 @@ body.light-theme .icon-sun {
 .app-section h2 {
     text-align: center;
     margin-bottom: 3rem;
-    font-size: 2.2rem;
+    font-size: 2rem;
     color: var(--light-color);
-    font-weight: 600;
+    font-weight: 500;
     position: relative;
     padding-bottom: 1rem;
     transition: color var(--transition-speed) ease;
-    letter-spacing: -0.3px;
+    letter-spacing: 0px;
 }
 
 body.light-theme .app-section h2 {
@@ -421,8 +423,8 @@ body.light-theme .app-section h2 {
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
-    height: 4px;
+    width: 50px;
+    height: 3px;
     background: var(--primary-color);
     border-radius: 2px;
     transition: background var(--transition-speed) ease;
@@ -436,12 +438,12 @@ body.light-theme .app-section h2 {
 
 .app-card {
     background-color: var(--card-background);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--box-shadow);
-    transition: transform var(--transition-speed) ease,
+    transition: transform 0.2s ease,
         box-shadow var(--transition-speed) ease,
         background-color var(--transition-speed) ease,
         border-color var(--transition-speed) ease;
@@ -454,33 +456,33 @@ body.light-theme .app-section h2 {
 .app-card::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -1px;
     border-radius: var(--border-radius);
-    padding: 1px;
-    background: linear-gradient(45deg, rgba(var(--primary-rgb), 0.2), rgba(var(--primary-rgb), 0.05));
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.4), rgba(var(--primary-rgb), 0.1));
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
+    -webkit-mask-composite: destination-out;
     mask-composite: exclude;
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 }
 
 .app-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     box-shadow: var(--hover-shadow);
 }
 
 body.light-theme .app-card {
     background-color: var(--card-background);
-    box-shadow: 0 2px 4px var(--shadow-color);
+    box-shadow: var(--box-shadow);
 }
 
 body.light-theme .app-card:hover {
-    box-shadow: 0 5px 15px var(--shadow-hover-color);
+    box-shadow: var(--hover-shadow);
 }
 
 .app-card:hover::before {
@@ -501,23 +503,25 @@ body.light-theme .app-card:hover {
     width: 100%;
     height: 160px;
     object-fit: cover;
-    opacity: 0.85;
+    opacity: 0.9;
     transition: opacity var(--transition-speed) ease,
-        transform 0.4s ease,
+        transform 0.3s ease,
+        filter 0.3s ease,
         border-color var(--transition-speed) ease;
     border-radius: 0;
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: calc(var(--border-radius) - 1px);
+    border-top-right-radius: calc(var(--border-radius) - 1px);
     border-bottom: 1px solid var(--border-color);
 }
 
 .app-card:hover .card-thumbnail img {
     opacity: 1;
-    transform: scale(1.03);
+    transform: scale(1.02);
+    filter: brightness(1.05);
 }
 
 .app-card .card-content {
-    padding: 1rem 1.2rem;
+    padding: 1.2rem;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
@@ -525,8 +529,8 @@ body.light-theme .app-card:hover {
 
 .app-card .card-title {
     margin-bottom: 0.5rem;
-    font-size: 1.15rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
     color: var(--light-color);
     line-height: 1.4;
     transition: color var(--transition-speed) ease;
@@ -546,13 +550,13 @@ body.light-theme .app-card .card-title {
 }
 
 .app-card .card-description {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: var(--subtle-text-color);
     margin-bottom: 1rem;
     line-height: 1.6;
     transition: color var(--transition-speed) ease;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     flex-grow: 1;
@@ -565,24 +569,24 @@ body.light-theme .app-card .card-title {
 
 .tag {
     display: inline-block;
-    background-color: rgba(var(--primary-rgb), 0.08);
-    color: var(--primary-color);
-    padding: 3px 7px;
+    background-color: rgba(var(--secondary-rgb), 0.15);
+    color: var(--subtle-text-color);
+    padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
-    font-weight: 500;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    border: 1px solid rgba(var(--primary-rgb), 0.15);
+    font-weight: 400;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    border: 1px solid transparent;
     transition: background-color var(--transition-speed) ease,
         color var(--transition-speed) ease,
-        border-color var(--transition-speed) ease;
+        transform 0.2s ease;
 }
 
 .tag:hover {
-    background-color: rgba(var(--primary-rgb), 0.2);
-    color: var(--primary-hover-color);
-    border-color: rgba(var(--primary-rgb), 0.3);
+    background-color: rgba(var(--primary-rgb), 0.15);
+    color: var(--primary-color);
+    transform: translateY(-1px);
 }
 
 body.light-theme .tag {}
@@ -595,10 +599,10 @@ footer {
     background-color: var(--dark-color);
     color: var(--subtle-text-color);
     text-align: center;
-    padding: 2rem 0;
-    margin-top: 4rem;
+    padding: 2.5rem 0;
+    margin-top: 5rem;
     border-top: 1px solid var(--border-color);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     transition: background-color var(--transition-speed) ease,
         color var(--transition-speed) ease,
         border-color var(--transition-speed) ease;
@@ -658,14 +662,15 @@ body.light-theme .app-title {
 }
 
 .app-detail-column-player .app-player {
-    box-shadow: var(--hover-shadow);
+    box-shadow: var(--box-shadow);
     position: relative;
     width: 100%;
     padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
+    overflow-y: auto;
     background-color: #000;
-    border-radius: calc(var(--border-radius) - 2px);
+    border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     transition: box-shadow var(--transition-speed) ease,
         border-color var(--transition-speed) ease;
@@ -693,7 +698,7 @@ body.light-theme .app-title {
 }
 
 .app-content {
-    padding: 1.5rem;
+    padding: 1.8rem;
     background-color: var(--content-background);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
@@ -706,11 +711,11 @@ body.light-theme .app-title {
 
 .app-content h2,
 .app-content h3 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     margin-bottom: 1rem;
     padding-bottom: 0.6rem;
     color: var(--light-color);
-    font-weight: 600;
+    font-weight: 500;
     border-bottom: 1px solid var(--border-color);
     transition: color var(--transition-speed) ease,
         border-color var(--transition-speed) ease;
@@ -752,13 +757,14 @@ body.light-theme .app-content h3 {
 }
 
 .app-content ul li::before {
-    content: "•";
+    content: "—";
     position: absolute;
     left: 0;
-    top: 0px;
+    top: 2px;
     color: var(--primary-color);
     font-size: 1.1em;
     transition: color var(--transition-speed) ease;
+    font-weight: bold;
 }
 
 .back-link-container {
@@ -768,25 +774,26 @@ body.light-theme .app-content h3 {
 
 .back-link {
     padding: 0.6rem 1.5rem;
-    border-radius: 50px;
+    border-radius: var(--border-radius);
     font-weight: 500;
     display: inline-block;
     border: 1px solid var(--border-color);
     color: var(--text-color);
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform 0.2s ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform 0.2s ease, box-shadow var(--transition-speed) ease;
     font-size: 0.9rem;
 }
 
 .back-link:hover {
     transform: translateY(-2px);
-    background-color: var(--primary-color);
-    color: #fff;
-    border-color: var(--primary-color);
+    background-color: var(--hover-background-color);
+    color: var(--hover-text-color);
+    border-color: var(--border-color);
     text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .back-link:hover {
-    color: #fff;
+    color: var(--hover-text-color);
 }
 
 .screenshots {
@@ -812,8 +819,8 @@ body.light-theme .screenshots h3 {
 }
 
 .screenshots-grid img {
-    border-radius: calc(var(--border-radius) / 2);
-    box-shadow: 0 4px 10px var(--shadow-color);
+    border-radius: calc(var(--border-radius) / 1.5);
+    box-shadow: 0 3px 8px var(--shadow-color);
     cursor: pointer;
     transition: transform var(--transition-speed) ease,
         box-shadow var(--transition-speed) ease, filter var(--transition-speed) ease,
@@ -822,9 +829,9 @@ body.light-theme .screenshots h3 {
 }
 
 .screenshots-grid img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px var(--shadow-hover-color);
-    filter: brightness(1.05);
+    transform: scale(1.03);
+    box-shadow: 0 6px 15px var(--shadow-hover-color);
+    filter: brightness(1.1);
 }
 
 body.light-theme .screenshots-grid img:hover {
@@ -909,24 +916,23 @@ body.light-theme .not-found-container p strong {
 
 .not-found-container a {
     display: inline-block;
-    background: linear-gradient(45deg,
-            var(--primary-color),
-            var(--primary-hover-color));
+    background-color: var(--primary-color);
     color: #fff;
     padding: 0.8rem 1.8rem;
-    border-radius: 50px;
+    border-radius: var(--border-radius);
     font-size: 0.95rem;
     font-weight: 500;
     transition: transform 0.2s ease, box-shadow var(--transition-speed) ease,
-        background var(--transition-speed) ease;
-    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.3);
+        background-color var(--transition-speed) ease;
+    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.2);
     border: none;
 }
 
 .not-found-container a:hover,
 .not-found-container a:focus {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(var(--primary-rgb), 0.4);
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
+    background-color: var(--primary-hover-color);
     color: #fff;
 }
 
@@ -1073,9 +1079,9 @@ body.light-theme .recommended-title {
     text-align: center;
     background: linear-gradient(135deg, var(--content-background) 0%, var(--secondary-color) 100%);
     border-radius: var(--border-radius);
-    padding: 3.5rem 2rem;
-    margin-bottom: 3.5rem;
-    box-shadow: var(--hover-shadow);
+    padding: 3rem 1.5rem;
+    margin-bottom: 4rem;
+    box-shadow: var(--box-shadow);
     border: 1px solid var(--border-color);
     transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
     position: relative;
@@ -1435,40 +1441,40 @@ body.light-theme .feature-item h3 {
 .app-card-horizontal {
     display: flex;
     align-items: center;
-    border: 1px solid transparent;
     border-radius: var(--border-radius);
     overflow: hidden;
     margin-bottom: 1.5rem;
     background-color: var(--card-background);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-    transition: box-shadow var(--transition-speed) ease, transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    box-shadow: var(--box-shadow);
+    transition: box-shadow var(--transition-speed) ease, transform 0.2s ease, border-color var(--transition-speed) ease;
     position: relative;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    border: 1px solid var(--border-color);
 }
 
 .app-card-horizontal::before {
     content: "";
     position: absolute;
-    inset: 0;
+    inset: -1px;
     border-radius: var(--border-radius);
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3), rgba(var(--primary-rgb), 0.05));
+    padding: 1.5px;
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.4), rgba(var(--primary-rgb), 0.1));
     -webkit-mask:
         linear-gradient(#fff 0 0) content-box,
         linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
+    -webkit-mask-composite: destination-out;
     mask-composite: exclude;
     opacity: 0;
-    transition: opacity var(--transition-speed) ease;
+    transition: opacity 0.4s ease;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 }
 
 .app-card-horizontal:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    box-shadow: var(--hover-shadow);
 }
 
 .app-card-horizontal:hover::before {
@@ -1476,7 +1482,7 @@ body.light-theme .feature-item h3 {
 }
 
 .app-card-thumbnail {
-    flex: 0 0 110px;
+    flex: 0 0 100px;
     overflow: hidden;
     position: relative;
     align-self: stretch;
@@ -1493,11 +1499,12 @@ body.light-theme .feature-item h3 {
     height: 100%;
     object-fit: cover;
     border-radius: 0;
-    transition: transform 0.35s ease;
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .app-card-horizontal:hover .app-card-thumbnail img {
-    transform: scale(1.05);
+    transform: scale(1.03);
+    filter: brightness(1.05);
 }
 
 .app-card-content {
@@ -1512,8 +1519,8 @@ body.light-theme .feature-item h3 {
 .app-card-title {
     margin-top: 0;
     margin-bottom: 0.4rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.05rem;
+    font-weight: 500;
     color: var(--light-color);
     line-height: 1.4;
     white-space: nowrap;
@@ -1537,7 +1544,7 @@ body.light-theme .app-card-title {
 
 .app-card-description {
     margin-bottom: 0.8rem;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--subtle-text-color);
     line-height: 1.5;
     flex-grow: 1;
@@ -1555,22 +1562,23 @@ body.light-theme .app-card-title {
 }
 
 .app-card-tags .tag {
-    background-color: rgba(var(--primary-rgb), 0.1);
-    color: var(--primary-color);
-    padding: 3px 8px;
-    border-radius: 10px;
+    background-color: rgba(var(--secondary-rgb), 0.15);
+    color: var(--subtle-text-color);
+    padding: 3px 7px;
+    border-radius: 4px;
     font-size: 0.65rem;
-    font-weight: 500;
+    font-weight: 400;
     margin-right: 5px;
     margin-bottom: 5px;
     border: none;
     display: inline-block;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, transform 0.2s ease;
 }
 
 .app-card-tags .tag:hover {
-    background-color: rgba(var(--primary-rgb), 0.2);
-    color: var(--primary-hover-color);
+    background-color: rgba(var(--primary-rgb), 0.15);
+    color: var(--primary-color);
+    transform: translateY(-1px);
 }
 
 .category-page .app-grid {
@@ -2096,4 +2104,38 @@ body.light-theme .app-card-title {
         padding: 2px 5px;
         font-size: 0.55rem;
     }
+}
+
+.app-player.app-player--expanded {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1001;
+    padding-bottom: 0 !important;
+    border-radius: 0;
+    border: none;
+    background-color: var(--dark-color);
+    overflow-y: auto;
+}
+
+.app-player.app-player--expanded .player-controls {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 1002;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 8px;
+    border-radius: var(--border-radius);
+}
+
+body.player-expanded .app-detail-column-content,
+body.player-expanded .back-link-container,
+body.player-expanded header:not(.header-fixed) {
+    display: none;
+}
+
+body.player-expanded {
+    overflow: hidden;
 }
