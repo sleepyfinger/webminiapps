@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/name_score.png
 app_folder: /apps/name_score/
 tags: [game, fun, test]
 category: "게임"
-orientation: horizontal
+orientation: vertical
 date: 2025-04-23 22:36:57 +0900
 popular: true
 ---
