@@ -55,11 +55,6 @@ canvas {
   color: #333;
 }
 
-#instructions {
-  font-size: 0.9em;
-  color: #777;
-}
-
 #gameOverOverlay {
   position: fixed;
   top: 0;
