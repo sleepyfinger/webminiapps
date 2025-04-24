@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/wormlife.png
 app_folder: /apps/wormlife/
 tags: [game, simulation, casual]
 category: "게임"
-orientation: horizontal
+orientation: vertical
 date: 2025-04-23 14:54:00 +0900
 ---
 
