@@ -6,8 +6,8 @@ thumbnail: /assets/images/thumbnails/mbti.png
 app_folder: /apps/mbti/
 tags: [utility, psychology, test]
 category: "유틸리티"
-orientation: horizontal
-date: 2025-04-23 14:34:00 +0900
+orientation: vertical
+date: 2025-04-25 00:44:08 +0900
 popular: true
 ---
 

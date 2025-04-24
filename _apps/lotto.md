@@ -6,8 +6,8 @@ thumbnail: /assets/images/thumbnails/lotto.png
 app_folder: /apps/lotto/
 tags: [utility, random, lottery]
 category: "유틸리티"
-orientation: horizontal
-date: 2025-04-23 14:29:00 +0900
+orientation: vertical
+date: 2025-04-25 00:43:06 +0900
 ---
 
 로또 6/45 규칙에 맞춰 무작위 번호를 쉽고 빠르게 생성할 수 있는 로또 번호 생성기입니다.

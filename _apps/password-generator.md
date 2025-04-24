@@ -6,8 +6,8 @@ thumbnail: /assets/images/thumbnails/password-generator.png
 app_folder: /apps/password-generator/
 tags: [utility, security]
 category: "유틸리티"
-orientation: horizontal
-date: 2025-04-22 00:35:56 +0900
+orientation: vertical
+date: 2025-04-25 00:42:17 +0900
 ---
 
 안전한 무작위 비밀번호 생성기 입니다.

@@ -6,8 +6,8 @@ thumbnail: /assets/images/thumbnails/fitcalc.png
 app_folder: /apps/fitcalc/
 tags: [health, calculator, utility]
 category: "유틸리티"
-orientation: horizontal
-date: 2025-04-23 14:17:00 +0900
+orientation: vertical
+date: 2025-04-25 00:42:36 +0900
 ---
 
 신체 정보를 입력하면 주요 건강 지표를 간편하게 계산해주는 건강 계산기 앱입니다.

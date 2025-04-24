@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/lotto2.png
 app_folder: /apps/lotto2/
 tags: [utility, random, lottery]
 category: "유틸리티"
-orientation: horizontal
+orientation: vertical
 date: 2025-04-23 14:31:00 +0900
 ---
 

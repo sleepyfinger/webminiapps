@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/military_countdown.png
 app_folder: /apps/military_countdown/
 tags: [utility, military, countdown]
 category: "유틸리티"
-orientation: horizontal
+orientation: vertical
 date: 2025-04-23 14:38:00 +0900
 ---
 
