@@ -8,12 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&family=Montserrat:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Roboto:wght@400;500;700&family=Montserrat:wght@400;500;700&family=Gothic+A1:wght@400;700&family=Nanum+Gothic:wght@400;700&family=Poppins:wght@400;500;700&family=Open+Sans:wght@400;700&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Pen+Script&family=Black+Han+Sans&family=Do+Hyeon&family=Jua&family=Gaegu:wght@400;700&family=Sunflower:wght@300;500;700&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Nanum+Brush+Script&family=Stylish&family=East+Sea+Dokdo&family=Song+Myung&family=Hi+Melody&family=Poor+Story&family=Kirang+Haerang&family=Gamja+Flower&family=Yeon+Sung&display=swap"
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;700&family=Nanum+Gothic:wght@400;700&family=Poppins:wght@400;500;700&family=Open+Sans:wght@400;700&display=swap"
       rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
     />
   </head>
 
@@ -225,10 +227,51 @@
           <div class="collapsible-content">
             <div class="setting-group">
               <div class="control-item">
+                <label for="backgroundTypeSelect">배경 유형:</label>
+                <select id="backgroundTypeSelect">
+                  <option value="solid">단색</option>
+                  <option value="linear">선형 그라데이션</option>
+                  <option value="radial">방사형 그라데이션</option>
+                </select>
+              </div>
+
+              <div class="control-item" id="solidColorContainer">
                 <label for="backgroundColor">배경색:</label>
                 <input type="color" id="backgroundColor" value="#ffffff" />
               </div>
+
+              <div id="gradientControlsContainer" style="display: none">
+                <div class="control-item">
+                  <label for="gradientColor1">색상 1:</label>
+                  <input type="color" id="gradientColor1" value="#ffffff" />
+                </div>
+                <div class="control-item">
+                  <label for="gradientColor2">색상 2:</label>
+                  <input type="color" id="gradientColor2" value="#e0e0e0" />
+                </div>
+                <div
+                  class="control-item"
+                  id="gradientDirectionContainer"
+                  style="display: none"
+                >
+                  <label for="gradientDirectionSelect">방향:</label>
+                  <select id="gradientDirectionSelect">
+                    <option value="to_bottom">위에서 아래로</option>
+                    <option value="to_right">왼쪽에서 오른쪽으로</option>
+                    <option value="to_bottom_right">
+                      왼쪽 위에서 오른쪽 아래로
+                    </option>
+                    <option value="to_bottom_left">
+                      오른쪽 위에서 왼쪽 아래로
+                    </option>
+                    <option value="to_top">아래에서 위로</option>
+                    <option value="to_left">오른쪽에서 왼쪽으로</option>
+                  </select>
+                </div>
+              </div>
             </div>
+
+            <hr class="separator" />
 
             <div class="setting-group">
               <div class="control-item">
@@ -249,6 +292,8 @@
               </div>
             </div>
 
+            <hr class="separator" />
+
             <div class="setting-group">
               <div class="control-item">
                 <label for="textColor">텍스트 색상:</label>
@@ -257,44 +302,64 @@
               <div class="control-item">
                 <label for="fontFamily">폰트:</label>
                 <select id="fontFamily">
-                  <option value="'Noto Sans KR', sans-serif">
-                    Noto Sans KR
-                  </option>
-                  <option value="'Roboto', sans-serif">Roboto</option>
-                  <option value="'Montserrat', sans-serif">Montserrat</option>
-                  <option value="'Nanum Gothic', sans-serif">
-                    Nanum Gothic
-                  </option>
-                  <option value="'Gothic A1', sans-serif">Gothic A1</option>
-                  <option value="'Poppins', sans-serif">Poppins</option>
-                  <option value="'Open Sans', sans-serif">Open Sans</option>
-                  <option value="Arial, sans-serif">Arial</option>
-                  <option value="Verdana, sans-serif">Verdana</option>
-                  <option value="Tahoma, sans-serif">Tahoma</option>
-                  <option value="Helvetica, sans-serif">Helvetica</option>
-                  <option value="Georgia, serif">Georgia</option>
-                  <option value="'Times New Roman', Times, serif">
-                    Times New Roman
-                  </option>
-                  <option value="'Courier New', Courier, monospace">
-                    Courier New
-                  </option>
-                  <option value="'Lucida Console', Monaco, monospace">
-                    Lucida Console
-                  </option>
-                  <option value="Impact, Charcoal, sans-serif">Impact</option>
-                  <option value="'Comic Sans MS', cursive, sans-serif">
-                    Comic Sans MS
-                  </option>
-                  <option value="'Trebuchet MS', sans-serif">
-                    Trebuchet MS
-                  </option>
-                  <option value="'Malgun Gothic', '맑은 고딕', sans-serif">
-                    Malgun Gothic
-                  </option>
-                  <option value="'Dotum', '돋움', sans-serif">Dotum</option>
-                  <option value="'Gulim', '굴림', sans-serif">Gulim</option>
-                  <option value="'Batang', '바탕', serif">Batang</option>
+                  <optgroup label="Korean (Free for Commercial Use)">
+                    <option value="'Pretendard', sans-serif">Pretendard</option>
+                    <option value="'Noto Sans KR', sans-serif">
+                      Noto Sans KR
+                    </option>
+                    <option value="'Nanum Gothic', sans-serif">
+                      Nanum Gothic
+                    </option>
+                    <option value="'Gothic A1', sans-serif">Gothic A1</option>
+                    <option value="'IBM Plex Sans KR', sans-serif">
+                      IBM Plex Sans KR
+                    </option>
+                    <option value="'Nanum Myeongjo', serif">
+                      Nanum Myeongjo
+                    </option>
+                    <option value="'Song Myung', serif">Song Myung</option>
+                    <option value="'Stylish', serif">Stylish</option>
+                    <option value="'Do Hyeon', sans-serif">Do Hyeon</option>
+                    <option value="'Jua', sans-serif">Jua</option>
+                    <option value="'Black Han Sans', sans-serif">
+                      Black Han Sans
+                    </option>
+                    <option value="'Sunflower', sans-serif">Sunflower</option>
+                    <option value="'Gaegu', cursive">Gaegu</option>
+                    <option value="'Nanum Pen Script', cursive">
+                      Nanum Pen Script
+                    </option>
+                    <option value="'Nanum Brush Script', cursive">
+                      Nanum Brush Script
+                    </option>
+                    <option value="'East Sea Dokdo', cursive">
+                      East Sea Dokdo
+                    </option>
+                    <option value="'Hi Melody', cursive">Hi Melody</option>
+                    <option value="'Poor Story', cursive">Poor Story</option>
+                    <option value="'Kirang Haerang', cursive">
+                      Kirang Haerang
+                    </option>
+                    <option value="'Gamja Flower', cursive">
+                      Gamja Flower
+                    </option>
+                    <option value="'Yeon Sung', cursive">Yeon Sung</option>
+                  </optgroup>
+                  <optgroup label="Latin (Free for Commercial Use)">
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                    <option value="'Poppins', sans-serif">Poppins</option>
+                    <option value="'Open Sans', sans-serif">Open Sans</option>
+                    <option value="Arial, Helvetica, sans-serif">Arial</option>
+                    <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Times New Roman', Times, serif">
+                      Times New Roman
+                    </option>
+                    <option value="'Courier New', Courier, monospace">
+                      Courier New
+                    </option>
+                  </optgroup>
                 </select>
               </div>
               <div class="slider-group">
@@ -314,7 +379,26 @@
                   max="150"
                 />
               </div>
-              <div class="slider-group">
+
+              <div class="slider-group" id="textXOffsetSliderGroup">
+                <label for="textXOffset">텍스트 X 위치:</label>
+                <input
+                  type="range"
+                  id="textXOffsetRange"
+                  min="-500"
+                  max="500"
+                  value="0"
+                />
+                <input
+                  type="number"
+                  id="textXOffset"
+                  value="0"
+                  min="-500"
+                  max="500"
+                />
+              </div>
+
+              <div class="slider-group" id="textYOffsetSliderGroup">
                 <label for="textYOffset">텍스트 Y 위치:</label>
                 <input
                   type="range"
@@ -337,6 +421,23 @@
       </aside>
 
       <section class="preview">
+        <div class="orientation-controls button-group">
+          <button
+            id="portraitButton"
+            class="button-secondary active"
+            title="세로 모드"
+          >
+            세로
+          </button>
+          <button
+            id="landscapeButton"
+            class="button-secondary"
+            title="가로 모드"
+          >
+            가로
+          </button>
+        </div>
+
         <div class="canvas-container">
           <canvas id="previewCanvas" width="810" height="1440"></canvas>
         </div>
@@ -352,7 +453,7 @@
 
     <footer class="main-footer">
       <div class="footer-content">
-        <p class="version-info">version 1.0.0</p>
+        <p class="version-info">version 1.1.0</p>
         <div class="creator-info">
           Made with ❤️ by
           <a href="https://blog.naver.com/sleepyfinger" target="_blank">
