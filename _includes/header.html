@@ -1,6 +1,10 @@
 <header>
   <div class="container">
-    <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+    <h1>
+      <a href="{{ '/' | relative_url }}" class="site-logo">
+        <img src="{{ '/assets/images/logo.png' | relative_url }}" alt="{{ site.title }} Logo"> {{ site.title }}
+      </a>
+    </h1>
     <nav>
       <ul>
         <li><a href="{{ '/' | relative_url }}">홈</a></li>

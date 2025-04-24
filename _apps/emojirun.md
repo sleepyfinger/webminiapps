@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/emojirun.png
 app_folder: /apps/emojirun/
 tags: [game, arcade, casual]
 category: "게임"
-orientation: vertical
+orientation: horizontal
 date: 2025-04-23 13:48:00 +0900
 ---
 

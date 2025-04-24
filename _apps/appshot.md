@@ -8,6 +8,7 @@ tags: [tool, design, screenshot]
 category: "도구"
 orientation: horizontal
 date: 2025-04-22 12:36:11 +0900
+popular: true
 ---
 
 **AppShot**은 앱 소개에 사용할 고퀄리티 스크린샷 이미지를 쉽게 제작할 수 있는 웹 기반 도구입니다.

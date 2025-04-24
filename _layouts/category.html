@@ -3,12 +3,6 @@ layout: default
 ---
 
 <div class="container page-content category-page">
-  <header class="page-header text-center mb-5">
-    <h1>{{ page.title }}</h1>
-    {% if page.description %}
-    <p class="lead">{{ page.description }}</p>
-    {% endif %}
-  </header>
 
   {% assign apps = site.apps | where_exp: "item", "item.category != nil" %}
   {% assign categories = "" | split: "," %}

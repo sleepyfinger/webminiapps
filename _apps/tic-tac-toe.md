@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/tic-tac-toe.png
 app_folder: /apps/tic-tac-toe/
 tags: [game, puzzle, classic]
 category: "게임"
-orientation: horizontal
+orientation: vertical
 date: 2025-04-23 14:52:00 +0900
 ---
 

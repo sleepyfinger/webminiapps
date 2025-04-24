@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/number-baseball.png
 app_folder: /apps/number-baseball/
 tags: [game, puzzle, brain]
 category: "게임"
-orientation: horizontal
+orientation: vertical
 date: 2025-04-23 14:40:00 +0900
 ---
 

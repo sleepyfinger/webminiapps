@@ -1,16 +1,11 @@
 ---
 layout: default
 title: 소개
+description: "WebMiniApps에 오신 것을 환영합니다! 이곳은 다양하고 재미있는 미니 웹 앱들을 모아 놓은 공간입니다."
 permalink: /about/
 ---
 
 <div class="container page-content about-page">
-  <header class="page-header text-center mb-5">
-
-    <h1>{{ page.title }}</h1>
-    <p class="lead">WebMiniApps에 오신 것을 환영합니다! 이곳은 다양하고 재미있는 미니 웹 앱들을 모아 놓은 공간입니다.</p>
-
-  </header>
 
   <section class="about-section mb-5">
 
@@ -20,7 +15,7 @@ permalink: /about/
 
   </section>
 
-  <section class="about-section features-section mb-5">
+    <section class="about-section features-section mb-5">
 
     <h2 class="text-center mb-4">주요 특징</h2>
     <div class="row text-center">
