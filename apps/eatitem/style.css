@@ -1,0 +1,145 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #e0e0e0;
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 15px;
+  box-sizing: border-box;
+  color: #333;
+  overflow-x: hidden;
+}
+
+h1 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-weight: 600;
+  text-align: center;
+}
+
+#ui {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  color: #555;
+  font-weight: 600;
+  background-color: #ffffff;
+  padding: 10px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#ui p {
+  margin: 5px 0;
+}
+
+#ui span {
+  color: #e74c3c;
+}
+
+canvas#gameCanvas {
+  background-color: #f0f0f0;
+  border: none;
+  display: block;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  touch-action: none;
+  width: 100%;
+  max-width: 540px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#gameOver {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(44, 62, 80, 0.9);
+  color: white;
+  padding: 30px 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  width: 80%;
+  max-width: 400px;
+}
+
+#gameOver:not(.hidden) {
+}
+
+#gameOver h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #ecf0f1;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+#gameOver p {
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  color: #bdc3c7;
+}
+
+#gameOver span {
+  color: #f1c40f;
+  font-weight: 600;
+}
+
+#restartButton {
+  padding: 12px 25px;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#restartButton:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+}
+
+#restartButton:active {
+  transform: translateY(0);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.8em;
+  }
+  #ui {
+    font-size: 1em;
+    padding: 8px 15px;
+    gap: 15px;
+  }
+  #gameOver h2 {
+    font-size: 1.8em;
+  }
+  #gameOver p {
+    font-size: 1.1em;
+  }
+  #restartButton {
+    padding: 10px 20px;
+    font-size: 0.9em;
+  }
+}

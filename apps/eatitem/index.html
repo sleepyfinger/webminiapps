@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>아이템 먹기 챌린지</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>아이템 먹기 챌린지</h1>
+
+    <div id="ui">
+      <p>SCORE: <span id="score">0</span></p>
+      <p>TIME: <span id="time">60</span></p>
+    </div>
+
+    <canvas id="gameCanvas" width="540" height="540"></canvas>
+
+    <div id="gameOver" class="hidden">
+      <h2>GAME OVER!</h2>
+      <p>FINAL SCORE: <span id="finalScore">0</span></p>
+      <button id="restartButton">RESTART</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
