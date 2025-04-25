@@ -1,0 +1,209 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+:root {
+  --bg-color: #f9fafd;
+  --primary-accent: #6a67ea;
+  --secondary-accent: #509bfd;
+  --board-bg: #eef2f8;
+  --cell-bg: rgba(255, 255, 255, 0.96);
+  --cell-border: #e6ecf2;
+  --text-dark: #333a45;
+  --text-light: #8a8f98;
+  --button-bg: linear-gradient(
+    75deg,
+    var(--primary-accent),
+    var(--secondary-accent)
+  );
+  --button-hover-bg: linear-gradient(75deg, #5c5ae7, #408eec);
+
+  --shadow-soft: 0 3px 6px rgba(60, 64, 67, 0.08);
+  --shadow-medium-soft: 0 6px 12px rgba(60, 64, 67, 0.12),
+    0 1px 3px rgba(60, 64, 67, 0.06);
+  --shadow-deep-soft: 0 10px 25px rgba(60, 64, 67, 0.15),
+    0 3px 8px rgba(60, 64, 67, 0.08);
+  --shadow-inset-light: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  --grid-width: 6;
+  --grid-height: 8;
+  --cell-size: 55px;
+  --cell-gap: 4px;
+  --board-padding: 12px;
+
+  --base-font-size: 16px;
+  --main-border-radius: 14px;
+  --cell-border-radius-factor: 0.18;
+
+  --board-width: calc(
+    (var(--cell-size) * var(--grid-width)) +
+      (var(--cell-gap) * (var(--grid-width) - 1)) + (var(--board-padding) * 2)
+  );
+  --board-height: calc(
+    (var(--cell-size) * var(--grid-height)) +
+      (var(--cell-gap) * (var(--grid-height) - 1)) + (var(--board-padding) * 2)
+  );
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-color);
+  padding: 25px 15px;
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  font-size: var(--base-font-size);
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--board-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: clamp(1.8em, 5vw, 2.5em);
+  color: var(--primary-accent);
+  margin-bottom: 20px;
+  letter-spacing: -0.6px;
+  text-align: center;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  max-width: calc(var(--board-width) - 20px);
+  margin-bottom: 25px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.score-container,
+.level-container {
+  font-size: clamp(1.1em, 3.5vw, 1.4em);
+  font-weight: 500;
+  color: var(--text-dark);
+  background-color: #ffffff;
+  padding: 8px 18px;
+  border-radius: var(--main-border-radius);
+  box-shadow: var(--shadow-medium-soft);
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.level-container {
+  transition: transform 0.2s ease-out, box-shadow 0.25s ease-out;
+}
+
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-width), var(--cell-size));
+  grid-template-rows: repeat(var(--grid-height), var(--cell-size));
+  background-color: var(--board-bg);
+  border-radius: var(--main-border-radius);
+  padding: var(--board-padding);
+  box-shadow: var(--shadow-deep-soft), var(--shadow-inset-light);
+  position: relative;
+  gap: var(--cell-gap);
+  width: var(--board-width);
+  height: var(--board-height);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: calc(var(--cell-size) * 0.6);
+  cursor: grab;
+  user-select: none;
+  background-color: var(--cell-bg);
+  border: 1px solid var(--cell-border);
+  border-radius: calc(var(--cell-size) * var(--cell-border-radius-factor));
+  box-sizing: border-box;
+  transition: background-color 0.2s ease-out, box-shadow 0.25s ease-out,
+    border-color 0.2s ease-out, opacity 0.15s ease-out,
+    transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: var(--shadow-soft), var(--shadow-inset-light);
+  will-change: transform, opacity, box-shadow;
+}
+
+.cell:not(.dragging):not(.matched):hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: var(--shadow-medium-soft), var(--shadow-inset-light);
+  background-color: #ffffff;
+  border-color: #dfe6ee;
+}
+
+@keyframes disappear {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.08) rotate(2deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.1) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+.cell.matched {
+  animation: disappear 0.3s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  pointer-events: none;
+}
+
+.cell.dragging {
+  cursor: grabbing;
+  box-shadow: var(--shadow-deep-soft);
+  opacity: 0.9;
+}
+
+.cell.drag-over {
+  outline: 2px solid var(--primary-accent);
+  outline-offset: -3px;
+  background-color: rgba(106, 103, 234, 0.1);
+}
+
+#reset-button {
+  margin-top: 30px;
+  padding: 14px 30px;
+  font-size: clamp(1em, 3.6vw, 1.15em);
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--button-bg);
+  color: white;
+  border: none;
+  border-radius: var(--main-border-radius);
+  box-shadow: var(--shadow-medium-soft), inset 0 -2px 3px rgba(0, 0, 0, 0.1);
+  transition: background 0.25s ease,
+    transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s ease;
+  letter-spacing: 0.4px;
+}
+
+#reset-button:hover {
+  background: var(--button-hover-bg);
+  box-shadow: var(--shadow-deep-soft), inset 0 -1px 2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-3px);
+}
+
+#reset-button:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: var(--shadow-soft), inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
