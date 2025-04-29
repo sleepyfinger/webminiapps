@@ -2,7 +2,7 @@
 layout: app
 title: "이름 궁합 테스트"
 description: "두 사람의 이름을 입력해 궁합 점수를 확인하는 재미있는 테스트"
-thumbnail: /assets/images/thumbnails/name_score.png
+thumbnail: /assets/images/thumbnails/name_score.webp
 app_folder: /apps/name_score/
 tags: [game, fun, test]
 category: "게임"

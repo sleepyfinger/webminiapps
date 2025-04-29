@@ -2,7 +2,7 @@
 layout: app
 title: "콜 마이 네임"
 description: "상대방이 정해준 인물을 추리하는 파티 게임"
-thumbnail: /assets/images/thumbnails/call-my-name.png
+thumbnail: /assets/images/thumbnails/call-my-name.webp
 app_folder: /apps/call-my-name/
 tags: [game, party, quiz]
 category: "게임"

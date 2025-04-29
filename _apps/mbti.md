@@ -2,7 +2,7 @@
 layout: app
 title: "MBTI 성격 유형 검사"
 description: "간단한 질문으로 나의 MBTI 성격 유형을 빠르게 확인하는 테스트"
-thumbnail: /assets/images/thumbnails/mbti.png
+thumbnail: /assets/images/thumbnails/mbti.webp
 app_folder: /apps/mbti/
 tags: [utility, psychology, test]
 category: "유틸리티"

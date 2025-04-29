@@ -2,7 +2,7 @@
 layout: app
 title: "틱택토"
 description: "3x3 격자에서 X와 O로 승부를 겨루는 고전 퍼즐 게임"
-thumbnail: /assets/images/thumbnails/tic-tac-toe.png
+thumbnail: /assets/images/thumbnails/tic-tac-toe.webp
 app_folder: /apps/tic-tac-toe/
 tags: [game, puzzle, classic]
 category: "게임"

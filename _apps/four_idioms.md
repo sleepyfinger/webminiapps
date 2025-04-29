@@ -2,7 +2,7 @@
 layout: app
 title: "사자성어 놀이터"
 description: "사자성어를 쉽고 재미있게 익히고 퀴즈로 복습하는 학습 앱"
-thumbnail: /assets/images/thumbnails/four_idioms.png
+thumbnail: /assets/images/thumbnails/four_idioms.webp
 app_folder: /apps/four_idioms/
 tags: [education, quiz, korean]
 category: "교육"

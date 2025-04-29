@@ -2,7 +2,7 @@
 layout: app
 title: "10 Line Puzzle"
 description: "숫자를 이어 합이 10이 되도록 만드는 짜릿한 퍼즐"
-thumbnail: /assets/images/thumbnails/10linepuzzle.png
+thumbnail: /assets/images/thumbnails/10linepuzzle.webp
 app_folder: /apps/10linepuzzle/
 tags: [game, puzzle]
 category: "게임"

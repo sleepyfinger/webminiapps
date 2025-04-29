@@ -2,7 +2,7 @@
 layout: app
 title: "정렬 알고리즘 시각화"
 description: "버블, 선택, 삽입 등 다양한 정렬 알고리즘의 동작 과정을 시각적으로 확인하는 도구"
-thumbnail: /assets/images/thumbnails/sort.png
+thumbnail: /assets/images/thumbnails/sort.webp
 app_folder: /apps/sort/
 tags: [education, algorithm, visualization]
 category: "교육"

@@ -2,7 +2,7 @@
 layout: app
 title: "모던 스도쿠"
 description: "직관적인 인터페이스와 다양한 편의 기능으로 즐기는 클래식 스도쿠 퍼즐 게임"
-thumbnail: /assets/images/thumbnails/sudoku.png
+thumbnail: /assets/images/thumbnails/sudoku.webp
 app_folder: /apps/sudoku/
 tags: [game, puzzle, brain]
 category: "게임"

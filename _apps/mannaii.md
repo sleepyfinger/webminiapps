@@ -2,7 +2,7 @@
 layout: app
 title: "만 나이 계산기"
 description: "생년월일을 입력하면 만 나이를 정확하게 계산해주는 도구"
-thumbnail: /assets/images/thumbnails/mannaii.png
+thumbnail: /assets/images/thumbnails/mannaii.webp
 app_folder: /apps/mannaii/
 tags: [utility, calculator, age]
 category: "유틸리티"

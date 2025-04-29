@@ -2,7 +2,7 @@
 layout: app
 title: "행맨"
 description: "영어 단어를 추리하며 목숨을 지키는 고전 단어 맞추기 게임"
-thumbnail: /assets/images/thumbnails/hangman.png
+thumbnail: /assets/images/thumbnails/hangman.webp
 app_folder: /apps/hangman/
 tags: [game, puzzle, english]
 category: "게임"

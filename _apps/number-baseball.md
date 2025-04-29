@@ -2,7 +2,7 @@
 layout: app
 title: "숫자 야구"
 description: "숫자와 위치를 추리해 정답을 맞추는 두뇌 퍼즐 게임"
-thumbnail: /assets/images/thumbnails/number-baseball.png
+thumbnail: /assets/images/thumbnails/number-baseball.webp
 app_folder: /apps/number-baseball/
 tags: [game, puzzle, brain]
 category: "게임"

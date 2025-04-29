@@ -2,7 +2,7 @@
 layout: app
 title: "손가락 접기 게임"
 description: "랜덤 질문에 답하며 손가락을 접는 파티 & 아이스브레이킹 게임"
-thumbnail: /assets/images/thumbnails/fingers-down.png
+thumbnail: /assets/images/thumbnails/fingers-down.webp
 app_folder: /apps/fingers-down/
 tags: [game, party, icebreaker]
 category: "게임"

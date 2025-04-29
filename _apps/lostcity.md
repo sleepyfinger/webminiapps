@@ -2,7 +2,7 @@
 layout: app
 title: "잃어버린 도시의 비밀"
 description: "고대 도시의 비밀을 풀어가는 텍스트 어드벤처 게임"
-thumbnail: /assets/images/thumbnails/lostcity.png
+thumbnail: /assets/images/thumbnails/lostcity.webp
 app_folder: /apps/lostcity/
 tags: [game, adventure, puzzle]
 category: "게임"

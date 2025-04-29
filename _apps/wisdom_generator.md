@@ -2,7 +2,7 @@
 layout: app
 title: "명언 생성기"
 description: "무작위로 지혜로운 명언을 보여주는 간단한 명언 생성기"
-thumbnail: /assets/images/thumbnails/wisdom_generator.png
+thumbnail: /assets/images/thumbnails/wisdom_generator.webp
 app_folder: /apps/wisdom_generator/
 tags: [utility, fun, quote]
 category: "유틸리티"

@@ -2,7 +2,7 @@
 layout: app
 title: "리듬튜브"
 description: "유튜브 영상을 활용해 실시간으로 리듬 게임을 즐기는 웹앱"
-thumbnail: /assets/images/thumbnails/rhythmtube.png
+thumbnail: /assets/images/thumbnails/rhythmtube.webp
 app_folder: /apps/rhythmtube/
 tags: [game, rhythm, music]
 category: "게임"

@@ -2,7 +2,7 @@
 layout: app
 title: "이모지 런"
 description: "점프만으로 즐기는 간단하고 중독성 있는 이모지 달리기 게임"
-thumbnail: /assets/images/thumbnails/emojirun.png
+thumbnail: /assets/images/thumbnails/emojirun.webp
 app_folder: /apps/emojirun/
 tags: [game, arcade, casual]
 category: "게임"

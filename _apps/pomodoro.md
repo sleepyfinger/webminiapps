@@ -2,7 +2,7 @@
 layout: app
 title: "뽀모도로 타이머"
 description: "25분 집중 작업과 5분 휴식을 반복하며 생산성을 높이는 시간 관리 도구"
-thumbnail: /assets/images/thumbnails/pomodoro.png
+thumbnail: /assets/images/thumbnails/pomodoro.webp
 app_folder: /apps/pomodoro/
 tags: [utility, productivity, timer]
 category: "유틸리티"

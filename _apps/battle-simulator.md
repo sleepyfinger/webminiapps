@@ -2,7 +2,7 @@
 layout: app
 title: "배틀 시뮬레이터"
 description: "가상의 유닛에 베팅하고 전투 결과를 시뮬레이션하는 게임"
-thumbnail: /assets/images/thumbnails/battle-simulator.png
+thumbnail: /assets/images/thumbnails/battle-simulator.webp
 app_folder: /apps/battle-simulator/
 tags: [game, simulation]
 category: "게임"

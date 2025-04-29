@@ -2,7 +2,7 @@
 layout: app
 title: "정치 성향 테스트"
 description: "질문에 답하며 나의 정치적 성향을 간단하게 분석하는 테스트"
-thumbnail: /assets/images/thumbnails/politiscan.png
+thumbnail: /assets/images/thumbnails/politiscan.webp
 app_folder: /apps/politiscan/
 tags: [utility, psychology, test]
 category: "유틸리티"

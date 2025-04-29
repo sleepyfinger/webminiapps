@@ -2,7 +2,7 @@
 layout: app
 title: "다른 글자 찾기"
 description: "비슷한 글자 속에서 다른 글자를 찾아내는 집중력 게임"
-thumbnail: /assets/images/thumbnails/find-different-letters.png
+thumbnail: /assets/images/thumbnails/find-different-letters.webp
 app_folder: /apps/find-different-letters/
 tags: [game, puzzle, brain]
 category: "게임"

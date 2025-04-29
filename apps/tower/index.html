@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>Build The Tower</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <div id="menu-container">
+      <h1 class="game-title">
+        <span>Build The Tower</span>
+      </h1>
+      <nav class="menu-nav">
+        <button class="menu-button" id="startButton">
+          <span class="icon">🚀</span> PLAY GAME
+        </button>
+        <button class="menu-button" id="helpButton">
+          <span class="icon">❓</span> HELP
+        </button>
+      </nav>
+      <div class="footer-info">
+        <p>&copy; 2025 SleepyFinger</p>
+      </div>
+    </div>
+
+    <div id="game-container" style="display: none">
+      <h1 class="game-screen-title">BUILD THE TOWER</h1>
+      <div id="score">점수: 0</div>
+      <canvas id="gameCanvas" width="300" height="500"></canvas>
+      <div id="gameOverScreen" style="display: none">
+        <h2>MISSION FAILED!</h2>
+        <p>최종 점수: <span id="finalScore">0</span></p>
+        <button class="game-button" id="restartButton">RETRY</button>
+        <button class="game-button" id="mainMenuButton">MAIN MENU</button>
+      </div>
+    </div>
+
+    <div id="helpPopup" class="popup-overlay" style="display: none">
+      <div class="popup-content">
+        <button class="popup-close" id="closeHelpPopup">&times;</button>
+        <h2>게임 방법</h2>
+        <p>화면을 탭하거나 스페이스바를 눌러 움직이는 블록을 떨어뜨리세요.</p>
+        <p>블록을 타워 위에 정확하게 맞추도록 노력하세요.</p>
+        <p>정확하게 맞추지 못하면 타워의 폭이 좁아집니다.</p>
+        <p>가능한 가장 높은 타워를 건설하세요!</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

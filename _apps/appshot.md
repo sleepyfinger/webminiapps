@@ -2,7 +2,7 @@
 layout: app
 title: "AppShot: 앱 스크린샷 생성기"
 description: "앱 소개용 스크린샷을 간편하게 제작하세요! 마켓 등록용 이미지 완성 도구"
-thumbnail: /assets/images/thumbnails/appshot.png
+thumbnail: /assets/images/thumbnails/appshot.webp
 app_folder: /apps/appshot/
 tags: [tool, design, screenshot]
 category: "도구"

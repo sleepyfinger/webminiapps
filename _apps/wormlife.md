@@ -2,7 +2,7 @@
 layout: app
 title: "지렁이 키우기"
 description: "지렁이를 키우고 번식시키며 성장 과정을 관찰하는 시뮬레이션 게임"
-thumbnail: /assets/images/thumbnails/wormlife.png
+thumbnail: /assets/images/thumbnails/wormlife.webp
 app_folder: /apps/wormlife/
 tags: [game, simulation, casual]
 category: "게임"

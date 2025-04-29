@@ -2,7 +2,7 @@
 layout: app
 title: "타이핑 게임"
 description: "제시된 문장을 빠르고 정확하게 입력하며 점수를 겨루는 타자 연습 게임"
-thumbnail: /assets/images/thumbnails/typing-game.png
+thumbnail: /assets/images/thumbnails/typing-game.webp
 app_folder: /apps/typing-game/
 tags: [game, typing, brain]
 category: "게임"

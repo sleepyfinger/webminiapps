@@ -2,7 +2,7 @@
 layout: app
 title: "로또 번호 생성기"
 description: "무작위 로또 번호를 쉽고 빠르게 생성하는 간편 도구"
-thumbnail: /assets/images/thumbnails/lotto.png
+thumbnail: /assets/images/thumbnails/lotto.webp
 app_folder: /apps/lotto/
 tags: [utility, random, lottery]
 category: "유틸리티"

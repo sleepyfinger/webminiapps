@@ -2,7 +2,7 @@
 layout: app
 title: "전역일 계산기"
 description: "입대일과 복무 구분을 입력하면 정확한 전역일을 계산해주는 군 복무 카운트다운 도구"
-thumbnail: /assets/images/thumbnails/military_countdown.png
+thumbnail: /assets/images/thumbnails/military_countdown.webp
 app_folder: /apps/military_countdown/
 tags: [utility, military, countdown]
 category: "유틸리티"

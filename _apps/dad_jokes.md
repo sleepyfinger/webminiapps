@@ -2,7 +2,7 @@
 layout: app
 title: "아재개그"
 description: "유쾌한 아재개그로 일상에 웃음을 더하세요"
-thumbnail: /assets/images/thumbnails/dad_jokes.png
+thumbnail: /assets/images/thumbnails/dad_jokes.webp
 app_folder: /apps/dad_jokes/
 tags: [game, humor, party]
 category: "게임"

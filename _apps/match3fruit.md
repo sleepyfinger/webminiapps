@@ -2,7 +2,7 @@
 layout: app
 title: "과일 매치3"
 description: "과일 이모지를 맞추며 즐기는 심플하고 중독성 강한 매치3 퍼즐 게임"
-thumbnail: /assets/images/thumbnails/match3fruit.png
+thumbnail: /assets/images/thumbnails/match3fruit.webp
 app_folder: /apps/match3fruit/
 tags: [game, puzzle, casual]
 category: "게임"

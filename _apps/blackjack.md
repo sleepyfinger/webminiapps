@@ -2,7 +2,7 @@
 layout: app
 title: "블랙잭"
 description: "딜러와 21에 가까운 점수를 겨루는 카드 게임"
-thumbnail: /assets/images/thumbnails/blackjack.png
+thumbnail: /assets/images/thumbnails/blackjack.webp
 app_folder: /apps/blackjack/
 tags: [game, card, casino]
 category: "게임"

@@ -2,7 +2,7 @@
 layout: app
 title: "기억력 테스트"
 description: "숫자가 나타나는 순서를 기억해 맞추는 집중력·기억력 게임"
-thumbnail: /assets/images/thumbnails/memorytest.png
+thumbnail: /assets/images/thumbnails/memorytest.webp
 app_folder: /apps/memorytest/
 tags: [game, puzzle, brain]
 category: "게임"

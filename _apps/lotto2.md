@@ -2,7 +2,7 @@
 layout: app
 title: "번호 선택 로또 생성기"
 description: "직접 번호 범위와 조건을 선택해 맞춤형 로또 번호를 생성하는 도구"
-thumbnail: /assets/images/thumbnails/lotto2.png
+thumbnail: /assets/images/thumbnails/lotto2.webp
 app_folder: /apps/lotto2/
 tags: [utility, random, lottery]
 category: "유틸리티"

@@ -2,7 +2,7 @@
 layout: app
 title: "Cute Animals"
 description: "동물 공을 합쳐 더 큰 캐릭터로! 중독성 강한 퍼즐 게임!"
-thumbnail: /assets/images/thumbnails/cute-animals.png
+thumbnail: /assets/images/thumbnails/cute-animals.webp
 app_folder: /apps/cute-animals/
 tags: [game, puzzle]
 category: "게임"

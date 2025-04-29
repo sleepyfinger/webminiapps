@@ -2,7 +2,7 @@
 layout: app
 title: "HTML 실습장"
 description: "HTML, CSS, JavaScript 코드를 실시간으로 작성하고 결과를 바로 확인하는 웹 에디터"
-thumbnail: /assets/images/thumbnails/html.png
+thumbnail: /assets/images/thumbnails/html.webp
 app_folder: /apps/html/
 tags: [utility, tool, coding, education]
 category: "도구"

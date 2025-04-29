@@ -2,7 +2,7 @@
 layout: app
 title: "건강 계산기"
 description: "BMR, TDEE, BMI 등 주요 건강 지표를 간편하게 계산하는 앱"
-thumbnail: /assets/images/thumbnails/fitcalc.png
+thumbnail: /assets/images/thumbnails/fitcalc.webp
 app_folder: /apps/fitcalc/
 tags: [health, calculator, utility]
 category: "유틸리티"
