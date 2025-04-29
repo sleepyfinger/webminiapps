@@ -19,10 +19,10 @@ layout: default
     <div class="category-section mb-5">
       <h2 id="{{ category | slugify }}" class="category-title mb-4">{{ category }}</h2>
 
-      <div class="app-grid">
+      <div class="app-grid"> {% comment %} 이미 3열 그리드를 위한 클래스가 적용되어 있습니다. {% endcomment %}
         {% assign apps_in_category = apps | where: "category", category | sort: 'date' | reverse %}
         {% for app in apps_in_category %}
-        {% include app_card.html app=app layout_type='horizontal' %}
+        {% include app_card.html app=app layout_type='vertical' %}
         {% endfor %}
       </div>
     </div>

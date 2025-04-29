@@ -8,7 +8,6 @@ tags: [game, puzzle]
 category: "게임"
 orientation: vertical
 date: 2025-04-21 23:58:36 +0900
-popular: true
 ---
 
 6x6 그리드 위에서 숫자들을 연결해보세요!

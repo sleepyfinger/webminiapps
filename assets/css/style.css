@@ -1612,11 +1612,13 @@ body.light-theme .app-card-title {
     transform: translateY(-1px);
 }
 
+/*
 .category-page .app-grid {
     display: block;
     grid-template-columns: none;
     gap: 0;
 }
+*/
 
 .categories-list {
     margin-top: 0;
