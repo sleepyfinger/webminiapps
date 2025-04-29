@@ -1,0 +1,21 @@
+---
+layout: default
+title: 인기 앱 전체 보기
+permalink: /popular-apps/
+---
+
+<div class="container page-container">
+  <h1>인기 앱</h1>
+  <section class="app-section">
+    <div class="app-grid">
+      {% assign popular_apps = site.apps | where_exp: "app", "app.popular == true" %}
+      {% if popular_apps.size > 0 %}
+        {% for app in popular_apps %}
+          {% include app_card.html app=app %}
+        {% endfor %}
+      {% else %}
+        <p>인기 앱으로 등록된 앱이 없습니다.</p>
+      {% endif %}
+    </div>
+  </section>
+</div>

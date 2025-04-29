@@ -1,0 +1,21 @@
+---
+layout: default
+title: 최신 앱 전체 보기
+permalink: /latest-apps/
+---
+
+<div class="container page-container">
+  <h1>최신 앱</h1>
+  <section class="app-section">
+    <div class="app-grid">
+      {% assign sorted_apps = site.apps | sort: 'date' | reverse %}
+      {% if sorted_apps.size > 0 %}
+        {% for app in sorted_apps %}
+          {% include app_card.html app=app %}
+        {% endfor %}
+      {% else %}
+        <p>등록된 앱이 없습니다.</p>
+      {% endif %}
+    </div>
+  </section>
+</div>

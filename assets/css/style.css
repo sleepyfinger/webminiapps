@@ -633,6 +633,34 @@ body.light-theme .tag:hover {
     color: var(--primary-hover-color);
 }
 
+.view-more-container {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.view-more-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed) ease, transform 0.2s ease, box-shadow var(--transition-speed) ease;
+    font-weight: 500;
+    box-shadow: 0 3px 8px rgba(var(--primary-rgb), 0.15);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.view-more-button:hover,
+.view-more-button:focus {
+    background-color: var(--primary-hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.25);
+    color: white;
+}
+
 footer {
     background-color: var(--dark-color);
     color: var(--subtle-text-color);
@@ -1258,6 +1286,33 @@ body.light-theme .recommended-simple-content p {
     max-width: 100%;
 }
 
+.page-container {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+}
+
+.page-container h1 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.2rem;
+    color: var(--light-color);
+    font-weight: 600;
+    transition: color var(--transition-speed) ease;
+    letter-spacing: 0.3px;
+}
+
+body.light-theme .page-container h1 {
+    color: var(--light-color);
+}
+
+.page-container .app-section {
+    padding: 0;
+}
+
+.page-container .app-section h2 {
+    display: none;
+}
+
 .page-content {
     padding-top: 3rem;
     padding-bottom: 4rem;
@@ -1612,14 +1667,6 @@ body.light-theme .app-card-title {
     transform: translateY(-1px);
 }
 
-/*
-.category-page .app-grid {
-    display: block;
-    grid-template-columns: none;
-    gap: 0;
-}
-*/
-
 .categories-list {
     margin-top: 0;
 }
@@ -1696,7 +1743,8 @@ body.player-expanded {
         margin-bottom: 2.5rem;
     }
 
-    .page-content h1 {
+    .page-content h1,
+    .page-container h1 {
         font-size: 2.2rem;
     }
 
@@ -1780,7 +1828,8 @@ body.player-expanded {
     }
 
     .app-detail-container,
-    .page-content {
+    .page-content,
+    .page-container {
         padding-top: 2rem;
     }
 
@@ -1908,7 +1957,8 @@ body.player-expanded {
         padding: 0.8rem 1.8rem;
     }
 
-    .page-content h1 {
+    .page-content h1,
+    .page-container h1 {
         font-size: 2rem;
     }
 
@@ -2026,7 +2076,8 @@ body.player-expanded {
 
     .cta-button,
     .play-now-button,
-    .btn {
+    .btn,
+    .view-more-button {
         padding: 0.8rem 1.8rem;
         font-size: 0.95rem;
     }
@@ -2113,7 +2164,8 @@ body.player-expanded {
         padding: 2rem 1rem;
     }
 
-    .page-content h1 {
+    .page-content h1,
+    .page-container h1 {
         font-size: 1.8rem;
     }
 

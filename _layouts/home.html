@@ -29,6 +29,11 @@ layout: default
     {% include app_card.html app=app %}
     {% endfor %}
   </div>
+  {% if sorted_apps.size > 4 %}
+  <div class="view-more-container">
+    <a href="{{ '/latest-apps/' | relative_url }}" class="view-more-button">더 보기</a>
+  </div>
+  {% endif %}
 </section>
 
 <section id="popular-apps" class="app-section container">
@@ -39,4 +44,9 @@ layout: default
     {% include app_card.html app=app %}
     {% endfor %}
   </div>
+  {% if popular_apps.size > 4 %}
+  <div class="view-more-container">
+    <a href="{{ '/popular-apps/' | relative_url }}" class="view-more-button">더 보기</a>
+  </div>
+  {% endif %}
 </section>
