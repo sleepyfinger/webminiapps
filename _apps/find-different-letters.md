@@ -6,8 +6,8 @@ thumbnail: /assets/images/thumbnails/find-different-letters.webp
 app_folder: /apps/find-different-letters/
 tags: [game, puzzle, brain]
 category: "게임"
-orientation: horizontal
-date: 2025-04-23 13:57:00 +0900
+orientation: vertical
+date: 2025-04-29 12:27:24 +0900
 ---
 
 비슷한 글자들 사이에서 단 하나 다른 글자를 찾아내는 집중력 퍼즐 게임입니다.
