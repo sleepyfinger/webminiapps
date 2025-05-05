@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>텍스트 변환기</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <h1>텍스트 변환기 <span class="version-info">v1.0</span></h1>
+
+      <div class="text-areas-container">
+        <div class="text-area-wrapper">
+          <div class="label-button-wrapper">
+            <label for="input-text">원본 텍스트</label>
+            <button id="clear-input-button" class="text-area-action-button">
+              지우기
+            </button>
+          </div>
+          <textarea
+            id="input-text"
+            placeholder="여기에 원본 텍스트를 입력하거나 붙여넣으세요..."
+          ></textarea>
+        </div>
+        <div class="text-area-wrapper">
+          <div class="label-button-wrapper">
+            <label for="output-text">결과 텍스트</label>
+            <button id="copy-output-button" class="text-area-action-button">
+              복사
+            </button>
+          </div>
+          <textarea
+            id="output-text"
+            placeholder="재작성된 텍스트가 여기에 표시됩니다..."
+            readonly
+          ></textarea>
+        </div>
+      </div>
+
+      <div id="regex-list-container">
+        <div class="regex-list-header">
+          <h2>규칙 목록</h2>
+          <div class="regex-list-actions">
+            <button id="add-pattern-button">패턴 추가</button>
+            <button id="save-patterns-button">패턴 목록 저장</button>
+            <button id="load-patterns-button">패턴 목록 불러오기</button>
+          </div>
+        </div>
+        <div id="regex-items-wrapper"></div>
+      </div>
+
+      <div class="button-container">
+        <button id="apply-patterns-button">변환하기</button>
+      </div>
+
+      <footer>
+        <p>&copy; 2025 sleepyfinger. All rights reserved.</p>
+      </footer>
+    </div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"
+      integrity="sha512-Eezs+g9Lq4TCCq0wae01s9PuNWzHYoCMkE97e2qdkYthpI0pzC3UGB03lgEHn2XM85hDOUF6qgqqszs+iXU4UA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>
