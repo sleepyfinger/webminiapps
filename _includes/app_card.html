@@ -1,11 +1,13 @@
 {% assign app = include.app %}
 {% assign layout_type = include.layout_type | default: 'default' %}
-
 {% assign app_url = app.url | default: '#' %}
-{% assign app_thumbnail = app.thumbnail | default: '/assets/images/placeholder.png' %}
+{% assign placeholder_img = '/assets/images/placeholder.png' | relative_url %}
+{% assign app_thumbnail = app.thumbnail | relative_url | default: placeholder_img %}
 {% assign app_title = app.title | default: '제목 없음' %}
-{% assign app_description = app.description | default: '설명이 없습니다.' %}
-{% assign app_tags = app.tags | default: '' %}
+{% assign app_description = app.description | default: '' %}
+{% assign app_tags = app.tags | default: empty %}
+{% assign has_description = app_description | strip | size > 0 %}
+{% assign has_tags = app_tags.size > 0 %}
 
 {% if layout_type == 'horizontal' %}
 
@@ -19,8 +21,10 @@
         <h3 class="app-card-title">
             <a href="{{ app_url | relative_url }}">{{ app_title }}</a>
         </h3>
+        {% if has_description %}
         <p class="app-card-description">{{ app_description | truncatewords: 20 }}</p>
-        {% if app_tags != '' %}
+        {% endif %}
+        {% if has_tags %}
         <div class="app-card-tags">
             {% for tag in app_tags %}
             <span class="tag">{{ tag }}</span>
@@ -33,17 +37,16 @@
 {% else %}
 
 <div class="app-card">
-    {% if app.thumbnail and app.thumbnail != '/assets/images/placeholder.png' %}
     <a href="{{ app_url | relative_url }}" class="card-thumbnail">
-        <img src="{{ app_thumbnail | relative_url }}" alt="{{ app_title }} 썸네일" loading="lazy">
+        <img src="{{ app_thumbnail }}" alt="{{ app_title }} 썸네일" loading="lazy" {% if app_thumbnail==placeholder_img %}
+            class="is-placeholder" {% endif %}>
     </a>
-    {% endif %}
     <div class="card-content">
         <h3 class="card-title"><a href="{{ app_url | relative_url }}">{{ app_title }}</a></h3>
-        {% if app.description and app.description != '설명이 없습니다.' %}
+        {% if has_description %}
         <p class="card-description">{{ app_description | truncatewords: 15 }}</p>
         {% endif %}
-        {% if app_tags != '' %}
+        {% if has_tags %}
         <div class="card-tags">
             {% for tag in app_tags %}
             <span class="tag">{{ tag }}</span>

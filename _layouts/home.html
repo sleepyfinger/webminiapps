@@ -6,28 +6,33 @@ layout: default
 {% if all_apps.size > 0 %}
 {% assign random_index = site.time | date: '%s' | modulo: all_apps.size %}
 {% assign random_app = all_apps[random_index] %}
-{% assign section_classes = "app-section container recommended-section-simple" %}
+
+{% assign section_classes = "app-section container recommended-section" %}
 {% assign section_style = "" %}
+
 {% if random_app.thumbnail %}
-{% assign section_classes = section_classes | append: " has-bg" %}
+{% assign section_classes = section_classes | append: " has-bg has-bg-overlay" %}
 {% capture section_style %}style="--recommended-bg-image: url('{{ random_app.thumbnail | relative_url }}');"{%
 endcapture %}
 {% endif %}
+
 <section id="recommended-app" class="{{ section_classes }}" {{ section_style | strip }}>
-  <div class="recommended-content-box">
-    <div class="recommended-simple-content">
-      <h2>오늘의 추천 앱</h2>
-      <h2><a href="{{ random_app.url | relative_url }}">{{ random_app.title }}</a></h2>
-    </div>
+  <div class="recommended-content-wrapper">
+    <span class="recommended-badge">오늘의 추천 앱</span>
+    <h2 class="recommended-title">
+      <a href="{{ random_app.url | relative_url }}">{{ random_app.title }}</a>
+    </h2>
     {% if random_app.description %}
-    <p>{{ random_app.description }}<br>지금 바로 플레이하세요.</p>
+    <p class="recommended-description">{{ random_app.description | truncatewords: 25 }}</p>
     {% endif %}
-    <a href="{{ random_app.url | relative_url }}" class="play-now-button">지금 플레이!</a>
+    <a href="{{ random_app.url | relative_url }}" class="play-now-button cta-button">지금 플레이! <span
+        aria-hidden="true">&rarr;</span></a>
   </div>
 </section>
+
 {% else %}
-<section id="recommended-app" class="app-section container recommended-section-simple">
-  <p style="text-align: center;">추천 앱이 아직 없습니다.</p>
+<section id="recommended-app" class="app-section container recommended-section recommended-section-empty">
+  <p class="text-center">추천 앱이 아직 없습니다.</p>
 </section>
 {% endif %}
 
