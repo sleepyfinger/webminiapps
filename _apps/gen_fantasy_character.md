@@ -7,7 +7,7 @@ app_folder: /apps/gen_fantasy_character/
 tags: [tool, character, fantasy, generator]
 category: "도구"
 orientation: horizontal
-date: 2025-05-07 00:50:00 +0900
+date: 2025-05-07 00:58:33 +0900
 ---
 
 판타지 캐릭터 생성기는 이름, 종족, 직업, 성격, 능력치 등 다양한 설정이 적용된 캐릭터를 자동으로 생성해주는 웹 기반 도구입니다.
