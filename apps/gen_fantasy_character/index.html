@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>판타지 캐릭터 생성기</title>
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(180deg, #10101a 0%, #0b0b12 100%);
+        color: #e0e0e0;
+        text-align: center;
+        padding: 5px 20px;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-family: "Orbitron", sans-serif;
+        color: #ff9f43;
+        font-size: 2.8em;
+        margin-bottom: 10px;
+        text-shadow: 0 0 10px rgba(255, 159, 67, 0.5),
+          0 0 20px rgba(255, 159, 67, 0.3);
+        letter-spacing: 2px;
+      }
+
+      #generateBtn {
+        font-family: "Noto Sans KR", sans-serif;
+        background: linear-gradient(145deg, #e67e22, #d35400);
+        color: #ffffff;
+        border: none;
+        padding: 10px 25px;
+        font-size: 1.2em;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+        box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4),
+          0 2px 5px rgba(0, 0, 0, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      #generateBtn:hover {
+        background: linear-gradient(145deg, #d35400, #c0392b);
+        box-shadow: 0 8px 20px rgba(230, 126, 34, 0.5),
+          0 4px 8px rgba(0, 0, 0, 0.4);
+        transform: translateY(-2px);
+      }
+
+      #generateBtn:active {
+        transform: translateY(0px) scale(0.97);
+        box-shadow: 0 3px 10px rgba(230, 126, 34, 0.3),
+          0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      #characterSheet {
+        background: rgba(20, 20, 30, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 15px 20px;
+        border-radius: 10px;
+        border: 1px solid #3b4c5d;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35),
+          0 1px 3px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 900px;
+        margin-top: 5px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .character-column {
+      }
+      .column-left {
+        flex-basis: 48%;
+      }
+      .column-right {
+        flex-basis: 48%;
+      }
+
+      .info-section {
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid rgba(62, 80, 98, 0.5);
+        text-align: left;
+      }
+      .info-section:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+
+      .info-section h2 {
+        font-family: "Noto Sans KR", sans-serif;
+        font-weight: 500;
+        color: #ffa801;
+        font-size: 1.4em;
+        margin-top: 0;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+        border-bottom: 2px solid;
+        border-image-slice: 1;
+        border-image-source: linear-gradient(
+          to right,
+          #ffa801,
+          rgba(255, 168, 1, 0.1)
+        );
+        padding-left: 0;
+      }
+
+      .info-section p,
+      .info-section ul {
+        color: #cccccc;
+        font-size: 0.92em;
+        line-height: 1.45;
+        margin: 0;
+        word-break: keep-all;
+      }
+
+      #nicknameDisplayElem,
+      #classDisplayElem {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: #48dbfb;
+      }
+      #classDisplayElem {
+        color: #a29bfe;
+        font-weight: 500;
+      }
+      #raceDisplayElem,
+      #genderDisplayElem,
+      #ageDisplayElem,
+      #appearanceDisplayElem,
+      #personalityDisplayElem,
+      #quirkDisplayElem,
+      #alignmentDisplayElem,
+      #possessionDisplayElem,
+      #talentsDisplayElem {
+        color: #ced6e0;
+      }
+
+      #statsDisplayElem {
+        list-style-type: none;
+        padding-left: 0;
+      }
+      #statsDisplayElem li span:first-child {
+        color: #1dd1a1;
+        font-weight: 500;
+      }
+      #statsDisplayElem li span:last-child {
+        color: #ced6e0;
+      }
+      #statsDisplayElem li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+      }
+
+      footer {
+        padding: 15px 0;
+        font-size: 0.8em;
+        color: #7f8c8d;
+        text-align: center;
+        width: 100%;
+      }
+      footer a {
+        color: #95a5a6;
+        text-decoration: none;
+      }
+      .version-info {
+        font-size: 0.85em;
+        color: #7f8c8d;
+        margin-top: -8px;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>판타지 캐릭터 생성기</h1>
+    <p class="version-info">Version 1.0.0</p>
+    <button id="generateBtn">새 캐릭터 생성!</button>
+    <div id="characterSheet">
+      <div class="character-column column-left">
+        <div class="info-section" id="trueNameSection">
+          <h2>이름</h2>
+          <p id="nicknameDisplayElem">생성 버튼을 눌러주세요.</p>
+        </div>
+        <div class="info-section" id="classSection">
+          <h2>직업</h2>
+          <p id="classDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="raceSection">
+          <h2>종족</h2>
+          <p id="raceDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="genderSection">
+          <h2>성별</h2>
+          <p id="genderDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="ageSection">
+          <h2>나이</h2>
+          <p id="ageDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="appearanceSection">
+          <h2>외형</h2>
+          <p id="appearanceDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="personalitySection">
+          <h2>성격</h2>
+          <p id="personalityDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="quirkSection">
+          <h2>특징/버릇</h2>
+          <p id="quirkDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="alignmentSection">
+          <h2>성향</h2>
+          <p id="alignmentDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="possessionSection">
+          <h2>주요 소지품</h2>
+          <p id="possessionDisplayElem">-</p>
+        </div>
+      </div>
+
+      <div class="character-column column-right">
+        <div class="info-section" id="statsSection">
+          <h2>능력치</h2>
+          <ul id="statsDisplayElem">
+            <li>힘: -</li>
+            <li>민첩: -</li>
+            <li>지능: -</li>
+          </ul>
+        </div>
+        <div class="info-section" id="abilitiesSection">
+          <h2>주요 능력</h2>
+          <p id="abilitiesDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="talentsSection">
+          <h2>재능</h2>
+          <p id="talentsDisplayElem">-</p>
+        </div>
+        <div class="info-section" id="loreSection">
+          <h2>배경 설정</h2>
+          <p id="loreDisplayElem">-</p>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p>
+        &copy; 2025
+        <a href="https://sleepyfinger.github.io/webminiapps/">sleepyfinger</a>.
+        All Rights Reserved.
+      </p>
+    </footer>
+
+    <script>
+      const concatPrefixes = [
+        "그림자",
+        "폭풍",
+        "강철",
+        "은빛",
+        "용",
+        "요정",
+        "드워프",
+        "밤",
+        "태양",
+        "달빛",
+        "별빛",
+        "서리",
+        "빛",
+        "어둠",
+        "피",
+        "신비",
+        "고대",
+        "영원",
+        "스톰",
+        "아이언",
+        "실버",
+        "나이트",
+        "썬",
+        "문",
+        "스타",
+        "그림",
+        "라이트",
+        "다크",
+        "블러드",
+        "스틸",
+        "미스틱",
+        "와일드",
+      ];
+      const titlePrefixes = [
+        "그림자의",
+        "폭풍의",
+        "강철의",
+        "은빛의",
+        "용의",
+        "요정의",
+        "드워프의",
+        "밤의",
+        "태양의",
+        "달빛의",
+        "별빛의",
+        "서리의",
+        "빛의",
+        "어둠의",
+        "피의",
+        "신비의",
+        "고대의",
+        "영원의",
+        "불멸의",
+        "잊혀진",
+        "고독한",
+        "야생의",
+      ];
+
+      const middles = [
+        "검",
+        "심장",
+        "노래",
+        "불꽃",
+        "바람",
+        "돌",
+        "숲",
+        "송곳니",
+        "발톱",
+        "방패",
+        "투구",
+        "파멸",
+        "격노",
+        "영혼",
+        "망치",
+        "도끼",
+        "활",
+        "단검",
+        "지팡이",
+        "서클릿",
+        "룬",
+        "문장",
+        "그림자",
+        "빛줄기",
+        "울음",
+        "외침",
+        "칼날",
+        "주먹",
+        "정령",
+        "수호자",
+        "추적자",
+        "여행자",
+      ];
+      const nameSuffixes = [
+        "우스",
+        "이아",
+        "온",
+        "안",
+        "오스",
+        "엔",
+        "오르",
+        "인",
+        "이스",
+        "에스",
+        "릭스",
+        "아스",
+        "엘",
+        "론",
+        "미르",
+        "가르",
+        "테스",
+        "듀스",
+        "실",
+        "렌",
+        "딘",
+        "윈드",
+        "팽",
+        "하트",
+        "소울",
+        "블레이드",
+        "브레이커",
+        "워커",
+        "러너",
+      ];
+      const classTitles = [
+        "전사",
+        "마법사",
+        "궁수",
+        "도적",
+        "성기사",
+        "사제",
+        "음유시인",
+        "수도사",
+        "드루이드",
+        "흑마법사",
+        "주술사",
+        "레인저",
+        "광전사",
+        "수호자",
+        "학살자",
+        "사냥꾼",
+        "기사",
+        "암살자",
+        "용병",
+        "정찰병",
+        "현자",
+        "예언자",
+        "방랑자",
+        "조련사",
+      ];
+
+      const firstNames = [
+        "아리",
+        "리안",
+        "카일",
+        "엘라",
+        "로한",
+        "세라",
+        "이안",
+        "노아",
+        "루나",
+        "레오",
+        "미아",
+        "유진",
+        "지호",
+        "서아",
+        "하준",
+        "다인",
+        "시온",
+        "엘리엇",
+        "올리비아",
+        "에단",
+        "레이나",
+        "마커스",
+        "소피아",
+        "제이콥",
+        "클로이",
+        "리암",
+        "벨라",
+        "오웬",
+        "조이",
+        "핀",
+        "아리아",
+        "루카스",
+        "에밀리",
+        "다니엘",
+        "릴리",
+        "사무엘",
+        "그레이스",
+        "헨리",
+        "나탈리",
+      ];
+      const lastNames = [
+        "김",
+        "이",
+        "박",
+        "최",
+        "정",
+        "강",
+        "조",
+        "윤",
+        "장",
+        "임",
+        "한",
+        "오",
+        "서",
+        "신",
+        "권",
+        "스톰윈드",
+        "섀도우송",
+        "아이언포지",
+        "실버문",
+        "윈드러너",
+        "블랙우드",
+        "스톤리버",
+        "브라이트우드",
+        "나이트셰이드",
+        "썬더클랩",
+        "문섀도우",
+        "스타폴",
+        "드래곤하트",
+        "울프팽",
+      ];
+
+      const races = [
+        "인간",
+        "엘프",
+        "드워프",
+        "오크",
+        "하플링",
+        "용족",
+        "수인",
+        "언데드",
+        "정령",
+        "고블린",
+        "나가",
+        "켄타우로스",
+      ];
+      const genders = ["남성", "여성", "논바이너리", "지정되지 않음"];
+      const personalityTraits = [
+        "용감한",
+        "신중한",
+        "냉소적인",
+        "낙천적인",
+        "충동적인",
+        "자비로운",
+        "교활한",
+        "명예로운",
+        "변덕스러운",
+        "과묵한",
+        "수다스러운",
+        "고집 센",
+        "겸손한",
+        "오만한",
+      ];
+      const quirks = [
+        "한쪽 눈에 흉터가 있음",
+        "특정 단어를 반복하는 버릇",
+        "항상 무언가를 손에 쥐고 있음",
+        "결정적인 순간에 농담을 함",
+        "동물에게 말을 검",
+        "노래를 흥얼거림",
+        "눈을 자주 깜빡임",
+        "손톱을 물어뜯음",
+        "다리를 떠는 습관",
+        "특이한 장신구를 착용함",
+      ];
+      const alignments = [
+        "질서 선",
+        "중립 선",
+        "혼돈 선",
+        "질서 중립",
+        "진정한 중립",
+        "혼돈 중립",
+        "질서 악",
+        "중립 악",
+        "혼돈 악",
+        "미정",
+      ];
+      const hairColors = [
+        "검은색",
+        "짙은 갈색",
+        "밝은 갈색",
+        "금발",
+        "붉은색",
+        "백색",
+        "은색",
+        "푸른색",
+        "녹색",
+        "분홍색",
+        "보라색",
+      ];
+      const eyeColors = [
+        "갈색",
+        "푸른색",
+        "녹색",
+        "회색",
+        "검은색",
+        "붉은색",
+        "금색",
+        "보라색",
+        "호박색",
+        "오드아이",
+      ];
+      const talents = [
+        "요리",
+        "악기 연주 (류트)",
+        "그림 그리기",
+        "이야기꾼",
+        "손재주 (수리/제작)",
+        "약초학 지식",
+        "동물 교감",
+        "지도 제작",
+        "암호 해독",
+        "노래 부르기",
+        "춤",
+        "흥정",
+        "도박",
+        "위장술",
+        "빠른 손놀림 (소매치기 아님)",
+      ];
+
+      const possessions = [
+        "낡은 장검",
+        "잘 벼려진 단검 한 쌍",
+        "마력이 깃든 지팡이",
+        "가보로 내려오는 활",
+        "신성한 문양이 새겨진 방패",
+        "비밀이 담긴 일기장",
+        "행운의 부적",
+        "정교한 세공의 나침반",
+        "빛바랜 지도 조각",
+        "신비한 약초 주머니",
+        "오래된 동전",
+      ];
+
+      const statCategories = {
+        힘: ["약함", "평범함", "강인함", "초인적", "괴력"],
+        민첩: ["둔함", "보통", "날렵함", "신속함", "바람같은"],
+        지능: ["어리석음", "평범함", "똑똑함", "명석함", "천재적"],
+        지혜: ["무지함", "보통", "현명함", "통찰력 있는", "예지적인"],
+        매력: ["혐오스러움", "평범함", "호감형", "카리스마", "매혹적인"],
+        체력: ["허약함", "보통", "강건함", "철인", "불멸에 가까운"],
+      };
+
+      const abilityPool = [
+        "화염구",
+        "얼음 화살",
+        "치유의 손길",
+        "은신",
+        "강타",
+        "방패 가격",
+        "독 바르기",
+        "순간 이동",
+        "정신 지배",
+        "소환술",
+        "야수 변신",
+        "그림자 걸음",
+        "빛의 심판",
+        "죽음의 손길",
+        "폭풍 소환",
+        "대지 가르기",
+        "마력 화살",
+        "회복의 노래",
+        "암살",
+        "결정타",
+      ];
+
+      const loreParts = {
+        출신: [
+          "잊혀진 왕국",
+          "고대 숲",
+          "저주받은 도시",
+          "하늘에 떠 있는 섬",
+          "지하 미궁",
+          "멸망한 문명",
+          "신비로운 차원",
+          "혹독한 설산 부족",
+          "불타는 사막의 유목민",
+          "몰락한 귀족 가문",
+          "고립된 산속 마을",
+          "번화한 항구 도시의 뒷골목",
+          "신성한 고대 사원",
+          "금지된 마법을 연구하는 비밀 결사",
+          "전쟁으로 폐허가 된 땅",
+          "마법이 금지된 왕국",
+          "떠돌이 유랑극단",
+          "고아원",
+          "감옥섬",
+        ],
+        목표: [
+          "잃어버린 유물을 찾기 위해",
+          "세상을 구원하기 위해",
+          "빼앗긴 모든 것을 되찾기 위해",
+          "숨겨진 진실을 파헤치기 위해",
+          "자신의 존재 이유를 알기 위해",
+          "궁극의 힘을 얻기 위해",
+          "평화로운 삶을 되찾기 위해",
+          "사랑하는 이를 지키기 위해",
+          "세상의 부조리에 맞서기 위해",
+          "잊혀진 약속을 이행하기 위해",
+          "잃어버린 가족의 행방을 찾기 위해",
+          "세상의 균형을 바로잡기 위해",
+          "억압받는 이들을 해방시키기 위해",
+          "과거의 실수를 바로잡기 위해",
+          "자신의 스승을 뛰어넘기 위해",
+          "전설 속의 장소를 찾아서",
+        ],
+        특징: [
+          "고대의 예언에 언급된 자",
+          "마지막 남은 종족의 일원",
+          "강력한 마법의 소유자",
+          "신에게 선택받은 용사",
+          "금지된 지식을 갈망하는 자",
+          "정령과 교감하는 자",
+          "비밀을 간직한 방랑자",
+          "전설적인 장인의 후예",
+          "별의 아이",
+          "과거의 그림자로부터 도망치는 자",
+          "두 개의 영혼을 지닌 자",
+          "알 수 없는 언어로 된 문신을 지닌 자",
+          "밤이 되면 눈동자 색이 변하는 자",
+          "고대 유물과 공명하는 자",
+          "동물의 말을 알아듣는 자",
+          "꿈을 통해 미래를 엿보는 자",
+          "시간의 흐름을 다르게 느끼는 자",
+          "만지는 모든 것을 시들게 하는 저주받은 손",
+        ],
+        사건: [
+          "가족을 잃은 비극적인 사건",
+          "믿었던 이에게 배신당한 경험",
+          "고향이 멸망하는 것을 목격함",
+          "우연히 강력한 유물을 발견함",
+          "금지된 마법에 손을 대 파멸을 초래함",
+          "정체불명의 존재와 위험한 계약을 맺음",
+          "죽음의 문턱에서 기적적으로 살아 돌아옴",
+          "위대한 스승과의 운명적인 만남과 비극적 이별",
+          "세상을 뒤흔들 예언을 들음",
+          "누명을 쓰고 쫓기는 신세가 됨",
+          "사랑하는 이의 죽음을 막지 못함",
+          "강대한 적과의 싸움에서 패배하고 모든 것을 잃음",
+          "알 수 없는 힘에 의해 다른 차원으로 추방당함",
+          "자신의 의지와 상관없이 끔찍한 계약에 묶임",
+          "세상을 구할 유일한 단서를 손에 넣음",
+          "기억을 잃은 채 낯선 곳에서 깨어남",
+        ],
+        비밀: [
+          "자신의 진짜 정체를 숨기고 있음",
+          "과거에 저지른 씻을 수 없는 죄",
+          "세상을 파멸시킬 수 있는 힘을 지님",
+          "고대 문명의 마지막 생존자임",
+          "사실은 다른 세계에서 넘어온 존재임",
+          "불치병에 걸려 시한부 인생을 살고 있음",
+          "사랑하는 이를 위해 어둠의 힘을 받아들임",
+          "자신이 예언 속 인물임을 아직 깨닫지 못함",
+          "몸 안에 강력하지만 통제 불가능한 존재가 봉인되어 있음",
+          "과거의 기억 일부를 잃어버림",
+          "가장 친한 친구가 사실은 적이라는 것을 알고 있음",
+          "세상을 구할 열쇠이자 파멸시킬 수 있는 열쇠를 동시에 쥐고 있음",
+          "왕가의 숨겨진 혈통임",
+          "적대 세력의 스파이로 활동 중임",
+        ],
+        동기: [
+          "복수심",
+          "사랑",
+          "정의감",
+          "호기심",
+          "생존 본능",
+          "명예욕",
+          "잃어버린 것을 되찾으려는 갈망",
+          "세상을 더 나은 곳으로 만들려는 신념",
+          "죄책감",
+          "의무감",
+          "지식에 대한 갈증",
+          "자유에 대한 열망",
+          "운명에 대한 저항",
+          "약속을 지키기 위한 헌신",
+          "순수한 탐구심",
+        ],
+      };
+
+      const loreTemplates = [
+        (p) =>
+          `${p.출신} 출신의 ${p.특징}. ${p.사건} 이후, ${p.동기}(으)로 ${p.목표} 여정을 떠났다.`,
+        (p) =>
+          `사람들은 그를 ${p.특징}(이)라 부른다. ${p.출신}에서 겪은 ${p.사건} 때문에 ${p.비밀}을 간직한 채, ${p.목표}를 추구하고 있다.`,
+        (p) =>
+          `${p.동기} 하나만을 바라보며 ${p.출신}을 등진 그는, ${p.사건}을 계기로 ${p.특징}(으)로 각성했다. 그의 ${p.목표}는 아직 끝나지 않았다.`,
+        (p) =>
+          `한때 ${p.출신}의 평범한 일원이었으나, ${p.사건}은 모든 것을 바꿔놓았다. 이제 그는 ${p.특징}으로서, ${p.비밀}을 안고 ${p.목표}를 향해 나아간다.`,
+        (p) =>
+          `${p.특징}으로 알려진 그는 ${p.출신}에서 왔으며, ${p.사건}을 겪은 후 ${p.동기}에 이끌려 ${p.목표}를 쫓고 있다. 그에게는 ${p.비밀}이 있다.`,
+        (p) =>
+          `${p.출신}의 그림자를 벗어나고자 ${p.목표}를 세운 ${p.특징}. 그의 마음 속에는 ${p.사건}으로 인한 깊은 ${p.동기}와 ${p.비밀}이 함께 자리잡고 있다.`,
+        (p) =>
+          `평범했던 그의 삶은 ${p.사건}을 기점으로 완전히 뒤바뀌었다. ${p.출신}의 기억을 뒤로한 채, 이제 그는 ${p.특징}(으)로 살아가며 ${p.목표}를 향해 나아간다. 그의 가슴 속에는 뜨거운 ${p.동기}가 불타고 있다.`,
+        (p) =>
+          `${p.출신}의 한적한 마을에서 온 그는 ${p.특징}으로 알려져 있다. 하지만 ${p.사건} 이후, 그는 ${p.비밀}을 간직한 채 ${p.동기}에 이끌려 ${p.목표}를 찾아 위험한 세상으로 발을 내디뎠다.`,
+        (p) =>
+          `그의 ${p.목표}는 ${p.사건}에서 비롯되었다. ${p.출신}의 ${p.특징}이었던 그는 이제 ${p.비밀}을 품고, 오직 ${p.동기}만을 따르며 길을 걷는다.`,
+        (p) =>
+          `${p.비밀}을 가진 ${p.특징}. ${p.출신}에서의 ${p.사건}은 그에게 지울 수 없는 ${p.동기}를 남겼고, 이는 그를 ${p.목표}로 이끌고 있다.`,
+      ];
+
+      const generateBtn = document.getElementById("generateBtn");
+      const nicknameDisplayElem = document.getElementById(
+        "nicknameDisplayElem"
+      );
+      const classDisplayElem = document.getElementById("classDisplayElem");
+      const raceDisplayElem = document.getElementById("raceDisplayElem");
+      const genderDisplayElem = document.getElementById("genderDisplayElem");
+      const ageDisplayElem = document.getElementById("ageDisplayElem");
+      const appearanceDisplayElem = document.getElementById(
+        "appearanceDisplayElem"
+      );
+      const personalityDisplayElem = document.getElementById(
+        "personalityDisplayElem"
+      );
+      const quirkDisplayElem = document.getElementById("quirkDisplayElem");
+      const alignmentDisplayElem = document.getElementById(
+        "alignmentDisplayElem"
+      );
+      const possessionDisplayElem = document.getElementById(
+        "possessionDisplayElem"
+      );
+      const talentsDisplayElem = document.getElementById("talentsDisplayElem");
+      const statsDisplayElem = document.getElementById("statsDisplayElem");
+      const abilitiesDisplayElem = document.getElementById(
+        "abilitiesDisplayElem"
+      );
+      const loreDisplayElem = document.getElementById("loreDisplayElem");
+
+      function getRandomElement(arr) {
+        if (!arr || arr.length === 0) return "";
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function generateNameAndClass() {
+        let trueName = "";
+        let characterClass = "";
+
+        if (firstNames.length > 0) {
+          trueName = getRandomElement(firstNames);
+          if (lastNames.length > 0 && Math.random() < 0.7) {
+            const lastName = getRandomElement(lastNames);
+            if (lastName) trueName += ` ${lastName}`;
+          }
+        }
+        trueName = trueName.trim();
+        if (trueName === "") {
+          trueName = "이름 없는 자";
+        }
+
+        if (classTitles.length > 0) {
+          characterClass = getRandomElement(classTitles);
+        } else {
+          characterClass = "모험가";
+        }
+
+        if (trueName.includes(characterClass) && classTitles.length > 1) {
+          characterClass =
+            getRandomElement(
+              classTitles.filter((ct) => !trueName.includes(ct))
+            ) || characterClass;
+        }
+
+        return { name: trueName, characterClass: characterClass };
+      }
+
+      function generateRace() {
+        return getRandomElement(races);
+      }
+
+      function generateGender() {
+        return getRandomElement(genders);
+      }
+
+      function generateAge() {
+        return Math.floor(Math.random() * (120 - 16 + 1)) + 16;
+      }
+
+      function generatePersonality(count = 2) {
+        const selectedTraits = new Set();
+        if (personalityTraits.length === 0) return "알 수 없음";
+
+        const traitsCopy = [...personalityTraits];
+        while (
+          selectedTraits.size < count &&
+          selectedTraits.size < traitsCopy.length
+        ) {
+          const randomIndex = Math.floor(Math.random() * traitsCopy.length);
+          selectedTraits.add(traitsCopy.splice(randomIndex, 1)[0]);
+        }
+        return Array.from(selectedTraits).join(", ");
+      }
+
+      function generateQuirk() {
+        return getRandomElement(quirks) || "특별한 특징 없음";
+      }
+
+      function generatePossession() {
+        return getRandomElement(possessions) || "가진 것 없음";
+      }
+
+      function generateAlignment() {
+        return getRandomElement(alignments) || "알 수 없음";
+      }
+
+      function generateAppearance() {
+        const hair = getRandomElement(hairColors);
+        const eyes = getRandomElement(eyeColors);
+        return `${hair} 머리카락, ${eyes} 눈`;
+      }
+
+      function generateTalents(count = 1) {
+        const selectedTalents = new Set();
+        if (talents.length === 0) return "특별한 재능 없음";
+
+        const talentsCopy = [...talents];
+        while (
+          selectedTalents.size < count &&
+          selectedTalents.size < talentsCopy.length
+        ) {
+          const randomIndex = Math.floor(Math.random() * talentsCopy.length);
+          selectedTalents.add(talentsCopy.splice(randomIndex, 1)[0]);
+        }
+        return Array.from(selectedTalents).join(", ");
+      }
+
+      function generateStats(count = 3) {
+        const allStatKeys = Object.keys(statCategories);
+        const statsHtml = [];
+
+        if (allStatKeys.length === 0) return "<li>능력치 정보 없음</li>";
+
+        const shuffledKeys = [...allStatKeys].sort(() => 0.5 - Math.random());
+        const keysToUse = shuffledKeys.slice(
+          0,
+          Math.min(count, allStatKeys.length)
+        );
+
+        for (const key of keysToUse) {
+          const descriptorsArray = statCategories[key];
+          const descriptor = getRandomElement(descriptorsArray);
+          const level = descriptorsArray.indexOf(descriptor);
+
+          let numericValue;
+          switch (level) {
+            case 0:
+              numericValue = Math.floor(Math.random() * 5) + 3;
+              break;
+            case 1:
+              numericValue = Math.floor(Math.random() * 5) + 8;
+              break;
+            case 2:
+              numericValue = Math.floor(Math.random() * 3) + 13;
+              break;
+            case 3:
+              numericValue = Math.floor(Math.random() * 3) + 16;
+              break;
+            case 4:
+              numericValue = Math.floor(Math.random() * 3) + 18;
+              break;
+            default:
+              numericValue = 10;
+          }
+
+          statsHtml.push(
+            `<li><span>${key}</span> <span>${descriptor} (${numericValue})</span></li>`
+          );
+        }
+        return statsHtml.join("");
+      }
+
+      function generateAbilities(count = 2) {
+        const selectedAbilities = new Set();
+        if (abilityPool.length === 0) return "능력 없음";
+
+        const poolCopy = [...abilityPool];
+        while (
+          selectedAbilities.size < count &&
+          selectedAbilities.size < poolCopy.length
+        ) {
+          const randomIndex = Math.floor(Math.random() * poolCopy.length);
+          selectedAbilities.add(poolCopy.splice(randomIndex, 1)[0]);
+        }
+        if (selectedAbilities.size === 0) return "특별한 능력 없음";
+        return Array.from(selectedAbilities).join(", ");
+      }
+
+      function generateLore() {
+        if (
+          Object.keys(loreParts).some(
+            (key) => !loreParts[key] || loreParts[key].length === 0
+          ) ||
+          !loreTemplates ||
+          loreTemplates.length === 0
+        ) {
+          return "배경 정보를 생성할 수 없습니다.";
+        }
+        const parts = {
+          출신: getRandomElement(loreParts.출신),
+          목표: getRandomElement(loreParts.목표),
+          특징: getRandomElement(loreParts.특징),
+          사건: getRandomElement(loreParts.사건),
+          비밀: getRandomElement(loreParts.비밀),
+          동기: getRandomElement(loreParts.동기),
+        };
+        const template = getRandomElement(loreTemplates);
+        return template(parts);
+      }
+
+      function generateCharacter() {
+        const nameAndClassParts = generateNameAndClass();
+        nicknameDisplayElem.textContent = nameAndClassParts.name;
+        classDisplayElem.textContent = nameAndClassParts.characterClass;
+        raceDisplayElem.textContent = generateRace();
+        genderDisplayElem.textContent = generateGender();
+        ageDisplayElem.textContent = generateAge() + "세";
+        appearanceDisplayElem.textContent = generateAppearance();
+        personalityDisplayElem.textContent = generatePersonality(
+          Math.random() < 0.6 ? 2 : 3
+        );
+        quirkDisplayElem.textContent = generateQuirk();
+        alignmentDisplayElem.textContent = generateAlignment();
+        possessionDisplayElem.textContent = generatePossession();
+        talentsDisplayElem.textContent = generateTalents(
+          Math.random() < 0.7 ? 1 : 2
+        );
+
+        statsDisplayElem.innerHTML = generateStats(3);
+        abilitiesDisplayElem.textContent = generateAbilities(
+          Math.random() < 0.7 ? 2 : 3
+        );
+        loreDisplayElem.textContent = generateLore();
+      }
+
+      generateBtn.addEventListener("click", generateCharacter);
+      window.addEventListener("load", generateCharacter);
+    </script>
+  </body>
+</html>
