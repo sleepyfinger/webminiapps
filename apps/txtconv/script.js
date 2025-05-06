@@ -271,6 +271,17 @@ regexListContainer.addEventListener("click", (event) => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  const helpToggle = document.querySelector(
+    ".regex-help-examples .collapsible-header"
+  );
+  const helpContainer = document.querySelector(".regex-help-examples");
+
+  if (helpToggle && helpContainer) {
+    helpToggle.addEventListener("click", () => {
+      helpContainer.classList.toggle("collapsed");
+    });
+  }
+
   loadPatterns();
 
   if (typeof Sortable !== "undefined") {
