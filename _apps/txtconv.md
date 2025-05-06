@@ -1,6 +1,6 @@
 ---
 layout: app
-title: "텍스트 변환기: 다양한 규칙 기반 텍스트 변환 도구"
+title: "텍스트 변환기"
 description: "여러 가지 규칙을 적용해 텍스트를 쉽고 빠르게 변환하세요! 개발자와 실무자를 위한 맞춤형 텍스트 처리 도구"
 thumbnail: /assets/images/thumbnails/txtconv.webp
 app_folder: /apps/txtconv/
