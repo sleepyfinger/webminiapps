@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>그림판 웹앱</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="toolbar">
+      <label for="colorPicker">색상:</label>
+      <input type="color" id="colorPicker" value="#000000" />
+
+      <label for="brushSize">굵기:</label>
+      <input type="range" id="brushSize" min="1" max="50" value="5" />
+      <span id="brushSizeValue">5</span>
+
+      <button id="pencilButton" class="tool-button active-tool">연필</button>
+      <button id="eraserButton" class="tool-button">지우개</button>
+      <button id="fillButton" class="tool-button">채우기</button>
+      <button id="rectButton" class="tool-button">사각형</button>
+      <button id="circleButton" class="tool-button">원</button>
+      <button id="clearButton">모두 지우기</button>
+    </div>
+    <canvas id="drawingCanvas">
+      Your browser does not support HTML5 Canvas.
+    </canvas>
+
+    <script src="script.js"></script>
+
+    <footer>
+      Made with ❤️ by
+      <a href="https://blog.naver.com/sleepyfinger" target="_blank">
+        SleepyFinger
+      </a>
+    </footer>
+  </body>
+</html>

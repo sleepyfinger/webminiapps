@@ -1,0 +1,191 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 10px;
+  background-color: #eef1f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.toolbar {
+  background-color: #ffffff;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: 95%;
+  max-width: 1000px;
+  box-sizing: border-box;
+}
+
+.toolbar label,
+.toolbar input[type="color"],
+.toolbar input[type="range"],
+.toolbar span,
+.toolbar button {
+  margin: 5px 0;
+}
+
+.toolbar label {
+  font-weight: 500;
+  color: #333;
+}
+
+.toolbar input[type="color"] {
+  width: 40px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0;
+}
+
+.toolbar input[type="range"] {
+  flex-grow: 1;
+  min-width: 100px;
+  max-width: 200px;
+}
+
+.toolbar span#brushSizeValue {
+  min-width: 25px;
+  text-align: right;
+  font-weight: 500;
+  color: #333;
+}
+
+#drawingCanvas {
+  width: 1000px;
+  height: 700px;
+  border: 2px solid #d0d0d0;
+  background-color: #ffffff;
+  cursor: crosshair;
+  touch-action: none;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button,
+.tool-button {
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+    transform 0.1s ease;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+button:hover,
+.tool-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+button:active,
+.tool-button:active {
+  transform: translateY(0px);
+}
+
+#clearButton {
+  background-color: #dc3545;
+}
+#clearButton:hover {
+  background-color: #c82333;
+}
+
+.tool-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.tool-button:not(.active-tool):hover {
+  background-color: #e0e0e0;
+  border-color: #bbb;
+}
+
+.tool-button.active-tool {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056b3;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+footer {
+  width: 100%;
+  padding: 15px 0;
+  margin-top: auto;
+  background-color: #f0f0f0;
+  text-align: center;
+  border-top: 1px solid #d0d0d0;
+  box-sizing: border-box;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.85em;
+  color: #555;
+}
+
+footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+footer a:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 10px;
+    gap: 8px;
+  }
+  .toolbar label,
+  .toolbar input[type="color"],
+  .toolbar input[type="range"],
+  .toolbar span,
+  .toolbar button {
+    font-size: 0.85rem;
+    padding: 8px 10px;
+  }
+  .toolbar input[type="range"] {
+    min-width: 80px;
+  }
+  #drawingCanvas {
+    width: 95vw;
+    height: 60vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar {
+    justify-content: space-around;
+  }
+  .toolbar label {
+    display: none;
+  }
+  .toolbar input[type="color"] {
+    width: 35px;
+    height: 25px;
+  }
+  .toolbar span#brushSizeValue {
+    display: none;
+  }
+}
