@@ -7,7 +7,7 @@ app_folder: /apps/jump/
 tags: [game, arcade, jump]
 category: "게임"
 orientation: horizontal
-date: 2025-04-22 23:43:53 +0900
+date: 2025-05-13 15:55:49 +0900
 ---
 
 플레이어가 캐릭터를 조작해 장애물을 피해 점프하며 오른쪽 끝까지 도달하는 것을 목표로 하는 간단한 점프 게임입니다.
