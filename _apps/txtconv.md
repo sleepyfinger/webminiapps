@@ -7,7 +7,8 @@ app_folder: /apps/txtconv/
 tags: [tool, text, converter]
 category: "도구"
 orientation: horizontal
-date: 2025-05-05 22:43:36 +0900
+date: 2025-05-13 13:49:56 +0900
+popular: true
 ---
 
 텍스트 변환기는 사용자가 직접 정의한 다양한 규칙을 적용해 텍스트를 손쉽게 변환할 수 있는 웹 기반 도구입니다.

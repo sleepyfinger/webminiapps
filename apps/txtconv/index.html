@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="app-container">
-      <h1>텍스트 변환기 <span class="version-info">v1.1</span></h1>
+      <h1>텍스트 변환기 <span class="version-info">v1.2</span></h1>
 
       <div class="text-areas-container">
         <div class="text-area-wrapper">
@@ -45,6 +45,8 @@
             <button id="add-pattern-button">패턴 추가</button>
             <button id="save-patterns-button">패턴 목록 저장</button>
             <button id="load-patterns-button">패턴 목록 불러오기</button>
+            <button id="export-json-clipboard-button">패턴 목록 JSON 복사</button>
+            <button id="import-json-clipboard-button">패턴 목록 JSON 적용</button>
           </div>
         </div>
         <div class="regex-help-examples collapsed">
@@ -164,6 +166,18 @@
       <footer>
         <p>&copy; 2025 sleepyfinger. All rights reserved.</p>
       </footer>
+    </div>
+
+    <div id="json-import-modal" class="modal">
+      <div class="modal-content">
+        <span class="modal-close-button">&times;</span>
+        <h2>JSON 패턴 붙여넣기</h2>
+        <p>아래 텍스트 영역에 JSON 형식의 패턴 목록을 붙여넣으세요.<br>또는, 클립보드에 복사된 내용이 있다면 자동으로 채워집니다.</p>
+        <textarea id="json-import-textarea" rows="10" placeholder="JSON 데이터를 여기에 붙여넣으세요..."></textarea>
+        <div class="modal-actions">
+          <button id="apply-json-from-modal-button">적용하기</button>
+        </div>
+      </div>
     </div>
 
     <script

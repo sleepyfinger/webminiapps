@@ -8,6 +8,14 @@ const savePatternsButton = document.getElementById("save-patterns-button");
 const loadPatternsButton = document.getElementById("load-patterns-button");
 const clearInputButton = document.getElementById("clear-input-button");
 const copyOutputButton = document.getElementById("copy-output-button");
+const exportJsonClipboardButton = document.getElementById("export-json-clipboard-button");
+const importJsonClipboardButton = document.getElementById("import-json-clipboard-button");
+
+const jsonImportModal = document.getElementById("json-import-modal");
+const jsonImportTextarea = document.getElementById("json-import-textarea");
+const applyJsonFromModalButton = document.getElementById("apply-json-from-modal-button");
+const modalCloseButton = document.querySelector(".modal-close-button");
+
 
 let regexPatterns = [];
 
@@ -55,19 +63,21 @@ function renderPatterns() {
     replaceInput.value = patternData.replace || "";
     replaceWrapper.appendChild(replaceInput);
 
-    actionSelect.addEventListener("change", (e) => {
-      const newAction = e.target.value;
-      replaceInput.style.display = newAction === "replace" ? "" : "none";
+    const updateVisibility = (selectedAction) => {
+      replaceInput.style.display = selectedAction === "replace" ? "" : "none";
       patternInput.style.display =
-        newAction !== "trimTrailingWhitespace" ? "" : "none";
-      if (newAction === "trimTrailingWhitespace") {
+        selectedAction !== "trimTrailingWhitespace" ? "" : "none";
+      if (selectedAction === "trimTrailingWhitespace") {
         patternInput.value = "";
       }
+    };
+
+    actionSelect.addEventListener("change", (e) => {
+      const newAction = e.target.value;
+      updateVisibility(newAction);
     });
 
-    replaceInput.style.display = actionSelect.value === "replace" ? "" : "none";
-    patternInput.style.display =
-      actionSelect.value !== "trimTrailingWhitespace" ? "" : "none";
+    updateVisibility(actionSelect.value);
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "삭제";
@@ -82,7 +92,6 @@ function renderPatterns() {
 }
 
 function addPatternRow() {
-  regexPatterns = getPatternsFromDOM();
   regexPatterns.push({ pattern: "", replace: "", action: "replace" });
   renderPatterns();
 }
@@ -117,7 +126,8 @@ function getPatternsFromDOM() {
 }
 
 function savePatterns(showAlert = true) {
-  regexPatterns = getPatternsFromDOM();
+  const currentDOMPatterns = getPatternsFromDOM();
+  regexPatterns = currentDOMPatterns;
   localStorage.setItem("regexPatterns", JSON.stringify(regexPatterns));
   if (showAlert) {
     alert("패턴 목록이 저장되었습니다.");
@@ -134,9 +144,17 @@ function loadPatterns() {
         regexPatterns = [{ pattern: "", replace: "", action: "replace" }];
       } else {
         regexPatterns = loadedData.filter(
-          (item) => item && typeof item === "object"
+          (item) =>
+            item &&
+            typeof item === "object" &&
+            typeof item.action === "string" &&
+            typeof item.pattern === "string" &&
+            typeof item.replace === "string"
         );
-        if (regexPatterns.length === 0) {
+        if (regexPatterns.length === 0 && loadedData.length > 0) {
+          console.warn("Loaded patterns were filtered out due to invalid format. Using default.");
+          regexPatterns = [{ pattern: "", replace: "", action: "replace" }];
+        } else if (regexPatterns.length === 0) {
           regexPatterns.push({ pattern: "", replace: "", action: "replace" });
         }
       }
@@ -167,19 +185,26 @@ function applyAllPatterns() {
       const replacement = patternData.replace || "";
 
       if (action === "replace" || action === "deleteLine") {
-        if (!patternString || !patternString.trim()) {
-          console.warn("Skipping rule with empty pattern:", patternData);
+        if (action === "deleteLine" && (!patternString || !patternString.trim())) {
+          console.warn("Skipping 'deleteLine' rule with empty pattern:", patternData);
           continue;
         }
+        if (action === "replace" && !patternString && replacement) {
+        }
 
-        const match = patternString.match(/^\/(.+)\/([gimyus]*)$/);
-        if (!match) {
+        const match = patternString.match(/^\/(.*)\/([gimyus]*)$/s);
+        if (!match && (patternString || action === "deleteLine")) {
           throw new Error(
             `잘못된 형식의 패턴: "${patternString}". /패턴/플래그 형식이어야 합니다.`
           );
         }
-        const regexPattern = match[1] || "";
-        const regexFlags = match[2] || "";
+        const regexPattern = match ? match[1] : "";
+        const regexFlags = match ? match[2] : "";
+
+        if (!patternString && action !== "replace") {
+          continue;
+        }
+
         const regex = new RegExp(regexPattern, regexFlags);
 
         if (action === "replace") {
@@ -201,6 +226,95 @@ function applyAllPatterns() {
   }
 }
 
+if (exportJsonClipboardButton) {
+  exportJsonClipboardButton.addEventListener('click', async () => {
+    const patternsToExport = getPatternsFromDOM();
+    if (patternsToExport.length === 0) {
+      alert('내보낼 패턴이 없습니다.');
+      return;
+    }
+    const jsonString = JSON.stringify(patternsToExport, null, 2);
+    try {
+      await navigator.clipboard.writeText(jsonString);
+      alert('패턴 목록이 JSON 형식으로 클립보드에 복사되었습니다.');
+    } catch (err) {
+      console.error('클립보드 복사 실패:', err);
+      alert('클립보드 복사에 실패했습니다. 콘솔을 확인해주세요.');
+      prompt("클립보드 복사에 실패했습니다. 아래 내용을 직접 복사하세요:", jsonString);
+    }
+  });
+}
+
+function processAndApplyJsonPatterns(jsonString) {
+  if (!jsonString) {
+    alert('붙여넣을 JSON 내용이 없습니다.');
+    return;
+  }
+  try {
+    const patternsToImport = JSON.parse(jsonString);
+
+    if (!Array.isArray(patternsToImport)) {
+      alert('잘못된 JSON 형식입니다. 패턴 목록은 배열이어야 합니다.');
+      return;
+    }
+
+    const validPatterns = [];
+    let invalidPatternFound = false;
+    patternsToImport.forEach(pattern => {
+      if (
+        pattern &&
+        typeof pattern.action === 'string' &&
+        typeof pattern.pattern === 'string' &&
+        typeof pattern.replace === 'string'
+      ) {
+        validPatterns.push(pattern);
+      } else {
+        console.warn('잘못된 형식의 패턴 객체를 건너뜁니다:', pattern);
+        invalidPatternFound = true;
+      }
+    });
+
+    if (invalidPatternFound) {
+      alert('일부 패턴이 잘못된 형식이어서 제외되었습니다. 콘솔을 확인하세요.');
+    }
+
+    if (validPatterns.length > 0) {
+      regexPatterns = validPatterns;
+      renderPatterns();
+      alert(`패턴 목록을 JSON에서 성공적으로 가져왔습니다. (${validPatterns.length}개 적용)`);
+    } else if (!invalidPatternFound) {
+      alert('가져올 유효한 패턴이 없습니다.');
+    }
+
+  } catch (err) {
+    console.error('JSON 파싱 또는 패턴 적용 실패:', err);
+    alert('JSON 파싱에 실패했거나 잘못된 형식의 데이터입니다. 콘솔을 확인해주세요.');
+  }
+}
+
+if (importJsonClipboardButton) {
+  importJsonClipboardButton.addEventListener('click', async () => {
+    if (jsonImportModal && jsonImportTextarea) {
+      jsonImportModal.style.display = "block";
+      jsonImportTextarea.value = '';
+      jsonImportTextarea.focus();
+    }
+  });
+}
+
+if (modalCloseButton) {
+  modalCloseButton.addEventListener('click', () => {
+    if (jsonImportModal) jsonImportModal.style.display = "none";
+  });
+}
+
+if (applyJsonFromModalButton) {
+  applyJsonFromModalButton.addEventListener('click', () => {
+    processAndApplyJsonPatterns(jsonImportTextarea.value);
+    if (jsonImportModal) jsonImportModal.style.display = "none";
+  });
+}
+
 addPatternButton.addEventListener("click", addPatternRow);
 applyPatternsButton.addEventListener("click", applyAllPatterns);
 savePatternsButton.addEventListener("click", () => savePatterns(true));
@@ -215,7 +329,6 @@ copyOutputButton.addEventListener("click", () => {
   const textToCopy = outputTextArea.value;
   if (
     !textToCopy ||
-    textToCopy === "원본 텍스트를 입력해주세요." ||
     textToCopy.startsWith("오류:")
   ) {
     alert("복사할 유효한 내용이 없습니다.");
@@ -236,29 +349,36 @@ copyOutputButton.addEventListener("click", () => {
       })
       .catch((err) => {
         console.error("클립보드 복사 실패 (navigator):", err);
-        alert("텍스트 복사에 실패했습니다. 브라우저 권한을 확인해주세요.");
+        tryCopyExecCommand(textToCopy);
       });
   } else {
-    try {
-      outputTextArea.select();
-      document.execCommand("copy");
-      outputTextArea.blur();
-
-      const originalText = copyOutputButton.textContent;
-      copyOutputButton.textContent = "복사됨!";
-      copyOutputButton.disabled = true;
-      setTimeout(() => {
-        copyOutputButton.textContent = originalText;
-        copyOutputButton.disabled = false;
-      }, 1500);
-    } catch (err) {
-      console.error("클립보드 복사 실패 (execCommand):", err);
-      alert(
-        "텍스트 복사에 실패했습니다. 브라우저가 지원하지 않거나 권한이 없을 수 있습니다."
-      );
-    }
+    tryCopyExecCommand(textToCopy);
   }
 });
+
+function tryCopyExecCommand(textToCopy) {
+  const textArea = document.createElement("textarea");
+  textArea.value = textToCopy;
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    const originalText = copyOutputButton.textContent;
+    copyOutputButton.textContent = "복사됨!";
+    copyOutputButton.disabled = true;
+    setTimeout(() => {
+      copyOutputButton.textContent = originalText;
+      copyOutputButton.disabled = false;
+    }, 1500);
+  } catch (err) {
+    console.error('클립보드 복사 실패 (execCommand):', err);
+    alert('텍스트 복사에 실패했습니다. 브라우저가 지원하지 않거나 권한이 없을 수 있습니다.');
+  }
+  document.body.removeChild(textArea);
+}
 
 regexListContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("delete-pattern-button")) {
@@ -282,6 +402,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  window.addEventListener('click', (event) => {
+    if (event.target === jsonImportModal) {
+      jsonImportModal.style.display = "none";
+    }
+  });
+
   loadPatterns();
 
   if (typeof Sortable !== "undefined") {
@@ -289,10 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
       animation: 150,
       handle: ".drag-handle",
       ghostClass: "sortable-ghost",
-      group: {
-        name: "regex-rules",
-        pull: false,
-      },
       chosenClass: "sortable-chosen",
       dragClass: "sortable-drag",
       onUpdate: function (evt) {
