@@ -8,7 +8,6 @@ tags: [utility, psychology, test]
 category: "유틸리티"
 orientation: horizontal
 date: 2025-04-23 14:42:00 +0900
-popular: true
 ---
 
 몇 가지 질문에 답하면서 나의 정치적 성향을 간단하게 분석해주는 테스트입니다.
