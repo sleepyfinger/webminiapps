@@ -439,45 +439,79 @@ function drawUpArrowIcon(ctx, cx, cy, size, color) {
 }
 
 function shareScore() {
+  const gameTitle = "My Jump Game Score!";
+  const gameUrl = "https://sleepyfinger.github.io/webminiapps/showcase/jump/";
+  const scoreText = `I scored ${score} in Jump Game! My high score is ${highScore}! Let's play!`;
+  const fullMessageToCopy = `${scoreText} ${gameUrl}`;
+
+  if (!navigator.share) {
+    console.log("Web Share API not supported on this browser. Attempting to copy to clipboard.");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(fullMessageToCopy)
+        .then(() => {
+          console.log("Score details copied to clipboard!");
+          alert("점수 정보가 클립보드에 복사되었습니다!");
+        })
+        .catch(err => {
+          console.error("Failed to copy score details to clipboard:", err);
+          alert("클립보드 복사에 실패했습니다. 수동으로 복사해주세요.");
+        });
+    } else {
+      console.log("Clipboard API also not supported. Cannot copy to clipboard.");
+      alert("웹 공유와 클립보드 복사 기능이 모두 지원되지 않는 브라우저입니다.");
+    }
+    return;
+  }
+
+  const shareDataBase = {
+    title: gameTitle,
+    text: scoreText,
+    url: gameUrl,
+  };
+
+  const shareTextOnly = () => {
+    return navigator.share(shareDataBase)
+      .then(() => {
+        console.log("Successfully shared score (text only).");
+      })
+      .catch((error) => {
+        console.error("Error sharing text only:", error);
+      });
+  };
+
   html2canvas(canvas)
-    .then(function (canvasImg) {
-      if (
-        navigator.share &&
-        navigator.canShare &&
-        navigator.canShare({ files: [] })
-      ) {
-        canvasImg.toBlob(function (blob) {
-          if (!blob) {
-            alert("스크린샷 생성에 실패했습니다. 이미지를 다운로드합니다.");
-            downloadScreenshot(canvasImg);
-            return;
+    .then((canvasImg) => {
+      if (navigator.canShare && navigator.canShare({ files: [] })) {
+        canvasImg.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], "jump_game_score.png", { type: "image/png" });
+            const shareDataWithFile = { ...shareDataBase, files: [file] };
+
+            navigator.share(shareDataWithFile)
+              .then(() => {
+                console.log("Successfully shared score with screenshot.");
+              })
+              .catch((error) => {
+                console.error("Error sharing with screenshot:", error);
+                if (error.name !== "AbortError") {
+                  console.log("Sharing with screenshot failed. Attempting to share text only.");
+                  shareTextOnly();
+                }
+              });
+          } else {
+            console.error("Screenshot blob creation failed. Attempting to share text only.");
+            shareTextOnly();
           }
-          const file = new File([blob], "jump_game_score.png", {
-            type: "image/png",
-          });
-          navigator
-            .share({
-              files: [file],
-              title: "My Jump Game Score!",
-              text: `I scored ${score} in Jump Game! My high score is ${highScore}! Let's play!`,
-              url: "https://sleepyfinger.github.io/webminiapps/showcase/jump/",
-            })
-            .catch((error) => {
-              console.error("Error sharing:", error);
-              if (error.name !== "AbortError") {
-                alert("공유에 실패했습니다. 이미지를 다운로드합니다.");
-              }
-              downloadScreenshot(canvasImg);
-            });
         }, "image/png");
       } else {
-        alert("웹 공유 기능이 지원되지 않아 이미지를 다운로드합니다.");
-        downloadScreenshot(canvasImg);
+        console.log("File sharing not supported. Attempting to share text only.");
+        shareTextOnly();
       }
     })
-    .catch(function (error) {
-      console.error("Error capturing canvas with html2canvas:", error);
-      alert("스크린샷을 찍는데 실패했습니다.");
+    .catch((html2canvasError) => {
+      console.error("Error capturing canvas with html2canvas:", html2canvasError);
+      console.log("Screenshot capture failed. Attempting to share text only.");
+      shareTextOnly();
     });
 }
 
