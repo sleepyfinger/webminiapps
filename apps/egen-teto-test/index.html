@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>에겐녀 테토녀 테스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: #fdf6f0;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        box-sizing: border-box;
+      }
+      .container {
+        max-width: 400px;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(100, 100, 100, 0.07);
+        padding: 28px;
+        text-align: center;
+      }
+      h1 {
+        color: #5c5470;
+        text-align: center;
+        font-size: 2em;
+        font-weight: 600;
+        margin-bottom: 25px;
+      }
+
+      #start-screen .description {
+        font-size: 1.05em;
+        color: #7d728f;
+        margin-bottom: 25px;
+        line-height: 1.6;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        font-size: 1.1em;
+        font-weight: 500;
+        border-radius: 25px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease,
+          box-shadow 0.2s ease;
+        margin-top: 15px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      }
+      .btn:active {
+        transform: scale(0.98) translateY(1px);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      #progress-info {
+        margin-bottom: 20px;
+      }
+      #progress-text {
+        font-size: 0.9em;
+        color: #a499b3;
+        margin-bottom: 8px;
+      }
+      #progress-bar-container {
+        width: 100%;
+        background-color: #fdeee2;
+        border-radius: 4px;
+        height: 10px;
+        overflow: hidden;
+      }
+      #progress-bar {
+        width: 0%;
+        height: 100%;
+        background-color: #faae7b;
+        border-radius: 4px;
+        transition: width 0.3s ease-in-out;
+      }
+
+      #qa-wrapper {
+        transition: opacity 0.25s ease-in-out;
+        margin-bottom: 20px;
+      }
+      #qa-wrapper.fade-out {
+        opacity: 0 !important;
+      }
+
+      #question {
+        font-size: 1.4em;
+        font-weight: 500;
+        color: #5c5470;
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+      #answers button {
+        display: block;
+        width: 100%;
+        margin-bottom: 12px;
+        padding: 15px;
+        font-size: 1em;
+        font-weight: 500;
+        border-radius: 10px;
+        background-color: #ffffff;
+        color: #d57149;
+        border: 1.5px solid #fcc4a3;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease,
+          color 0.2s ease, transform 0.1s ease;
+      }
+      #answers button:hover {
+        background-color: #fef3ed;
+        border-color: #faae7b;
+      }
+
+      #result {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff9f5;
+        border-radius: 12px;
+        font-size: 1.15em;
+        text-align: center;
+        line-height: 1.7;
+        border: 1px solid #fdeee2;
+      }
+      #result .icon {
+        font-size: 2.2em;
+        margin-bottom: 12px;
+      }
+      #result b {
+        color: #d57149;
+        font-size: 1.3em;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      #restart {
+        display: block;
+        width: 100%;
+        background-color: #faae7b;
+      }
+      #start-button {
+        background-color: #faae7b;
+        font-size: 1.2em;
+        padding: 15px 30px;
+      }
+      #start-button:hover {
+        background-color: #f89d63;
+      }
+      #restart:hover {
+        background-color: #f89d63;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>에겐녀 vs 테토녀 테스트</h1>
+
+      <div id="start-screen">
+        <p class="description">
+          간단한 질문에 답하고 당신의 성향이 '테토'에 가까운지, '에겐'에
+          가까운지 알아보세요!
+        </p>
+        <button id="start-button" class="btn">테스트 시작하기</button>
+      </div>
+
+      <div id="test-screen" style="display: none">
+        <div id="progress-info" style="display: none">
+          <p id="progress-text"></p>
+          <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+          </div>
+        </div>
+        <div id="qa-wrapper">
+          <div id="question"></div>
+          <div id="answers"></div>
+        </div>
+        <div id="result" style="display: none"></div>
+        <button id="restart" class="btn" style="display: none">다시하기</button>
+      </div>
+    </div>
+    <script>
+      const questions = [
+        {
+          q: "팀 프로젝트에서 당신의 역할은?",
+          a: ["주도적으로 팀을 이끄는 리더", "팀원들을 서포트하는 조력자"],
+        },
+        {
+          q: "친구가 고민을 털어놓을 때 당신의 반응은?",
+          a: ["문제 해결을 위한 현실적인 조언", "따뜻한 위로와 정서적 지지"],
+        },
+        {
+          q: "의견 대립이 생겼을 때 당신의 대처 방식은?",
+          a: [
+            "논리적으로 내 주장을 펼쳐 설득",
+            "상대방 의견을 경청하며 타협점 모색",
+          ],
+        },
+        {
+          q: "새로운 일을 시작할 때 당신의 스타일은?",
+          a: [
+            "빠르게 계획하고 즉시 실행",
+            "신중하게 정보를 수집하고 천천히 시작",
+          ],
+        },
+        {
+          q: "감정을 표현하는 방식은?",
+          a: [
+            "솔직하고 직접적으로 표현",
+            "상황과 상대를 고려해 간접적으로 표현",
+          ],
+        },
+        {
+          q: "결정을 내려야 할 때 더 중요하게 생각하는 것은?",
+          a: [
+            "객관적인 사실과 데이터 기반 판단",
+            "직감과 주변 사람들과의 관계",
+          ],
+        },
+        {
+          q: "일상에서 스트레스를 받을 때 해소하는 방법은?",
+          a: ["활동적인 취미나 운동으로 해소", "조용한 휴식이나 명상으로 해소"],
+        },
+        {
+          q: "선호하는 작업 환경은?",
+          a: ["명확한 목표와 경쟁이 있는 환경", "안정적이고 협력적인 환경"],
+        },
+        {
+          q: "칭찬을 받을 때 당신의 반응은?",
+          a: [
+            "능력을 인정받은 것 같아 자신감 상승",
+            "쑥스럽지만 감사한 마음으로 수용",
+          ],
+        },
+        {
+          q: "약속 시간에 늦은 친구를 봤을 때 드는 생각은?",
+          a: [
+            "'왜 늦었을까?' 이유가 궁금하고 계획에 차질이 생길까 걱정",
+            "'무슨 일 있었나?' 친구의 안전이나 상황이 먼저 걱정",
+          ],
+        },
+      ];
+
+      let current = 0;
+      let scores = { 테토: 0, 에겐: 0 };
+
+      const startScreenEl = document.getElementById("start-screen");
+      const testScreenEl = document.getElementById("test-screen");
+      const startButtonEl = document.getElementById("start-button");
+      const questionEl = document.getElementById("question");
+      const answersEl = document.getElementById("answers");
+      const resultEl = document.getElementById("result");
+      const restartButtonEl = document.getElementById("restart");
+      const progressInfoEl = document.getElementById("progress-info");
+      const progressTextEl = document.getElementById("progress-text");
+      const progressBarEl = document.getElementById("progress-bar");
+      const qaWrapperEl = document.getElementById("qa-wrapper");
+
+      function showQuestion() {
+        if (current < questions.length) {
+          progressInfoEl.style.display = "block";
+          qaWrapperEl.classList.add("fade-out");
+
+          setTimeout(() => {
+            questionEl.textContent = questions[current].q;
+
+            const tetoChoiceText = questions[current].a[0];
+            const egenChoiceText = questions[current].a[1];
+            let buttonsHTML;
+            if (Math.random() < 0.5) {
+              buttonsHTML = `<button onclick="answer('테토')">${tetoChoiceText}</button><button onclick="answer('에겐')">${egenChoiceText}</button>`;
+            } else {
+              buttonsHTML = `<button onclick="answer('에겐')">${egenChoiceText}</button><button onclick="answer('테토')">${tetoChoiceText}</button>`;
+            }
+            answersEl.innerHTML = buttonsHTML;
+
+            if (progressTextEl) {
+              progressTextEl.textContent = `질문 ${current + 1} / ${
+                questions.length
+              }`;
+            }
+            if (progressBarEl) {
+              const progressPercentage =
+                ((current + 1) / questions.length) * 100;
+              progressBarEl.style.width = `${progressPercentage}%`;
+            }
+            qaWrapperEl.classList.remove("fade-out");
+          }, 250);
+        } else {
+          showResult();
+        }
+      }
+
+      function answer(type) {
+        if (type !== "테토" && type !== "에겐") {
+          console.error("Unknown answer type:", type);
+          return;
+        }
+        scores[type]++;
+        current++;
+        showQuestion();
+      }
+
+      function showResult() {
+        qaWrapperEl.style.display = "none";
+        progressInfoEl.style.display = "none";
+        resultEl.style.display = "block";
+        restartButtonEl.style.display = "block";
+
+        let result = "";
+        let desc = "";
+        let icon = "";
+
+        if (scores["테토"] > scores["에겐"]) {
+          result = "테토 타입";
+          icon = "🚀";
+          desc =
+            "당신은 추진력 있고 리더십이 강한 테토 타입! 독립적이고 논리적인 성향이 돋보입니다.";
+        } else if (scores["에겐"] > scores["테토"]) {
+          result = "에겐 타입";
+          icon = "💖";
+          desc =
+            "당신은 다정하고 공감능력이 뛰어난 에겐 타입! 조화와 배려를 중시하는 스타일입니다.";
+        } else {
+          result = "균형 타입";
+          icon = "⚖️";
+          desc =
+            "당신은 상황에 따라 테토처럼 추진력 있기도 하고, 에겐처럼 다정하기도 한 균형잡힌 타입! 다양한 매력을 가지고 있네요.";
+        }
+        resultEl.innerHTML = `<div class="icon">${icon}</div><b>${result}</b><br>${desc}`;
+      }
+
+      function startTest() {
+        startScreenEl.style.display = "none";
+        testScreenEl.style.display = "block";
+        qaWrapperEl.style.display = "block";
+        resultEl.style.display = "none";
+        restartButtonEl.style.display = "none";
+
+        current = 0;
+        scores = { 테토: 0, 에겐: 0 };
+
+        if (progressBarEl) progressBarEl.style.width = "0%";
+        if (progressTextEl) progressTextEl.textContent = "";
+
+        showQuestion();
+      }
+      startButtonEl.onclick = startTest;
+      restartButtonEl.onclick = function () {
+        resultEl.style.display = "none";
+        resultEl.innerHTML = "";
+        restartButtonEl.style.display = "none";
+        qaWrapperEl.style.display = "block";
+        qaWrapperEl.classList.remove("fade-out");
+        progressInfoEl.style.display = "block";
+        startTest();
+      };
+    </script>
+  </body>
+</html>
