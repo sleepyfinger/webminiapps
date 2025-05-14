@@ -389,11 +389,14 @@
         }
         resultEl.innerHTML = `<div class="icon">${icon}</div><b>${result}</b><br>${desc}`;
 
+        // const fixedShareUrl = window.location.href;
+        const fixedShareUrl = "https://sleepyfinger.github.io/webminiapps/showcase/egen-teto-test/";
+
         lastResultData = {
           shareApiTitle: "나의 에겐 vs 테토 테스트 결과!",
           shareApiText: `저는 ${result} ${icon} 입니다! ${desc} 당신도 테스트 해보세요!`,
-          clipboardText: `✨ 나의 에겐 vs 테토 테스트 결과 ✨\n\n저는 ${result} ${icon} 입니다!\n${desc}\n\n당신도 테스트 해보세요!\n${window.location.href}`,
-          url: window.location.href,
+          clipboardText: `✨ 나의 에겐 vs 테토 테스트 결과 ✨\n\n저는 ${result} ${icon} 입니다!\n${desc}\n\n당신도 테스트 해보세요!\n${fixedShareUrl}`,
+          url: fixedShareUrl,
         };
       }
 
