@@ -5,7 +5,7 @@ description: "클릭 한 번으로 개성 넘치는 판타지 캐릭터를 자�
 thumbnail: /assets/images/thumbnails/gen_fantasy_character.webp
 app_folder: /apps/gen_fantasy_character/
 tags: [tool, character, fantasy, generator]
-category: "도구"
+category: "유틸리티"
 orientation: horizontal
 date: 2025-05-07 00:58:33 +0900
 ---

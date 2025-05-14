@@ -5,7 +5,7 @@ description: "HTML, CSS, JavaScript 코드를 실시간으로 작성하고 결�
 thumbnail: /assets/images/thumbnails/html.webp
 app_folder: /apps/html/
 tags: [utility, tool, coding, education]
-category: "도구"
+category: "유틸리티"
 orientation: horizontal
 date: 2025-04-23 14:27:00 +0900
 ---

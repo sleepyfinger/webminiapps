@@ -5,7 +5,7 @@ description: "두 사람의 이름을 입력해 궁합 점수를 확인하는 �
 thumbnail: /assets/images/thumbnails/name_score.webp
 app_folder: /apps/name_score/
 tags: [game, fun, test]
-category: "게임"
+category: "테스트"
 orientation: vertical
 date: 2025-04-23 22:36:57 +0900
 popular: true

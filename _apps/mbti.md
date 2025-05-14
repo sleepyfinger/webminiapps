@@ -5,7 +5,7 @@ description: "간단한 질문으로 나의 MBTI 성격 유형을 빠르게 확�
 thumbnail: /assets/images/thumbnails/mbti.webp
 app_folder: /apps/mbti/
 tags: [utility, psychology, test]
-category: "유틸리티"
+category: "테스트"
 orientation: vertical
 date: 2025-04-25 00:44:08 +0900
 popular: true

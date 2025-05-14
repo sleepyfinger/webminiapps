@@ -6,7 +6,7 @@ thumbnail: /assets/images/thumbnails/egen-teto-test.webp
 app_folder: /apps/egen-teto-test/
 tags: [test, personality, fun]
 category: "테스트"
-orientation: horizontal
+orientation: vertical
 date: 2025-05-14 11:46:28 +0900
 ---
 

@@ -5,7 +5,7 @@ description: "앱 소개용 스크린샷을 간편하게 제작하세요! 마켓
 thumbnail: /assets/images/thumbnails/appshot.webp
 app_folder: /apps/appshot/
 tags: [tool, design, screenshot]
-category: "도구"
+category: "유틸리티"
 orientation: horizontal
 date: 2025-04-22 12:36:11 +0900
 popular: true

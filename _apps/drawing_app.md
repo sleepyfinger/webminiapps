@@ -5,7 +5,7 @@ description: "간단히 자유롭게 웹에서 그림을 그리는 앱"
 thumbnail: /assets/images/thumbnails/drawing_app.webp
 app_folder: /apps/drawing_app/
 tags: [drawing, creativity, tool]
-category: "도구"
+category: "유틸리티"
 orientation: horizontal
 date: 2025-05-12 23:45:51 +0900
 ---

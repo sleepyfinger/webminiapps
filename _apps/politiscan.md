@@ -5,7 +5,7 @@ description: "질문에 답하며 나의 정치적 성향을 간단하게 분석
 thumbnail: /assets/images/thumbnails/politiscan.webp
 app_folder: /apps/politiscan/
 tags: [utility, psychology, test]
-category: "유틸리티"
+category: "테스트"
 orientation: horizontal
 date: 2025-04-23 14:42:00 +0900
 ---

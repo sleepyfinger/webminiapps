@@ -5,7 +5,7 @@ description: "여러 가지 규칙을 적용해 텍스트를 쉽고 빠르게 �
 thumbnail: /assets/images/thumbnails/txtconv.webp
 app_folder: /apps/txtconv/
 tags: [tool, text, converter]
-category: "도구"
+category: "유틸리티"
 orientation: horizontal
 date: 2025-05-13 13:49:56 +0900
 popular: true

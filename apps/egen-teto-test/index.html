@@ -12,38 +12,39 @@
         margin: 0;
         padding: 20px;
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        align-items: flex-start;
         min-height: 100vh;
         box-sizing: border-box;
       }
       .container {
         max-width: 400px;
-        width: 100%;
+        width: 90%;
         background-color: #ffffff;
         border-radius: 20px;
-        box-shadow: 0 8px 25px rgba(100, 100, 100, 0.07);
-        padding: 28px;
+        box-shadow: 0 5px 20px rgba(100, 100, 100, 0.07);
+        padding: 20px;
         text-align: center;
       }
       h1 {
         color: #5c5470;
         text-align: center;
-        font-size: 2em;
+        font-size: 1.7em;
         font-weight: 600;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
       }
 
       #start-screen .description {
-        font-size: 1.05em;
+        font-size: 1em;
         color: #7d728f;
-        margin-bottom: 25px;
+        margin-bottom: 22px;
         line-height: 1.6;
       }
 
       .btn {
-        padding: 12px 25px;
-        font-size: 1.1em;
+        padding: 11px 22px;
+        font-size: 1.05em;
         font-weight: 500;
         border-radius: 25px;
         border: none;
@@ -51,7 +52,7 @@
         cursor: pointer;
         transition: background-color 0.2s ease, transform 0.1s ease,
           box-shadow 0.2s ease;
-        margin-top: 15px;
+        margin-top: 12px;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
       }
       .btn:active {
@@ -60,7 +61,7 @@
       }
 
       #progress-info {
-        margin-bottom: 20px;
+        margin-bottom: 18px;
       }
       #progress-text {
         font-size: 0.9em;
@@ -84,55 +85,62 @@
 
       #qa-wrapper {
         transition: opacity 0.25s ease-in-out;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
       }
       #qa-wrapper.fade-out {
         opacity: 0 !important;
       }
 
       #question {
-        font-size: 1.4em;
+        font-size: 1.2em;
         font-weight: 500;
         color: #5c5470;
-        margin-bottom: 24px;
+        margin-bottom: 18px;
         line-height: 1.6;
       }
       #answers button {
         display: block;
         width: 100%;
-        margin-bottom: 12px;
-        padding: 15px;
+        margin-bottom: 8px;
+        padding: 13px;
         font-size: 1em;
         font-weight: 500;
         border-radius: 10px;
-        background-color: #ffffff;
+        background-color: #fffcf9;
         color: #d57149;
-        border: 1.5px solid #fcc4a3;
+        border: 1.5px solid #fdeee2;
         cursor: pointer;
         transition: background-color 0.2s ease, border-color 0.2s ease,
           color 0.2s ease, transform 0.1s ease;
       }
       #answers button:hover {
-        background-color: #fef3ed;
-        border-color: #faae7b;
+        background-color: #faae7b;
+        border-color: #f89d63;
+        color: white;
+      }
+      #answers button:active {
+        transform: scale(0.97);
+        background-color: #f89d63;
       }
 
       #result {
         margin-top: 20px;
         padding: 20px;
-        background-color: #fff9f5;
+        background-color: #ffffff;
         border-radius: 12px;
-        font-size: 1.15em;
+        font-size: 1.1em;
         text-align: center;
         line-height: 1.7;
-        border: 1px solid #fdeee2;
+        border: 2px solid #faae7b;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        color: #706882;
       }
       #result .icon {
-        font-size: 2.2em;
+        font-size: 2em;
         margin-bottom: 12px;
       }
       #result b {
-        color: #d57149;
+        color: #c75b2d;
         font-size: 1.3em;
         display: block;
         margin-bottom: 10px;
@@ -145,14 +153,43 @@
       }
       #start-button {
         background-color: #faae7b;
-        font-size: 1.2em;
-        padding: 15px 30px;
+        font-size: 1.15em;
+        padding: 13px 28px;
       }
       #start-button:hover {
         background-color: #f89d63;
       }
-      #restart:hover {
+      #restart,
+      #share-button {
+        display: block;
+        width: 100%;
+        background-color: #faae7b;
+      }
+      #restart:hover,
+      #share-button:hover {
         background-color: #f89d63;
+      }
+      #share-button {
+        margin-top: 10px;
+      }
+      footer {
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        font-size: 0.9em;
+        color: #a499b3;
+        margin-top: 20px;
+      }
+      footer p {
+        margin: 0;
+      }
+      footer a {
+        color: #c75b2d;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      footer a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
@@ -181,8 +218,25 @@
         </div>
         <div id="result" style="display: none"></div>
         <button id="restart" class="btn" style="display: none">다시하기</button>
+        <button id="share-button" class="btn" style="display: none">
+          결과 공유하기
+        </button>
       </div>
     </div>
+
+    <footer>
+      <p>
+        Made with 💖 ·
+        <a
+          href="https://blog.naver.com/sleepyfinger"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          SleepyFinger
+        </a>
+      </p>
+    </footer>
+
     <script>
       const questions = [
         {
@@ -255,6 +309,7 @@
       const answersEl = document.getElementById("answers");
       const resultEl = document.getElementById("result");
       const restartButtonEl = document.getElementById("restart");
+      const shareButtonEl = document.getElementById("share-button");
       const progressInfoEl = document.getElementById("progress-info");
       const progressTextEl = document.getElementById("progress-text");
       const progressBarEl = document.getElementById("progress-bar");
@@ -310,6 +365,7 @@
         progressInfoEl.style.display = "none";
         resultEl.style.display = "block";
         restartButtonEl.style.display = "block";
+        shareButtonEl.style.display = "block";
 
         let result = "";
         let desc = "";
@@ -332,6 +388,13 @@
             "당신은 상황에 따라 테토처럼 추진력 있기도 하고, 에겐처럼 다정하기도 한 균형잡힌 타입! 다양한 매력을 가지고 있네요.";
         }
         resultEl.innerHTML = `<div class="icon">${icon}</div><b>${result}</b><br>${desc}`;
+
+        lastResultData = {
+          shareApiTitle: "나의 에겐녀 vs 테토녀 테스트 결과!",
+          shareApiText: `저는 ${result} ${icon} 입니다! ${desc} 당신도 테스트 해보세요!`,
+          clipboardText: `✨ 나의 에겐녀 vs 테토녀 테스트 결과 ✨\n\n저는 ${result} ${icon} 입니다!\n${desc}\n\n당신도 테스트 해보세요!\n${window.location.href}`,
+          url: window.location.href,
+        };
       }
 
       function startTest() {
@@ -340,9 +403,11 @@
         qaWrapperEl.style.display = "block";
         resultEl.style.display = "none";
         restartButtonEl.style.display = "none";
+        shareButtonEl.style.display = "none";
 
         current = 0;
         scores = { 테토: 0, 에겐: 0 };
+        lastResultData = {};
 
         if (progressBarEl) progressBarEl.style.width = "0%";
         if (progressTextEl) progressTextEl.textContent = "";
@@ -354,11 +419,64 @@
         resultEl.style.display = "none";
         resultEl.innerHTML = "";
         restartButtonEl.style.display = "none";
+        shareButtonEl.style.display = "none";
         qaWrapperEl.style.display = "block";
         qaWrapperEl.classList.remove("fade-out");
         progressInfoEl.style.display = "block";
         startTest();
       };
+
+      let lastResultData = {};
+
+      async function handleShare() {
+        const { shareApiTitle, shareApiText, clipboardText, url } =
+          lastResultData;
+
+        if (!shareApiTitle || !url) {
+          console.error("공유할 결과 데이터가 없습니다.");
+          alert("공유할 결과가 없습니다. 먼저 테스트를 완료해주세요.");
+          return;
+        }
+
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: shareApiTitle,
+              text: shareApiText,
+              url: url,
+            });
+          } catch (err) {
+            if (err.name !== "AbortError") {
+              console.error("공유 중 오류 발생:", err);
+              copyToClipboard(clipboardText);
+            }
+          }
+        } else {
+          copyToClipboard(clipboardText);
+        }
+      }
+      function copyToClipboard(textToCopy) {
+        if (
+          navigator.clipboard &&
+          typeof navigator.clipboard.writeText === "function"
+        ) {
+          navigator.clipboard
+            .writeText(textToCopy)
+            .then(() => {
+              alert("결과와 링크가 클립보드에 복사되었습니다!");
+            })
+            .catch((err) => {
+              console.error("클립보드 복사 실패:", err);
+              alert("결과를 클립보드에 복사하지 못했습니다.");
+            });
+        } else {
+          console.warn(
+            "Clipboard API (writeText)는 이 환경에서 지원되지 않습니다."
+          );
+          alert("클립보드 자동 복사 기능을 지원하지 않습니다.");
+        }
+      }
+      shareButtonEl.onclick = handleShare;
     </script>
   </body>
 </html>
