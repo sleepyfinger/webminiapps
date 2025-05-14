@@ -14,12 +14,27 @@
   </head>
   <body>
     <div class="game-container">
-      <h1>이모지 런</h1>
-      <canvas id="gameCanvas" width="800" height="400"></canvas>
-      <div id="ui-container">
-        <p id="score">점수: 0</p>
+      <button id="soundToggleBtn">🔊</button>
+      <audio id="bgm" src="assets/sounds/background_music.mp3" loop></audio>
+
+      <div id="startScreenOverlay">
+        <div id="startScreenContent">
+          <h1>이모지 런</h1>
+          <p id="instructions">
+            점프하려면 화면을 탭하거나<br />스페이스바/위쪽 화살표 키를
+            누르세요!
+          </p>
+          <button id="startGameButton">게임 시작</button>
+          <p class="start-hint">(Enter 또는 화면 탭으로 시작)</p>
+          <p class="sound-credit">Sounds from Pixabay</p>
+        </div>
       </div>
 
+      <canvas id="gameCanvas" width="800" height="400" class="hidden"></canvas>
+      <div id="ui-container" class="hidden">
+        <p id="score">🎯 0</p>
+        <p id="inGameHighScoreDisplay">🏆 0</p>
+      </div>
       <div id="gameOverOverlay" class="hidden">
         <div id="gameOverContent">
           <h2>게임 오버!</h2>
