@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>텍사스 홀덤</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <h2>텍사스 홀덤</h2>
+
+      <div class="controls">
+        <div class="ai-slider-container">
+          <label for="aiCountSlider">
+            AI 플레이어 수: <span id="aiCountDisplay">2</span>명
+          </label>
+          <input
+            type="range"
+            id="aiCountSlider"
+            min="1"
+            max="9"
+            value="2"
+            oninput="updateAiCountDisplay(this.value)"
+            onchange="setAiCountFromSlider(this.value)"
+          />
+        </div>
+        <input type="hidden" id="aiCount" value="2" />
+        <button id="startGameBtn" onclick="startGame()">새 게임 시작</button>
+      </div>
+
+      <div class="game-info">
+        <strong>게임 상태:</strong>
+        <span id="game-state-display">대기 중</span> |
+        <strong>현재 턴:</strong> <span id="current-turn-display">-</span> |
+        <strong>딜러:</strong> <span id="dealer-display">-</span>
+      </div>
+
+      <div class="community-cards-area" id="community-cards-display">
+        <strong>커뮤니티 카드:</strong> <span id="table-cards"></span>
+      </div>
+
+      <div class="pot-area">
+        <strong>팟:</strong> <span id="pot-display">0원</span>
+      </div>
+
+      <div class="players-area" id="players-display">
+        플레이어 정보가 여기에 표시됩니다.
+      </div>
+
+      <div class="user-actions-area" id="user-action-controls">
+        <!-- 사용자 액션 버튼이 여기에 동적으로 추가됩니다 -->
+      </div>
+
+      <div class="log-area" id="game-log">
+        <div>게임 로그가 여기에 표시됩니다.</div>
+      </div>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
