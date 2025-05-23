@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MBTI 궁합 계산기</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap");
+
+      body {
+        background: linear-gradient(135deg, #d2b4de 0%, #a9cce3 100%);
+        min-height: 100vh;
+        font-family: "Noto Sans KR", sans-serif;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .container {
+        flex-grow: 1;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      .card {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        border-radius: 1.5rem;
+        border: none;
+        background-color: #ffffff;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInCard 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s
+          forwards;
+      }
+      h2 {
+        color: #9b59b6;
+        font-weight: 700;
+      }
+      .card-icon {
+        font-size: 2.5rem;
+        color: #9b59b6;
+        margin-bottom: 0.5rem;
+        text-align: center;
+      }
+      .form-label {
+        font-weight: 500;
+        color: #555;
+      }
+      .form-control {
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        border-color: #ddd;
+      }
+      .form-control:focus {
+        border-color: #b088f0;
+        box-shadow: 0 0 0 0.25rem rgba(155, 89, 182, 0.25);
+      }
+      .btn-primary {
+        background-color: #9b59b6;
+        border-color: #9b59b6;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #8e44ad;
+        border-color: #8e44ad;
+      }
+      #result {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #fff;
+        border-radius: 1rem;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+        text-align: left;
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+        transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          visibility 0s linear 0.4s; /* Smoother timing for result appearance */
+        visibility: hidden;
+      }
+      .compat-score-value {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        transition: color 0.5s;
+        text-align: center;
+      }
+      .compat-anim {
+        animation: pop 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      }
+      @keyframes pop {
+        0% {
+          transform: scale(0.7);
+          opacity: 0.5;
+        }
+        60% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes fadeInCard {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #result.visible {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        visibility: visible;
+        transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          visibility 0s linear 0s;
+      }
+      .btn-outline-secondary.share-btn {
+        color: #9b59b6;
+        border-color: #9b59b6;
+        transition: all 0.3s ease;
+      }
+      .btn-outline-secondary.share-btn:hover {
+        color: #fff;
+        background-color: #9b59b6;
+        border-color: #9b59b6;
+      }
+      .share-btn {
+        margin-top: 1.8rem;
+        width: 100%;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      .mbti-badge {
+        font-size: 1.1rem;
+        background: #f2eaf7;
+        color: #8e44ad;
+        border-radius: 0.75em;
+        padding: 0.3em 0.8em;
+        margin: 0 0.5em;
+        display: inline-block;
+        font-weight: 600;
+      }
+      .result-connector {
+        font-size: 1.8rem;
+        color: #e74c3c;
+        margin: 0 0.75rem;
+      }
+      .score-bar-container {
+        background-color: #e9ecef;
+        border-radius: 0.5rem;
+        height: 12px;
+        overflow: hidden;
+      }
+      .score-bar {
+        height: 100%;
+        border-radius: 0.5rem;
+        transition: width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+          background-color 0.5s ease-in-out;
+      }
+      .result-section-title {
+        font-weight: 600;
+        color: #8e44ad;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .result-tip {
+        background-color: #f3e8ff;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        color: #6c3483;
+        font-size: 0.95rem;
+      }
+      .result-description {
+        font-size: 1.05rem;
+        color: #4b5563;
+      }
+      .footer {
+        text-align: center;
+        padding: 1.5rem 0;
+        margin-top: 3rem;
+        color: #495057;
+        font-size: 0.875rem;
+        width: 100%;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      .footer a {
+        color: #6c757d;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease, text-decoration 0.2s ease;
+      }
+      .footer a:hover {
+        color: #343a40;
+        text-decoration: underline;
+      }
+
+      @media (max-width: 576px) {
+        .card {
+          padding: 1.5rem !important;
+        }
+        .compat-score-value {
+          font-size: 2.5rem;
+        }
+        .mbti-badge {
+          font-size: 1rem;
+          margin: 0 0.3em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="container d-flex flex-column justify-content-center align-items-center"
+    >
+      <div class="card p-4" style="max-width: 420px; width: 100%">
+        <div class="card-icon">
+          <i class="bi bi-chat-heart-fill"></i>
+        </div>
+        <h2 class="text-center mb-4">MBTI 궁합 계산기</h2>
+        <form id="compatForm" autocomplete="off">
+          <div class="mb-3">
+            <label for="mbti1" class="form-label">첫 번째 MBTI</label>
+            <input
+              list="mbti-types"
+              class="form-control"
+              id="mbti1"
+              maxlength="4"
+              required
+              placeholder="예: INFP"
+              autocomplete="off"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="mbti2" class="form-label">두 번째 MBTI</label>
+            <input
+              list="mbti-types"
+              class="form-control"
+              id="mbti2"
+              maxlength="4"
+              required
+              placeholder="예: ENFJ"
+              autocomplete="off"
+            />
+          </div>
+          <datalist id="mbti-types">
+            <option value="ISTJ"></option>
+            <option value="ISFJ"></option>
+            <option value="INFJ"></option>
+            <option value="INTJ"></option>
+            <option value="ISTP"></option>
+            <option value="ISFP"></option>
+            <option value="INFP"></option>
+            <option value="INTP"></option>
+            <option value="ESTP"></option>
+            <option value="ESFP"></option>
+            <option value="ENFP"></option>
+            <option value="ENTP"></option>
+            <option value="ESTJ"></option>
+            <option value="ESFJ"></option>
+            <option value="ENFJ"></option>
+            <option value="ENTJ"></option>
+          </datalist>
+
+          <button type="submit" class="btn btn-primary w-100">궁합 계산</button>
+        </form>
+        <div id="result"></div>
+        <button
+          id="shareBtn"
+          class="btn btn-outline-secondary share-btn d-none"
+        >
+          결과 공유
+        </button>
+      </div>
+    </div>
+    <footer class="footer">
+      <p class="mb-0">
+        &copy; 2025
+        <a href="https://blog.naver.com/sleepyfinger" target="_blank"
+          >SleepyFinger</a
+        >. All Rights Reserved.
+      </p>
+    </footer>
+    <script>
+      const mbtiCompatibilityTable = {
+        INFP: {
+          ENFJ: 100,
+          ENTJ: 100,
+          INFJ: 80,
+          ENFP: 80,
+          INTJ: 80,
+          INFP: 80,
+          ISFJ: 60,
+          ESFJ: 60,
+          ISTJ: 60,
+          INTP: 60,
+          ISFP: 60,
+          ENTP: 60,
+          ESTJ: 40,
+          ESFP: 40,
+          ISTP: 40,
+          ESTP: 20,
+        },
+        ENFJ: {
+          INFP: 100,
+          ISFP: 100,
+          INFJ: 80,
+          ENFP: 80,
+          ENFJ: 80,
+          ESFJ: 80,
+          INTJ: 80,
+          ENTJ: 80,
+          ISFJ: 60,
+          ESFP: 60,
+          ENTP: 60,
+          ESTJ: 60,
+          ISTJ: 40,
+          ISTP: 40,
+          INTP: 40,
+          ESTP: 20,
+        },
+        ENTJ: {
+          INFP: 100,
+          ISFP: 100,
+          ENTP: 80,
+          INTP: 80,
+          ENTJ: 80,
+          INTJ: 80,
+          ENFJ: 80,
+          ENFP: 80,
+          ISTJ: 60,
+          ESTJ: 60,
+          ISFJ: 60,
+          ESFJ: 60,
+          ISTP: 40,
+          ESTP: 40,
+          ESFP: 20,
+        },
+        INFJ: {
+          ENFP: 100,
+          ENTP: 100,
+          INFP: 80,
+          ENFJ: 80,
+          INFJ: 80,
+          INTJ: 80,
+          INTP: 80,
+          ISFJ: 60,
+          ESFJ: 60,
+          ISTJ: 60,
+          ENTJ: 60,
+          ISFP: 40,
+          ESTJ: 40,
+          ESFP: 40,
+          ISTP: 20,
+          ESTP: 20,
+        },
+        ENFP: {
+          INFJ: 100,
+          INTJ: 100,
+          INFP: 80,
+          ENFJ: 80,
+          ENFP: 80,
+          ENTP: 80,
+          ISFP: 80,
+          ESFP: 80,
+          ENTJ: 60,
+          INTP: 60,
+          ESFJ: 60,
+          ESTJ: 60,
+          ISTJ: 40,
+          ISFJ: 40,
+          ISTP: 40,
+          ESTP: 20,
+        },
+        INTJ: {
+          ENFP: 100,
+          ENTP: 100,
+          INFP: 80,
+          ENFJ: 80,
+          INFJ: 80,
+          INTJ: 80,
+          ENTJ: 80,
+          INTP: 80,
+          ISTJ: 60,
+          ESTJ: 60,
+          ISFJ: 60,
+          ESFJ: 60,
+          ISFP: 40,
+          ESFP: 40,
+          ISTP: 40,
+          ESTP: 20,
+        },
+        ISTJ: {
+          ESFP: 100,
+          ESTP: 100,
+          ISFJ: 80,
+          ISTJ: 80,
+          ESTJ: 80,
+          ESFJ: 80,
+          INTJ: 60,
+          ENTJ: 60,
+          ISFP: 60,
+          INFP: 60,
+          ENFP: 60,
+          INFJ: 60,
+          ISTP: 40,
+          ESTP: 40,
+          ENTP: 40,
+          ENFJ: 20,
+        },
+        ISFJ: {
+          ESTP: 100,
+          ESFP: 100,
+          ISTJ: 80,
+          ISFJ: 80,
+          ESTJ: 80,
+          ESFJ: 80,
+          ENFJ: 80,
+          INFP: 60,
+          ENFP: 60,
+          INTJ: 60,
+          ENTJ: 60,
+          ISFP: 60,
+          ISTP: 40,
+          ESTP: 40,
+          ENTP: 40,
+          INFJ: 20,
+        },
+        ISTP: {
+          ESFJ: 100,
+          ENFJ: 100,
+          ISTP: 80,
+          ESTP: 80,
+          ISFP: 80,
+          ESTJ: 80,
+          ISTJ: 80,
+          ENTP: 60,
+          INTP: 60,
+          ISFJ: 60,
+          INFP: 60,
+          ENFP: 60,
+          INTJ: 40,
+          ENTJ: 40,
+          ESFP: 40,
+          INFJ: 20,
+        },
+        ISFP: {
+          ENFJ: 100,
+          ESFJ: 100,
+          ISFP: 80,
+          ESFP: 80,
+          ISTP: 80,
+          ESTP: 80,
+          INFP: 80,
+          ENFP: 80,
+          ISTJ: 60,
+          ISFJ: 60,
+          INTJ: 60,
+          ENTJ: 60,
+          INTP: 40,
+          ENTP: 40,
+          ESTJ: 40,
+          INFJ: 20,
+        },
+        ESTP: {
+          ISFJ: 100,
+          ISTJ: 100,
+          ESFP: 80,
+          ESTP: 80,
+          ISTP: 80,
+          ISFP: 80,
+          ESTJ: 80,
+          ESFJ: 80,
+          ENFJ: 60,
+          INFP: 60,
+          ENFP: 60,
+          INTP: 60,
+          INTJ: 40,
+          ENTJ: 40,
+          INFJ: 40,
+          ENTP: 20,
+        },
+        ESFP: {
+          ISTJ: 100,
+          ISFJ: 100,
+          ESFP: 80,
+          ISFP: 80,
+          ESTP: 80,
+          ISTP: 80,
+          ESFJ: 80,
+          ESTJ: 80,
+          ENFP: 60,
+          INFP: 60,
+          ENFJ: 60,
+          INTP: 60,
+          INTJ: 40,
+          ENTJ: 40,
+          INFJ: 40,
+          ENTP: 20,
+        },
+        ESTJ: {
+          ISFP: 100,
+          ISTP: 100,
+          ESTJ: 80,
+          ISTJ: 80,
+          ESTP: 80,
+          ISTP: 80,
+          ESFJ: 80,
+          ISFJ: 80,
+          ENTJ: 60,
+          INTJ: 60,
+          ENFJ: 60,
+          INFJ: 60,
+          INFP: 40,
+          ENFP: 40,
+          INTP: 40,
+          ENTP: 20,
+        },
+        ESFJ: {
+          ISTP: 100,
+          ISFP: 100,
+          ESFJ: 80,
+          ISFJ: 80,
+          ESTJ: 80,
+          ISTJ: 80,
+          ESFP: 80,
+          ESTP: 80,
+          ENFJ: 80,
+          INFP: 60,
+          ENFP: 60,
+          INTJ: 60,
+          ENTJ: 60,
+          INTP: 40,
+          ENTP: 40,
+          INFJ: 20,
+        },
+        INTP: {
+          ENTJ: 100,
+          ENFJ: 100,
+          INTP: 80,
+          ENTP: 80,
+          INTJ: 80,
+          INFP: 80,
+          ENFP: 80,
+          INFJ: 80,
+          ISFP: 60,
+          ISTP: 60,
+          ESFP: 60,
+          ESTP: 60,
+          ISTJ: 40,
+          ISFJ: 40,
+          ESTJ: 40,
+          ESFJ: 20,
+        },
+        ENTP: {
+          INFJ: 100,
+          INTJ: 100,
+          ENTP: 80,
+          INTP: 80,
+          ENFP: 80,
+          ENFJ: 80,
+          ENTJ: 80,
+          INFP: 80,
+          ISFP: 60,
+          ISTP: 60,
+          ESFP: 60,
+          ESTP: 60,
+          ISTJ: 40,
+          ISFJ: 40,
+          ESTJ: 40,
+          ESFJ: 20,
+        },
+      };
+
+      const compatibilityDescriptions = [
+        {
+          min: 90,
+          max: 100,
+          text: "✨ 천생연분! 서로에게 완벽한 파트너예요. 함께 있으면 웃음이 끊이지 않고, 서로의 존재만으로도 큰 힘이 됩니다. 마치 영화 속 한 장면처럼 로맨틱하고 이상적인 관계입니다.",
+          tip: "지금처럼 서로를 아끼고 존중하며 사랑을 키워나가세요. 함께하는 모든 순간이 소중한 추억이 될 거예요. 가끔은 특별한 데이트로 서로에게 감동을 선물해보세요! 🎉",
+        },
+        {
+          min: 70,
+          max: 89,
+          text: "💖 아주 좋은 궁합! 서로에게 긍정적인 영향을 주며 함께 성장하는 아름다운 관계입니다. 서로의 다름을 이해하고 존중하며, 안정감과 행복을 느낄 수 있습니다.",
+          tip: "서로의 관심사를 공유하고 함께 새로운 것을 경험해보세요. 작은 칭찬과 격려는 관계를 더욱 단단하게 만들어 줄 거예요. 서로에게 든든한 지원군이 되어주세요. 😊",
+        },
+        {
+          min: 50,
+          max: 69,
+          text: "🙂 괜찮은 궁합! 서로 잘 맞는 부분도 있지만, 가끔은 다른 생각과 방식으로 인해 작은 다툼이 생길 수도 있어요. 하지만 서로 노력하면 충분히 좋은 관계를 만들 수 있습니다.",
+          tip: "서로의 생각과 감정을 솔직하게 표현하고, 상대방의 이야기를 경청하는 자세가 중요해요. 함께 취미를 만들거나, 공통의 목표를 세워보는 것도 좋은 방법입니다. 💬",
+        },
+        {
+          min: 30,
+          max: 49,
+          text: "🤔 조금은 다른 스타일! 서로 다른 점이 많아 이해하는 데 시간이 필요할 수 있어요. 하지만 서로의 차이를 인정하고 존중한다면, 오히려 새로운 것을 배우고 성장하는 계기가 될 수 있습니다.",
+          tip: "서로의 다름을 '틀림'이 아닌 '다름'으로 받아들이는 연습이 필요해요. 상대방의 장점을 발견하고 칭찬해주세요. 작은 노력들이 모여 관계를 긍정적으로 변화시킬 수 있습니다. 💖",
+        },
+        {
+          min: 0,
+          max: 29,
+          text: "😥 상반된 성향! 마치 자석의 같은 극처럼 서로 밀어내는 느낌을 받을 수 있어요. 많은 노력과 이해가 필요한 관계이지만, 불가능한 것은 아닙니다.",
+          tip: "서로의 개인적인 공간과 시간을 존중해주세요. 갈등이 생겼을 때는 감정적으로 대응하기보다, 차분하게 대화로 풀어나가는 것이 중요해요. 서로의 '다름' 속에서 배울 점을 찾아보세요. 🙏",
+        },
+      ];
+
+      function getScoreColor(score) {
+        if (score >= 90) return "#a78bfa";
+        if (score >= 70) return "#fb7185";
+        if (score >= 50) return "#2ecc71";
+        if (score >= 30) return "#f39c12";
+        return "#e74c3c";
+      }
+
+      function isValidMBTI(str) {
+        const validTypes = [
+          "ISTJ",
+          "ISFJ",
+          "INFJ",
+          "INTJ",
+          "ISTP",
+          "ISFP",
+          "INFP",
+          "INTP",
+          "ESTP",
+          "ESFP",
+          "ENFP",
+          "ENTP",
+          "ESTJ",
+          "ESFJ",
+          "ENFJ",
+          "ENTJ",
+        ];
+        return validTypes.includes(str.toUpperCase());
+      }
+
+      function getCompatibilityScore(mbti1, mbti2) {
+        mbti1 = mbti1.toUpperCase();
+        mbti2 = mbti2.toUpperCase();
+        if (
+          mbtiCompatibilityTable[mbti1] &&
+          mbtiCompatibilityTable[mbti1][mbti2] !== undefined
+        ) {
+          return mbtiCompatibilityTable[mbti1][mbti2];
+        }
+        let score = 0;
+        for (let i = 0; i < 4; i++) {
+          if (mbti1[i] === mbti2[i]) score += 25;
+        }
+        return score;
+      }
+
+      function shareResult(mbti1, mbti2, score, desc) {
+        const emoji =
+          score >= 90
+            ? "💖"
+            : score >= 70
+            ? "😊"
+            : score >= 50
+            ? "🙂"
+            : score >= 30
+            ? "🤔"
+            : "😥";
+        const shareText = `${emoji} MBTI 궁합 결과!\n${mbti1} ❤️ ${mbti2} = ${score}%\n"${desc}"\n\n나의 MBTI 궁합도 여기서 확인해보세요:\n${window.location.href}`;
+        const customUrl =
+          "https://sleepyfinger.github.io/webminiapps/showcase/mbti_gunghab_test";
+        if (navigator.share) {
+          navigator.share({
+            title: "MBTI 궁합 결과",
+            text: `${emoji} MBTI 궁합 결과!\n${mbti1} ❤️ ${mbti2} = ${score}%\n"${desc}"\n\n나의 MBTI 궁합도 여기서 확인해보세요:\n${customUrl}`,
+            url: customUrl,
+          });
+        } else {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard
+              .writeText(
+                `${emoji} MBTI 궁합 결과!\n${mbti1} ❤️ ${mbti2} = ${score}%\n"${desc}"\n\n나의 MBTI 궁합도 여기서 확인해보세요:\n${customUrl}`
+              )
+              .then(() => {
+                alert("결과가 클립보드에 복사되었습니다!");
+              })
+              .catch((err) => {
+                console.error("클립보드 복사 실패:", err);
+                alert("클립보드 복사에 실패했습니다.");
+              });
+          } else {
+            const resultDiv = document.getElementById("result");
+            const shareableText = document.createElement("textarea");
+            shareableText.value = `${emoji} MBTI 궁합 결과!\n${mbti1} ❤️ ${mbti2} = ${score}%\n"${desc}"\n\n나의 MBTI 궁합도 여기서 확인해보세요:\n${customUrl}`;
+            shareableText.readOnly = true;
+            shareableText.style.width = "100%";
+            shareableText.style.minHeight = "100px";
+            resultDiv.appendChild(shareableText);
+            alert(
+              "공유 기능을 사용할 수 없는 환경입니다. 아래 텍스트를 직접 복사하거나 스크린샷을 찍어 공유해주세요."
+            );
+          }
+        }
+      }
+
+      document.getElementById("mbti1").addEventListener("input", function (e) {
+        this.value = this.value
+          .toUpperCase()
+          .replace(/[^A-Z]/g, "")
+          .slice(0, 4);
+        if (this.value.length === 4 && !isValidMBTI(this.value)) {
+          this.classList.add("is-invalid");
+        } else {
+          this.classList.remove("is-invalid");
+        }
+      });
+      document.getElementById("mbti2").addEventListener("input", function (e) {
+        this.value = this.value
+          .toUpperCase()
+          .replace(/[^A-Z]/g, "")
+          .slice(0, 4);
+        if (this.value.length === 4 && !isValidMBTI(this.value)) {
+          this.classList.add("is-invalid");
+        } else {
+          this.classList.remove("is-invalid");
+        }
+      });
+
+      document
+        .getElementById("compatForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const mbti1 = document
+            .getElementById("mbti1")
+            .value.trim()
+            .toUpperCase();
+          const mbti2 = document
+            .getElementById("mbti2")
+            .value.trim()
+            .toUpperCase();
+          const mbti1Input = document.getElementById("mbti1");
+          const mbti2Input = document.getElementById("mbti2");
+          const resultDiv = document.getElementById("result");
+          const shareBtn = document.getElementById("shareBtn");
+
+          mbti1Input.classList.remove("is-invalid");
+          mbti2Input.classList.remove("is-invalid");
+
+          if (!isValidMBTI(mbti1) || !isValidMBTI(mbti2)) {
+            resultDiv.innerHTML = `
+              <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <div>
+                  올바른 MBTI 4글자를 입력해주세요. (예: INFP, ENFJ)
+                </div>
+              </div>`;
+            resultDiv.classList.add("visible");
+            shareBtn.classList.add("d-none");
+            return;
+          }
+
+          const score = getCompatibilityScore(mbti1, mbti2);
+          const color = getScoreColor(score);
+          const fullDescription = compatibilityDescriptions.find(
+            (d) => score >= d.min && score <= d.max
+          ) || {
+            text: "궁합 설명을 찾을 수 없습니다.",
+            tip: "점수를 다시 확인해주세요.",
+          };
+
+          resultDiv.innerHTML = `
+        <div class="result-content">
+            <div class="result-header d-flex justify-content-center align-items-center mb-3">
+                <span class="mbti-badge">${mbti1}</span>
+                <span class="result-connector">❤️</span>
+                <span class="mbti-badge">${mbti2}</span>
+            </div>
+            <div class="score-display text-center mb-3">
+                <div class="compat-score-value compat-anim" style="color:${color};">${score}%</div>
+                <div class="score-bar-container mt-2">
+                    <div class="score-bar" style="width: ${score}%; background-color: ${color};"></div>
+                </div>
+            </div>
+            <div class="result-text-content">
+                <p class="result-description text-center mb-3">${fullDescription.text}</p>
+                <hr class="my-3">
+                <h5 class="result-section-title"><i class="bi bi-lightbulb-fill me-2"></i>관계 조언</h5>
+                <div class="result-tip">${fullDescription.tip}</div>
+            </div>
+        </div>
+      `;
+          resultDiv.classList.add("visible");
+          shareBtn.classList.remove("d-none");
+          const compatElem = resultDiv.querySelector(".compat-score-value");
+          if (compatElem) {
+            compatElem.classList.remove("compat-anim");
+            void compatElem.offsetWidth;
+            compatElem.classList.add("compat-anim");
+          }
+          shareBtn.onclick = () =>
+            shareResult(mbti1, mbti2, score, fullDescription.text);
+        });
+    </script>
+  </body>
+</html>
